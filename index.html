@@ -144,6 +144,9 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .btn-block{width:100%}
 .btn-sm{min-height:36px;padding:0 12px;font-size:12.5px;border-radius:10px}
 .btn-danger{color:var(--bad);border-color:#EFD9D5;background:#FDF4F2}
+.btn-copy{background:var(--primary-soft);border-color:#CFE0D8;color:var(--primary)}
+.btn-copy:active{background:#DCEAE4}
+.copy-hint{font-size:11px;color:var(--ink-3);text-align:center;margin-top:6px;line-height:1.5}
 .btn:disabled{opacity:.5;box-shadow:none}
 .btn-row{display:flex;gap:8px}
 .btn-row .btn{flex:1}
@@ -1390,6 +1393,7 @@ function renderToday() {
             '<div class="ex-actions" style="margin-top:12px">' +
               '<button class="mini-btn" data-diary-speak="' + dkey() + '">🔊 듣기</button>' +
               '<button class="mini-btn" data-diary="' + dkey() + '">✎ 수정</button>' +
+              '<button class="mini-btn" data-dcopykey="' + dkey() + '">📋 첨삭용으로 복사</button>' +
               '<button class="mini-btn" data-diary-list="1">모아보기</button>' +
             '</div>'
           : '<p class="diary-empty">오늘 하루를 일본어 한 줄로 남겨보세요.<br>' +
@@ -1954,6 +1958,9 @@ function renderReview() {
           '<button class="btn" data-diary-list="1">지난 일기</button>' +
           '<button class="btn btn-primary" data-diary="' + dkey() + '">오늘 일기</button>' +
         '</div>' +
+        (String((diaryFor(dkey()) || {}).text || '').trim()
+          ? '<button class="btn btn-copy btn-block" style="margin-top:8px" data-dcopykey="' + dkey() + '">📋 오늘 일기 첨삭용으로 복사</button>'
+          : '') +
       '</div>' +
       '<div class="section-title"><h2>학습 기록</h2><span class="hint">이 기기에만 저장</span></div>' +
       '<div class="card">' +
@@ -2010,6 +2017,102 @@ let diaryDraft = null;
 function diaryFor(key) { return (S.diary && S.diary[key]) ? S.diary[key] : null; }
 function diarySorted() { return Object.keys(S.diary || {}).sort().reverse(); }
 
+/* ---------- 첨삭용 복사 ----------
+   일기를 채팅창에 붙여넣어 첨삭을 받을 수 있는 형식으로 만든다. */
+let copySheetBack = false;
+function proofreadBlock(date, mood, weather, jp, ko) {
+  const d = String(date || '').trim() || dkey();
+  const meta = [String(mood || '').replace(/\s+/g, ''), String(weather || '').replace(/\s+/g, '')]
+    .filter(Boolean).join(' ');
+  const lines = [
+    '[일본어 일기 첨삭 부탁해요]',
+    '날짜: ' + d + (meta ? ' (' + meta + ')' : ''),
+    '일본어: ' + String(jp || '').trim()
+  ];
+  const k = String(ko || '').trim();
+  if (k) lines.push('한국어 메모: ' + k);
+  return lines.join('\n');
+}
+function legacyCopy(text) {
+  let ok = false;
+  try {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.setAttribute('readonly', '');
+    ta.style.position = 'fixed';
+    ta.style.top = '-1000px';
+    ta.style.left = '0';
+    ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.focus();
+    ta.select();
+    try { ta.setSelectionRange(0, ta.value.length); } catch (e) {}
+    ok = document.execCommand('copy');
+    document.body.removeChild(ta);
+  } catch (e) { ok = false; }
+  return ok;
+}
+function flashCopied(btn) {
+  if (!btn || !btn.dataset) return;
+  if (!btn.dataset.copyLabel) btn.dataset.copyLabel = btn.textContent;
+  btn.textContent = '✅ 복사했어요';
+  btn.classList.add('on');
+  clearTimeout(btn._copyTimer);
+  btn._copyTimer = setTimeout(function () {
+    btn.textContent = btn.dataset.copyLabel;
+    btn.classList.remove('on');
+  }, 1600);
+}
+function copyProofreadRequest(text, btn, backToDiary) {
+  const done = function (ok) {
+    if (ok) {
+      toast('복사됐어요! 채팅창에 붙여넣기 해주세요');
+      flashCopied(btn);
+    } else {
+      showCopySheet(text, backToDiary);
+    }
+  };
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(text).then(function () { done(true); }, function () { done(legacyCopy(text)); });
+  } else {
+    done(legacyCopy(text));
+  }
+}
+/* 클립보드가 막힌 환경(비보안 컨텍스트·권한 거부)에서는 직접 고를 수 있게 보여준다 */
+function showCopySheet(text, backToDiary) {
+  copySheetBack = !!backToDiary;
+  openSheet(
+    '<div class="quiz-head"><b>첨삭용 문장</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<p style="font-size:12px;color:var(--ink-3);line-height:1.6">이 브라우저에서 자동 복사가 막혔어요.<br>아래 내용을 길게 눌러 전체 선택 후 복사해 주세요.</p>' +
+    '<textarea class="field" id="copyFallback" readonly style="min-height:150px;font-size:13px;margin-top:10px">' + esc(text) + '</textarea>' +
+    '<button class="btn btn-copy btn-block" style="margin-top:10px" data-copysheet="1">다시 복사 시도</button>'
+  );
+  const ta = $('#copyFallback');
+  if (ta) { try { ta.focus(); ta.setSelectionRange(0, ta.value.length); } catch (e) {} }
+}
+function copyDiarySheet() {
+  syncDiaryInputs();
+  if (!diaryDraft) return;
+  const jp = String(diaryDraft.text || '').trim();
+  if (!jp) {
+    toast('일본어 일기를 먼저 입력해 주세요');
+    const ta = $('#diaryText');
+    if (ta) ta.focus();
+    return;
+  }
+  copyProofreadRequest(
+    proofreadBlock(diaryDraft.date, diaryDraft.mood, diaryDraft.weather, jp, diaryDraft.ko),
+    document.querySelector('[data-dcopy]'),
+    true
+  );
+}
+function copyDiaryEntry(key, btn) {
+  const e = diaryFor(key);
+  const jp = e && String(e.text || '').trim();
+  if (!jp) { toast('일본어 일기가 비어 있어요. 먼저 일기를 써 주세요'); return; }
+  copyProofreadRequest(proofreadBlock(key, e.mood, e.weather, jp, e.ko), btn, false);
+}
+
 function openDiary(key) {
   const k = key || dkey();
   const e = diaryFor(k);
@@ -2059,6 +2162,8 @@ function renderDiarySheet() {
     '</div>' +
     '<label class="field-label" for="diaryKo">한국어 메모<span>선택</span></label>' +
     '<textarea class="field" id="diaryKo" style="min-height:64px" placeholder="나중에 보기 좋게 한국어로 적어두세요">' + esc(diaryDraft.ko) + '</textarea>' +
+    '<button class="btn btn-copy btn-block" style="margin-top:12px" data-dcopy="1">📋 첨삭용으로 복사</button>' +
+    '<p class="copy-hint">채팅창에 붙여넣으면 첨삭을 받을 수 있는 형식으로 복사돼요</p>' +
     '<div class="q-foot">' + (existing ? '<button class="btn btn-danger" data-ddel="' + esc(k) + '">삭제</button>' : '') +
       '<button class="btn btn-primary" data-dsave="1">저장</button></div>' +
     (list.length ? '<button class="btn btn-ghost btn-block" style="margin-top:8px" data-diary-list="1">지난 일기 ' + list.length + '편 보기</button>' : '')
@@ -2146,6 +2251,7 @@ function openDiaryList() {
       (e.ko ? '<div class="diary-ko">' + esc(e.ko) + '</div>' : '') +
       '<div class="ex-actions" style="margin-top:8px">' +
         '<button class="mini-btn" data-dspeak="' + esc(k) + '">🔊</button>' +
+        '<button class="mini-btn" data-dcopykey="' + esc(k) + '" title="첨삭용으로 복사" aria-label="첨삭용으로 복사">📋 첨삭용</button>' +
         '<button class="mini-btn" data-dedit="' + esc(k) + '">✎ 수정</button>' +
         '<button class="mini-btn" data-ddel="' + esc(k) + '">🗑 삭제</button>' +
       '</div></div>';
@@ -2208,6 +2314,8 @@ function onTodayClick(e) {
     speak(e && e.text ? e.text : '');
     return;
   }
+  const dcp = t.closest('[data-dcopykey]');
+  if (dcp) { copyDiaryEntry(dcp.dataset.dcopykey, dcp); return; }
   const go = t.closest('[data-goto]');
   if (go) { switchTab(go.dataset.goto); return; }
   const sp = t.closest('[data-speak-slow]');
@@ -2436,6 +2544,8 @@ function onReviewClick(e) {
   if (dl) { openDiaryList(); return; }
   const dw = t.closest('[data-diary]');
   if (dw) { openDiary(dw.dataset.diary); return; }
+  const dcp = t.closest('[data-dcopykey]');
+  if (dcp) { copyDiaryEntry(dcp.dataset.dcopykey, dcp); return; }
   const back = t.closest('[data-backup]');
   if (back) {
     const k = back.dataset.backup;
@@ -2479,7 +2589,13 @@ function onSheetClick(e) {
     return;
   }
   if (t.closest('[data-cancel]')) { closeSheet(); return; }
-  if (t.closest('[data-close]')) { closeSheet(); return; }
+  if (t.closest('[data-close]')) {
+    const back = copySheetBack;
+    copySheetBack = false;
+    closeSheet();
+    if (back && diaryDraft) renderDiarySheet();
+    return;
+  }
   const dlist = t.closest('[data-diary-list]');
   if (dlist) { openDiaryList(); return; }
   const dnew = t.closest('[data-diary]');
@@ -2492,6 +2608,29 @@ function onSheetClick(e) {
   if (dtp) { insertTemplate(DIARY_TEMPLATES[Number(dtp.dataset.dtpl)]); return; }
   const dsv = t.closest('[data-dsave]');
   if (dsv) { saveDiary(); return; }
+  const dcp = t.closest('[data-dcopy]');
+  if (dcp) { copyDiarySheet(); return; }
+  const dcpk = t.closest('[data-dcopykey]');
+  if (dcpk) { copyDiaryEntry(dcpk.dataset.dcopykey, dcpk); return; }
+  const cps = t.closest('[data-copysheet]');
+  if (cps) {
+    const ta = $('#copyFallback');
+    const txt = ta ? ta.value : '';
+    if (!txt) return;
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(txt).then(function () {
+        toast('복사됐어요! 채팅창에 붙여넣기 해주세요');
+      }, function () {
+        if (legacyCopy(txt)) toast('복사됐어요! 채팅창에 붙여넣기 해주세요');
+        else toast('자동 복사가 안 돼요. 내용을 길게 눌러 복사해 주세요');
+      });
+    } else if (legacyCopy(txt)) {
+      toast('복사됐어요! 채팅창에 붙여넣기 해주세요');
+    } else {
+      toast('자동 복사가 안 돼요. 내용을 길게 눌러 복사해 주세요');
+    }
+    return;
+  }
   const ddel = t.closest('[data-ddel]');
   if (ddel) { deleteDiary(ddel.dataset.ddel); return; }
   const dedit = t.closest('[data-dedit]');
