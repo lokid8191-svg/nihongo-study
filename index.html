@@ -546,12 +546,11 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 .hm-bar{flex:1;height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
 .hm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#4E8A76);transition:width .3s ease}
 .hm-chips{display:grid;grid-template-columns:repeat(3,1fr);gap:5px;margin-top:7px}
-.hm-chip{display:flex;align-items:center;gap:4px;min-width:0;min-height:27px;padding:0 7px;border-radius:9px;
-  border:1px solid var(--line);background:var(--surface-2);font-size:10.5px;font-weight:600;color:var(--ink-2);text-align:left}
-.hm-chip>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.hm-chip .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid #CEC8BD;background:var(--surface);flex:none;display:grid;place-items:center;font-size:9px;line-height:1;color:#fff;font-weight:800}
+.hm-chip{display:flex;align-items:center;gap:3px;min-width:0;min-height:27px;padding:0 7px;border-radius:9px;
+  border:1px solid var(--line);background:var(--surface-2);font-size:10px;font-weight:700;color:var(--ink-2);text-align:left;letter-spacing:-.1px}
+.hm-chip .lbl{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-chip.on{border-color:#BFD9CE;background:var(--primary-soft);color:var(--primary)}
-.hm-chip.on .dot{background:var(--primary);border-color:var(--primary)}
+.hm-chip.on::before{content:"✓";flex:none;font-size:9.5px;font-weight:800}
 .hm-chip:active{transform:scale(.97)}
 /* 식단 · 수분 */
 .hm-gauges{display:flex;flex-direction:column;gap:7px;margin-top:8px}
@@ -589,8 +588,9 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 .hm-fr span b{color:var(--primary);font-weight:800;margin-left:1px}
 .hm-fr span.warn{background:#FDF3E7;border-color:#F0DCC0;color:#9A6B1E}
 .hm-fr span.warn b{color:#9A6B1E}
-.hm-fr-line{font-size:10.5px;color:var(--ink-2);margin-top:4px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.hm-fr-line b{font-weight:800;color:var(--ink)}
+.hm-fr-line{display:flex;align-items:center;font-size:10px;color:var(--ink-2);margin-top:6px;line-height:1.45;min-width:0}
+.hm-fr-line b{flex:none;font-weight:700;color:var(--ink)}
+.hm-fr-line .hl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-fr-line.warn{color:#9A6B1E;font-weight:700}
 
 @media (max-width:360px){
@@ -1654,9 +1654,8 @@ function homeRoutineChipsHTML(k) {
   return routineItems().map(function (it) {
     const on = !!(day && day.checks[it.id]);
     return '<button class="hm-chip' + (on ? ' on' : '') + '" data-hrtoggle="' + esc(it.id) + '" aria-pressed="' + on +
-      '" title="' + esc(it.label) + '">' +
-      '<span class="dot" aria-hidden="true">' + (on ? '✓' : '') + '</span>' +
-      '<span>' + esc(it.icon || '·') + ' ' + esc(it.label) + '</span></button>';
+      '" title="' + esc(it.icon || '') + ' ' + esc(it.label) + '">' +
+      '<span class="lbl">' + esc(it.label) + '</span></button>';
   }).join('');
 }
 /* 홈 체크는 언제나 '오늘' 기록을 바꿉니다 (루틴 탭의 날짜 이동과 무관) */
@@ -1768,8 +1767,9 @@ function renderHome() {
     .map(function (x) { return x.it; });
   /* 냉장고 한 줄 알림: 개수 요약 + 유통기한 임박(없으면 주요 재고) */
   const frBits = [];
+  let frCounts = '아직 담긴 재료가 없어요';
   if (live.length) {
-    frBits.push('냉동 ' + counts.freezer + ' · 냉장 ' + counts.fridge + ' · 실온 ' + counts.room);
+    frCounts = '냉동 ' + counts.freezer + ' · 냉장 ' + counts.fridge + ' · 실온 ' + counts.room;
     if (expiring.length) {
       const x = expiring[0];
       frBits.push('⏳ ' + x.it.name + ' ' +
@@ -1780,10 +1780,9 @@ function renderHome() {
         return it.name + ' ' + it.qty;
       }).join(' · '));
     }
-  } else {
-    frBits.push('아직 담긴 재료가 없어요');
   }
-  const frLine = frBits.join(' · ');
+  const frHl = frBits.join(' · ');
+  const frLine = frCounts + (frHl ? ' · ' + frHl : '');
 
   host.innerHTML =
     '<div class="view-inner hm-view"><div class="hm-wrap">' +
@@ -1845,7 +1844,10 @@ function renderHome() {
       '<div class="hm-card">' +
         '<div class="hm-h"><span class="t">🧊 냉장고</span>' +
           '<button class="link" data-goto="fridge">냉장고 보기 ›</button></div>' +
-        '<div class="hm-fr-line' + (expiring.length ? ' warn' : '') + '" title="' + esc(frLine) + '">🧊 ' + esc(frLine) + '</div>' +
+        '<div class="hm-fr-line' + (expiring.length ? ' warn' : '') + '" title="' + esc(frLine) + '">' +
+          '<b>🧊 ' + esc(frCounts) + '</b>' +
+          (frHl ? '<span class="hl"> · ' + esc(frHl) + '</span>' : '') +
+        '</div>' +
       '</div>' +
 
     '</div></div>';
