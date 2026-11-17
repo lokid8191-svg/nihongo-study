@@ -3071,6 +3071,76 @@ function flushMemo(silent) {
   if (st) st.textContent = silent ? '저장했어요' : (p.value.trim() ? '저장했어요 · ' + p.value.trim().length + '자' : '비었어요');
 }
 
+/* 자세한 일기: 노출 창(읽기 카드)과 작성 창(바텀시트) 분리.
+   저장 위치는 예전 그대로 routine.days[날짜].memo 라, 이미 쓴 메모가 그대로 남습니다. */
+let rMemoDraft = null, rMemoDraftTimer = null;
+function routineMemoDateLabel(k) {
+  const d = parseDkey(k);
+  const wd = ['일', '월', '화', '수', '목', '금', '토'];
+  return (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + wd[d.getDay()] + '요일';
+}
+function setRoutineMemoState(msg) {
+  const st = document.getElementById('rMemoState');
+  if (st) st.textContent = msg || '';
+}
+function flushRoutineMemo(silent) {
+  if (!rMemoDraft) return;
+  const d = routineDay(rMemoDraft.date, true);
+  const v = String(rMemoDraft.value || '');
+  if (d.memo !== v) { d.memo = v; save(); }
+  setRoutineMemoState(silent ? '저장했어요' : (v.trim() ? v.trim().length + '자 저장됨' : ''));
+}
+function openRoutineMemo(key) {
+  const k = key || routineDate;
+  rMemoDraft = { date: k, value: String(routineDay(k, true).memo || '') };
+  renderRoutineMemoSheet();
+}
+function renderRoutineMemoSheet() {
+  if (!rMemoDraft) return;
+  const k = rMemoDraft.date;
+  const existing = String(routineDay(k).memo || '').trim();
+  openSheet(
+    '<div class="quiz-head"><b>자세한 일기</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<p class="sheet-date">' + esc(routineMemoDateLabel(k)) + ' · 이 기기의 브라우저에만 저장돼요</p>' +
+    '<textarea class="field" id="rMemo" placeholder="오늘 하루를 조금 더 자세히 남겨보세요. (선택)" style="min-height:150px">' + esc(rMemoDraft.value) + '</textarea>' +
+    '<div class="memo-state" id="rMemoState">' + (existing ? existing.length + '자 저장됨' : '') + '</div>' +
+    '<p class="copy-hint">적다가 잠깐 닫아도 자동 저장돼요</p>' +
+    '<div class="q-foot">' + (existing ? '<button class="btn btn-danger" data-rmemodel="1">지우기</button>' : '') +
+      '<button class="btn btn-primary" data-rmemosave="1">저장</button></div>'
+  );
+  const ta = $('#rMemo');
+  if (ta) {
+    ta.addEventListener('input', function () {
+      rMemoDraft.value = ta.value;
+      clearTimeout(rMemoDraftTimer);
+      rMemoDraftTimer = setTimeout(function () { flushRoutineMemo(false); }, 700);
+    });
+    try { ta.focus(); } catch (e) {}
+  }
+}
+function saveRoutineMemo() {
+  if (!rMemoDraft) return;
+  const ta = $('#rMemo');
+  if (ta) rMemoDraft.value = ta.value;
+  clearTimeout(rMemoDraftTimer);
+  flushRoutineMemo(true);
+  const k = rMemoDraft.date;
+  rMemoDraft = null;
+  closeSheet();
+  if (k === routineDate) renderRoutine();
+  toast('자세한 일기를 저장했어요');
+}
+function clearRoutineMemo(k) {
+  const d = routineDay(k, true);
+  d.memo = '';
+  save();
+  clearTimeout(rMemoDraftTimer);
+  rMemoDraft = null;
+  closeSheet();
+  if (k === routineDate) renderRoutine();
+  toast('자세한 일기를 지웠어요');
+}
+
 function toggleRoutineItem(id) {
   flushMemo(true);
   const d = routineDay(routineDate, true);
@@ -3361,6 +3431,8 @@ function onRoutineClick(e) {
   if (ed) { flushMemo(true); rItemDelConfirm = null; renderRoutineItemSheet(); return; }
   const dy = t.closest('[data-rdiary]');
   if (dy) { flushMemo(true); openDiary(dy.dataset.rdiary); return; }
+  const rm = t.closest('[data-rmemo]');
+  if (rm) { flushMemo(true); openRoutineMemo(rm.dataset.rmemo); return; }
   const wt = t.closest('[data-wtheme]');
   if (wt) { workoutTheme = wt.dataset.wtheme; flushMemo(true); renderRoutine(); return; }
   const wp = t.closest('[data-wpick]');
@@ -4654,6 +4726,12 @@ function onSheetClick(e) {
   if (onRoutineSheetClick(e)) return;
   if (onFridgeSheetClick(e)) return;
   if (onDietSheetClick(e)) return;
+  if (t.closest('[data-rmemosave]')) { saveRoutineMemo(); return; }
+  if (t.closest('[data-rmemodel]')) {
+    const mk = rMemoDraft ? rMemoDraft.date : routineDate;
+    askConfirm('자세한 일기 지우기', '이 날 적어둔 메모를 지울까요?', '지우기', function () { clearRoutineMemo(mk); });
+    return;
+  }
   if (t.closest('[data-qnext]')) {
     Q.i++;
     Q.answered = false;
