@@ -2871,6 +2871,20 @@ function buddyImage(compact) {
   const pick = BAKUGO_IMAGES[buddyImgIdx % BAKUGO_IMAGES.length] || BAKUGO_IMAGES[0];
   return (compact && pick.a) ? pick.a : pick.p;
 }
+/* 사진 파일이 아직 커밋되지 않았거나 주소가 깨진 경우: 그 항목을 목록에서 조용히 빼고 다음 사진으로 넘어갑니다.
+   (파일을 나중에 올리면 자동으로 다시 로테이션에 들어옵니다) */
+function buddyImageBroken(img) {
+  if (!img || !img.getAttribute) return;
+  const bad = img.getAttribute('src') || '';
+  for (let i = 0; i < BAKUGO_IMAGES.length; i++) {
+    if (BAKUGO_IMAGES[i].p === bad) { BAKUGO_IMAGES.splice(i, 1); break; }
+  }
+  if (!BAKUGO_IMAGES.length) return;
+  buddyImgIdx = Math.floor(Math.random() * BAKUGO_IMAGES.length);
+  const next = buddyImage(false);
+  if (next === bad) return;
+  img.src = next;
+}
 function buddyNextImage() {
   const n = BAKUGO_IMAGES.length;
   if (n < 2) return;
@@ -4752,6 +4766,11 @@ function init() {
     if (b) switchTab(b.dataset.tab);
   });
   $('#streakChip').addEventListener('click', function () { switchTab('review'); });
+  /* 바쿠고 사진 로드 실패는 조용히 다음 사진으로 (사진 목록에 아직 없는 파일이 있어도 화면이 비지 않게) */
+  document.addEventListener('error', function (e) {
+    const el = e.target;
+    if (el && el.classList && el.classList.contains('buddy-img')) buddyImageBroken(el);
+  }, true);
   $('#view-home').addEventListener('click', onHomeClick);
   $('#view-studytoday').addEventListener('click', onHomeClick);
   $('#view-routine').addEventListener('click', onRoutineClick);
