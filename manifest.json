@@ -12,8 +12,8 @@
     "minimal-ui"
   ],
   "orientation": "portrait",
-  "background_color": "#F7F5F0",
-  "theme_color": "#F7F5F0",
+  "background_color": "#F3F4F6",
+  "theme_color": "#F3F4F6",
   "categories": [
     "education",
     "productivity"
