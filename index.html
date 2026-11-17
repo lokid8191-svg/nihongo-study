@@ -355,6 +355,9 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .diary-empty{font-size:13px;color:var(--ink-2);line-height:1.75}
 .diary-ex{font-size:12.5px;color:var(--ink-3);margin-top:9px;line-height:1.6}
 .diary-ex b{color:var(--primary);font-weight:600}
+.diary-note{font-size:14px;font-weight:500;line-height:1.75;letter-spacing:.2px;white-space:pre-wrap;word-break:break-word}
+.diary-actions{display:flex;gap:6px;margin-top:11px;flex-wrap:wrap}
+.sheet-date{font-size:12px;color:var(--ink-3);margin:2px 0 4px;line-height:1.6}
 .field-label{display:block;font-size:11.5px;font-weight:700;color:var(--ink-2);margin:14px 0 6px;letter-spacing:.1px}
 .field-label span{font-weight:500;color:var(--ink-3);margin-left:4px}
 input[type="date"].field{width:100%;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:0 12px;font-family:inherit;font-size:14px}
@@ -533,7 +536,7 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 .hm-h .link:active{color:var(--primary)}
 /* 스터디 메이트: 루틴 탭과 같은 큰 세로 포토 프레임 */
 .buddy.hm-buddy-card{padding:10px 11px}
-.buddy.hm-buddy-card .buddy-jp{text-wrap:balance}
+.buddy.hm-buddy-card .buddy-jp{font-size:12.5px;line-height:1.5;text-wrap:balance}
 .hm-bd-date{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--ink-3);line-height:1.3;margin-bottom:1px}
 .hm-bd-date .hm-fire{color:var(--accent);font-weight:800}
 .hm-bd-date b{font-weight:700;color:var(--ink-2);font-size:10.5px}
@@ -2811,7 +2814,57 @@ const BAKUGO_IMAGES = [
   { p: 'assets/bakugo-p3.jpg', a: 'assets/bakugo-a3.jpg', t: '교복' },
   { p: 'assets/bakugo-p4.jpg', a: 'assets/bakugo-a4.jpg', t: '교복' },
   { p: 'assets/bakugo-p5.jpg', a: 'assets/bakugo-a5.jpg', t: '사복' },
-  { p: 'assets/bakugo-p6.jpg', a: 'assets/bakugo-a6.jpg', t: '사복' }
+  { p: 'assets/bakugo-p6.jpg', a: 'assets/bakugo-a6.jpg', t: '사복' },
+  { p: 'assets/bakugo-p7.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p8.jpg', t: '사복' },
+  { p: 'assets/bakugo-p9.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p10.jpg', t: '사복' },
+  { p: 'assets/bakugo-p11.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p12.jpg', t: '사복' },
+  { p: 'assets/bakugo-p13.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p14.jpg', t: '사복' },
+  { p: 'assets/bakugo-p15.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p16.jpg', t: '사복' },
+  { p: 'assets/bakugo-p17.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p18.jpg', t: '사복' },
+  { p: 'assets/bakugo-p19.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p20.jpg', t: '사복' },
+  { p: 'assets/bakugo-p21.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p22.jpg', t: '사복' },
+  { p: 'assets/bakugo-p23.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p24.jpg', t: '사복' },
+  { p: 'assets/bakugo-p25.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p26.jpg', t: '교복' },
+  { p: 'assets/bakugo-p27.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p28.jpg', t: '사복' },
+  { p: 'assets/bakugo-p29.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p30.jpg', t: '교복' },
+  { p: 'assets/bakugo-p31.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p32.jpg', t: '사복' },
+  { p: 'assets/bakugo-p33.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p34.jpg', t: '교복' },
+  { p: 'assets/bakugo-p35.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p36.jpg', t: '사복' },
+  { p: 'assets/bakugo-p37.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p38.jpg', t: '교복' },
+  { p: 'assets/bakugo-p39.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p40.jpg', t: '사복' },
+  { p: 'assets/bakugo-p41.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p42.jpg', t: '교복' },
+  { p: 'assets/bakugo-p43.jpg', t: '사복' },
+  { p: 'assets/bakugo-p44.jpg', t: '정장' },
+  { p: 'assets/bakugo-p45.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p46.jpg', t: '교복' },
+  { p: 'assets/bakugo-p47.jpg', t: '사복' },
+  { p: 'assets/bakugo-p48.jpg', t: '정장' },
+  { p: 'assets/bakugo-p49.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p50.jpg', t: '교복' },
+  { p: 'assets/bakugo-p51.jpg', t: '사복' },
+  { p: 'assets/bakugo-p52.jpg', t: '정장' },
+  { p: 'assets/bakugo-p53.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p54.jpg', t: '교복' },
+  { p: 'assets/bakugo-p55.jpg', t: '사복' },
+  { p: 'assets/bakugo-p56.jpg', t: '정장' }
 ];
 let buddyImgIdx = Math.floor(Math.random() * BAKUGO_IMAGES.length);
 function buddyImage(compact) {
@@ -3093,6 +3146,7 @@ function renderRoutine() {
 
   const hasDiaryItem = items.some(function (it) { return it.id === 'diary'; });
   const memoVal = day.memo || '';
+  const memoDayLabel = (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + wd[dt.getDay()] + '요일';
   const moodNow = routineMoodKey(day.mood);
 
   host.innerHTML =
@@ -3144,9 +3198,18 @@ function renderRoutine() {
       '<div class="card"><div class="mood-grid">' + moods + '</div></div>' +
 
       '<div class="section-title"><h2>자세한 일기</h2><span class="hint">이 날의 메모</span></div>' +
-      '<div class="card">' +
-        '<textarea class="field" id="rMemo" placeholder="오늘 하루를 조금 더 자세히 남겨보세요. (선택)" style="min-height:92px">' + esc(memoVal) + '</textarea>' +
-        '<div class="memo-state" id="rMemoState">' + (memoVal ? memoVal.trim().length + '자 저장됨' : '') + '</div>' +
+      '<div class="diary-card">' +
+        (memoVal.trim()
+          ? '<div class="diary-meta"><span class="badge">' + esc(memoDayLabel) + ' 메모</span>' +
+              '<span class="badge">' + memoVal.trim().length + '자</span></div>' +
+            '<div class="diary-note">' + esc(memoVal) + '</div>' +
+            '<div class="diary-actions">' +
+              '<button class="mini-btn" data-rmemo="' + routineDate + '">✏️ 수정</button>' +
+            '</div>'
+          : '<p class="diary-empty">이 날 하루를 조금 더 자세히 남겨보세요.<br>' +
+              '<span class="diary-ex"><b>오늘은 아침에 30분 걸었어요. 저녁엔 일본어 단어 10개를 외웠어요.</b></span></p>' +
+            '<button class="btn btn-primary btn-block" style="margin-top:13px" data-rmemo="' + routineDate + '">✍️ 일기 쓰기</button>'
+        ) +
       '</div>' +
 
       '<div class="stat-grid">' +
