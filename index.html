@@ -521,6 +521,68 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 .diet-mini .dmin-bar i.over{background:var(--bad)}
 .diet-mini .dmin-s{font-size:11.5px;color:var(--ink-3);line-height:1.5}
 
+/* ---------- 홈: 하루치 대시보드 ---------- */
+.hm-wrap{display:flex;flex-direction:column;gap:10px}
+.hm-card{background:var(--surface);border:1px solid var(--line);border-radius:15px;box-shadow:var(--shadow);padding:11px 12px}
+.hm-h{display:flex;align-items:center;gap:6px;min-height:18px}
+.hm-h .t{flex:1;min-width:0;font-size:12.5px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;letter-spacing:.1px}
+.hm-h .v{flex:none;font-size:11.5px;font-weight:800;color:var(--primary);letter-spacing:-.2px;white-space:nowrap}
+.hm-h .v small{font-size:10px;font-weight:700;color:var(--ink-3);margin-left:3px;letter-spacing:0}
+.hm-h .link{flex:none;font-size:10.5px;font-weight:700;color:var(--ink-3);padding:3px 0 3px 4px;white-space:nowrap}
+.hm-h .link:active{color:var(--primary)}
+/* 스터디 메이트: 루틴 탭과 같은 큰 세로 포토 프레임 */
+.buddy.hm-buddy-card{padding:11px 12px}
+.hm-bd-date{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:700;color:var(--ink-3);line-height:1.3;margin-bottom:1px}
+.hm-bd-date .hm-fire{color:var(--accent);font-weight:800}
+/* 루틴 요약 */
+.hm-rt{display:flex;align-items:center;gap:8px;margin-top:7px}
+.hm-rt b{font-size:14px;font-weight:800;letter-spacing:-.3px;color:var(--primary);white-space:nowrap}
+.hm-rt b small{font-size:10.5px;font-weight:700;color:var(--ink-3);letter-spacing:0}
+.hm-bar{flex:1;height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.hm-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#4E8A76);transition:width .3s ease}
+.hm-chips{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+.hm-chip{display:inline-flex;align-items:center;gap:4px;max-width:100%;min-height:29px;padding:0 8px;border-radius:9px;
+  border:1px solid var(--line);background:var(--surface-2);font-size:11px;font-weight:600;color:var(--ink-2)}
+.hm-chip>span:last-child{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.hm-chip .dot{width:14px;height:14px;border-radius:50%;border:1.5px solid #CEC8BD;background:var(--surface);flex:none;display:grid;place-items:center;font-size:9px;line-height:1;color:#fff;font-weight:800}
+.hm-chip.on{border-color:#BFD9CE;background:var(--primary-soft);color:var(--primary)}
+.hm-chip.on .dot{background:var(--primary);border-color:var(--primary)}
+.hm-chip:active{transform:scale(.97)}
+/* 식단 · 수분 */
+.hm-gauges{display:flex;flex-direction:column;gap:7px;margin-top:8px}
+.hm-g-t{display:flex;align-items:baseline;gap:6px;font-size:10.5px;font-weight:700;color:var(--ink-3)}
+.hm-g-t b{margin-left:auto;font-size:11.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;white-space:nowrap}
+.hm-g-t b small{font-size:10px;font-weight:700;color:var(--ink-3);margin-left:2px;letter-spacing:0}
+.hm-track{position:relative;height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;margin-top:3px}
+.hm-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#4E8A76)}
+.hm-track i.over{background:var(--bad)}
+.hm-zone{position:absolute;top:0;bottom:0;background:rgba(44,93,82,.13);border-left:1px solid rgba(44,93,82,.3);border-right:1px solid rgba(44,93,82,.3)}
+.hm-water{display:flex;align-items:center;gap:5px;margin-top:9px;padding-top:8px;border-top:1px dashed var(--line);font-size:12px}
+.hm-water b{font-size:13px;font-weight:800;letter-spacing:-.2px}
+.hm-water small{font-size:10.5px;color:var(--ink-3);font-weight:700}
+.hm-water .sp{flex:1}
+.hm-water .btn{min-height:30px;padding:0 9px;font-size:11px;border-radius:9px}
+/* 운동 */
+.hm-wo-t{font-size:12.5px;font-weight:700;line-height:1.4;margin-top:6px}
+.hm-wo-s{font-size:10.5px;color:var(--ink-3);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-acts{display:flex;gap:6px;margin-top:8px}
+.hm-acts .btn{flex:1;min-height:32px;font-size:11px;border-radius:9px;padding:0 8px}
+/* 일본어 */
+.hm-jp{display:flex;align-items:center;gap:6px;margin-top:7px;font-size:11px;color:var(--ink-2);flex-wrap:wrap}
+.hm-jp .st{font-weight:800;color:var(--accent);font-size:12.5px;letter-spacing:-.2px}
+.hm-jp .sep{color:#DCD6CB}
+.hm-jp .dy{font-weight:600}
+.hm-jp .dy.on{color:var(--primary);font-weight:700}
+/* 냉장고 */
+.hm-fr{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.hm-fr span{font-size:10.5px;font-weight:700;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:2px 7px}
+.hm-fr span b{color:var(--primary);font-weight:800;margin-left:2px}
+.hm-fr span.warn{background:#FDF3E7;border-color:#F0DCC0;color:#9A6B1E}
+.hm-fr span.warn b{color:#9A6B1E}
+.hm-fr-line{font-size:10.5px;color:var(--ink-2);margin-top:5px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.hm-fr-line b{font-weight:800;color:var(--ink)}
+.hm-fr-line.warn{color:#9A6B1E;font-weight:700}
+
 @media (max-width:360px){
   .brand h1{font-size:15px}
   .kana-cell{height:56px}
@@ -528,6 +590,8 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
   .tab{font-size:9.5px}
   .tab svg{width:19px;height:19px}
   .rt-t{font-size:12.5px}
+  .hm-chip{font-size:10.5px;padding:0 7px}
+  .hm-chip .dot{width:13px;height:13px}
 }
 </style>
 </head>
@@ -546,9 +610,10 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
   </header>
 
   <main>
-    <section class="view active" id="view-today" aria-label="오늘"></section>
+    <section class="view active" id="view-home" aria-label="홈"></section>
     <section class="view" id="view-routine" aria-label="데일리 루틴"></section>
     <section class="view" id="view-fridge" aria-label="냉장고"></section>
+    <section class="view" id="view-studytoday" aria-label="오늘의 학습"></section>
     <section class="view" id="view-kana" aria-label="가나와 쓰기"></section>
     <section class="view" id="view-words" aria-label="단어와 한자"></section>
     <section class="view" id="view-gram" aria-label="문법과 회화"></section>
@@ -556,9 +621,9 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
   </main>
 
   <nav class="tabbar" id="tabbar" aria-label="탭">
-    <button class="tab active" data-tab="today" aria-current="page">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-      <span>오늘</span>
+    <button class="tab active" data-tab="home" aria-current="page">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M3.5 10.5 12 4l8.5 6.5"/><path d="M5.5 9.5v9a1.5 1.5 0 0 0 1.5 1.5h10a1.5 1.5 0 0 0 1.5-1.5v-9"/><path d="M10 20v-5h4v5"/></svg>
+      <span>홈</span>
     </button>
     <button class="tab" data-tab="routine">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M10 6h10M10 12h10M10 18h10"/><path d="M4 6l1.5 1.5L8.5 4.5"/><circle cx="5" cy="12" r="1.3"/><circle cx="5" cy="18" r="1.3"/></svg>
@@ -1217,7 +1282,8 @@ function markStudy(kind) {
   updateStreak();
   save();
   updateStreakChip();
-  if (currentTab === 'today') renderToday();
+  if (currentTab === 'home') renderHome();
+  else if (currentTab === 'studytoday') renderStudyToday();
 }
 
 /* ---------------- 음성 ---------------- */
@@ -1549,8 +1615,8 @@ function todayWords() {
 }
 function todaySentence() { return SENTENCES[dayIndex() % SENTENCES.length]; }
 
-let currentTab = 'today';
-let studyTab = 'kana';
+let currentTab = 'home';
+let studyTab = 'studytoday';
 function updateStreakChip() {
   const el = $('#streakNum');
   if (el) el.textContent = String(S.streak || 0);
@@ -1561,114 +1627,280 @@ function updateStreakChip() {
     sub.textContent = done === 3 ? '오늘 루틴 완료 · 내일 또 봐요' : 'JLPT N5 · 매일 5분';
   }
 }
-function renderToday() {
-  const host = $('#view-today');
+/* ---------------- 홈: 하루치 대시보드 ---------------- */
+/* 미니 게이지: fill=0~100(%), zone=[시작%,끝%] 목표 범위 표시 */
+function hmGaugeHTML(label, valueHTML, fill, opts) {
+  const o = opts || {};
+  const w = Math.max(0, Math.min(100, Math.round(fill * 10) / 10));
+  return '<div class="hm-g">' +
+    '<div class="hm-g-t"><span>' + label + '</span><b>' + valueHTML + '</b></div>' +
+    '<div class="hm-track"><i class="' + (o.over ? 'over' : '') + '" style="width:' + w + '%"></i>' +
+      (o.zone ? '<span class="hm-zone" style="left:' + o.zone[0] + '%;width:' + Math.max(0, o.zone[1] - o.zone[0]) + '%"></span>' : '') +
+    '</div></div>';
+}
+/* 홈 루틴 미니 칩: 6개 항목을 그대로 보여주고 눌러서 바로 체크 */
+function homeRoutineChipsHTML(k) {
+  const day = routineDay(k);
+  return routineItems().map(function (it) {
+    const on = !!(day && day.checks[it.id]);
+    return '<button class="hm-chip' + (on ? ' on' : '') + '" data-hrtoggle="' + esc(it.id) + '" aria-pressed="' + on +
+      '" title="' + esc(it.label) + '">' +
+      '<span class="dot" aria-hidden="true">' + (on ? '✓' : '') + '</span>' +
+      '<span>' + esc(it.icon || '·') + ' ' + esc(it.label) + '</span></button>';
+  }).join('');
+}
+/* 홈 체크는 언제나 '오늘' 기록을 바꿉니다 (루틴 탭의 날짜 이동과 무관) */
+function toggleRoutineToday(id) {
+  flushMemo(true);
+  const d = routineDay(dkey(), true);
+  const it = routineItems().filter(function (x) { return x.id === id; })[0];
+  const name = it ? it.label : '체크';
+  if (d.checks[id]) {
+    delete d.checks[id];
+    save();
+    renderHome();
+    toast(name + ' 체크를 해제했어요');
+  } else {
+    d.checks[id] = true;
+    save();
+    renderHome();
+    toast('✓ ' + name);
+  }
+}
+/* 홈 물 한 잔 추가: 언제나 오늘 기록 */
+function homeWaterAdd() {
+  const g = dietGoals();
+  const step = Number(g.waterStepMl) || 500;
+  const day = dietDay(dkey(), true);
+  day.water = Math.round((day.water + step) * 10) / 10;
+  day.edited = true;
+  save();
+  renderHome();
+  toast('💧 물 ' + num1(day.water) + ' mL (+' + step + ')');
+}
+/* 홈 운동 완료 토글: 언제나 오늘 기록 */
+function toggleWorkoutToday(id) {
+  const d = routineDay(dkey(), true);
+  if (d.workout && d.workout.id === id) {
+    delete d.workout;
+    save();
+    renderHome();
+    toast('운동 완료를 취소했어요');
+    return;
+  }
+  d.workout = { id: id, at: Date.now() };
+  const it = routineItems().filter(function (x) { return x.id === 'workout' || /운동/.test(x.label); })[0];
+  if (it) d.checks[it.id] = true;
+  save();
+  renderHome();
+  const w = WORKOUTS.filter(function (x) { return x.id === id; })[0];
+  toast(w ? '운동 완료! ' + workoutMinutes(w) + '분 채웠어요 🏃' : '운동 완료! 🏃');
+}
+function renderHome() {
+  const host = $('#view-home');
+  if (!host) return;
   const now = new Date();
-  const hour = now.getHours();
-  const greet = hour < 11 ? '좋은 아침이에요' : hour < 17 ? '좋은 오후예요' : '좋은 저녁이에요';
+  const k = dkey();
+  const wd = ['일', '월', '화', '수', '목', '금', '토'];
+  const total = routineItems().length;
+  const done = routineDone(k);
+  const pct = total ? Math.round(done / total * 100) : 0;
+
+  /* 식단 · 수분 */
+  const ds = dietState();
+  const g = ds.goals;
+  const dday = ds.days[k];
+  const dt = dietTotals(dday);
+  const water = dday ? dday.water : 0;
+  const step = Number(g.waterStepMl) || 500;
+  const kcalMax = Math.max(g.calories * 1.2, dt.kcal * 1.05, 1);
+  const proMax = Math.max(g.protein[1] * 1.25, dt.protein * 1.05, 1);
+
+  /* 운동 */
+  const wo = workoutFor(k);
+  const rday = routineDay(k);
+  const woDone = !!(rday && rday.workout && rday.workout.id === wo.id);
+
+  /* 일본어 */
+  const dEntry = diaryFor(k);
+
+  /* 냉장고 */
+  const live = fridgeItems().filter(function (it) { return !it.out; });
+  const counts = { freezer: 0, fridge: 0, room: 0 };
+  live.forEach(function (it) { counts[it.place] = (counts[it.place] || 0) + 1; });
+  const expiring = live.map(function (it) { return { it: it, d: daysUntil(it.expires) }; })
+    .filter(function (x) { return x.d !== null && x.d <= 3; })
+    .sort(function (a, b) { return a.d - b.d; });
+  const stocked = live.filter(function (it) { return it.qty; });
+  let frLines = '';
+  if (expiring.length) {
+    const x = expiring[0];
+    frLines += '<div class="hm-fr-line warn">⏳ ' + esc(x.it.name) + ' ' +
+      (x.d < 0 ? Math.abs(x.d) + '일 지남' : x.d === 0 ? '오늘까지' : 'D-' + x.d) +
+      (expiring.length > 1 ? ' 외 ' + (expiring.length - 1) + '개' : '') + '</div>';
+  }
+  if (stocked.length) {
+    frLines += '<div class="hm-fr-line">🍱 ' + stocked.slice(0, 2).map(function (it) {
+      return esc(it.name) + ' <b>' + esc(it.qty) + '</b>';
+    }).join(' · ') + '</div>';
+  }
+  if (!frLines) {
+    frLines = '<div class="hm-fr-line">' + (live.length ? '유통기한 임박한 재료가 없어요' : '아직 담긴 재료가 없어요') + '</div>';
+  }
+
+  host.innerHTML =
+    '<div class="view-inner"><div class="hm-wrap">' +
+
+      /* 1. 스터디 메이트 — 루틴 탭과 같은 큰 세로 포토 프레임 */
+      buddyHTML(done, total, { home: true, dateLine: koreanDate(now) + ' ' + wd[now.getDay()] + '요일' }) +
+
+      /* 2. 오늘의 루틴 */
+      '<div class="hm-card">' +
+        '<div class="hm-h"><span class="t">📋 오늘의 루틴</span>' +
+          '<button class="link" data-goto="routine">전체 보기 ›</button></div>' +
+        '<div class="hm-rt"><b>' + done + '<small> / ' + total + ' · ' + pct + '%</small></b>' +
+          '<span class="hm-bar"><i style="width:' + pct + '%"></i></span></div>' +
+        '<div class="hm-chips">' + homeRoutineChipsHTML(k) + '</div>' +
+      '</div>' +
+
+      /* 3. 오늘의 식단 & 수분 */
+      '<div class="hm-card">' +
+        '<div class="hm-h"><span class="t">🥗 오늘의 식단 & 수분</span>' +
+          '<button class="link" data-goto-diet="1">식단 기록 ›</button></div>' +
+        '<div class="hm-gauges">' +
+          hmGaugeHTML('🔥 칼로리', num1(dt.kcal) + '<small>/ ' + g.calories + ' kcal</small>',
+            dt.kcal / kcalMax * 100, { over: dt.kcal > g.calories }) +
+          hmGaugeHTML('🍗 단백질', num1(dt.protein) + '<small>/ ' + g.protein[0] + '~' + g.protein[1] + 'g</small>',
+            dt.protein / proMax * 100,
+            { over: dt.protein > g.protein[1], zone: [g.protein[0] / proMax * 100, g.protein[1] / proMax * 100] }) +
+        '</div>' +
+        '<div class="hm-water">💧 <b>' + num1(water) + '</b><small>mL</small><span class="sp"></span>' +
+          '<button class="btn btn-sm btn-primary" data-hwater="1">+' + step + 'mL</button></div>' +
+      '</div>' +
+
+      /* 4. 오늘의 5~10분 운동 */
+      '<div class="hm-card">' +
+        '<div class="hm-h"><span class="t">🏃 오늘의 5~10분 운동</span>' +
+          '<span class="v">약 ' + workoutMinutes(wo) + '분<small>' + workoutThemeLabel(wo.theme) + '</small></span></div>' +
+        '<div class="hm-wo-t">' + esc(wo.title) + '</div>' +
+        '<div class="hm-wo-s">' + esc(wo.ch) + (woDone ? ' · 오늘 완료 ✓' : '') + '</div>' +
+        '<div class="hm-acts">' +
+          '<a class="btn btn-sm" href="https://www.youtube.com/watch?v=' + esc(wo.yt) + '" target="_blank" rel="noopener noreferrer">▶ 유튜브</a>' +
+          '<button class="btn btn-sm ' + (woDone ? 'btn-ghost' : 'btn-primary') + '" data-hwo="' + esc(wo.id) + '" aria-pressed="' + woDone + '">' +
+            (woDone ? '✓ 완료됨' : '✓ 완료') + '</button>' +
+        '</div>' +
+      '</div>' +
+
+      /* 5. 오늘의 일본어 */
+      '<div class="hm-card">' +
+        '<div class="hm-h"><span class="t">🇯🇵 오늘의 일본어</span>' +
+          '<button class="link" data-goto="studytoday">공부하러 가기 ›</button></div>' +
+        '<div class="hm-jp">' +
+          '<span class="st">🔥 ' + (S.streak || 0) + '일</span><span>연속 학습</span>' +
+          '<span class="sep">·</span>' +
+          '<span class="dy' + (dEntry ? ' on' : '') + '">' + (dEntry ? '한 줄 일기 작성 완료' : '한 줄 일기 아직') + '</span>' +
+        '</div>' +
+        '<div class="hm-acts">' +
+          (dEntry
+            ? '<button class="btn btn-copy btn-sm" data-dcopykey="' + k + '">📋 첨삭 복사</button>' +
+              '<button class="btn btn-sm" data-diary="' + k + '">✎ 일기 수정</button>'
+            : '<button class="btn btn-primary btn-sm" data-diary="' + k + '">✍️ 일기 쓰기</button>') +
+        '</div>' +
+      '</div>' +
+
+      /* 6. 냉장고 알림 */
+      '<div class="hm-card">' +
+        '<div class="hm-h"><span class="t">🧊 냉장고</span>' +
+          '<button class="link" data-goto="fridge">냉장고 보기 ›</button></div>' +
+        '<div class="hm-fr">' +
+          '<span>🧊 냉동<b>' + counts.freezer + '</b></span>' +
+          '<span>❄️ 냉장<b>' + counts.fridge + '</b></span>' +
+          '<span>🍎 실온<b>' + counts.room + '</b></span>' +
+          (expiring.length ? '<span class="warn">⏳ 임박<b>' + expiring.length + '</b></span>' : '') +
+        '</div>' +
+        frLines +
+      '</div>' +
+
+    '</div></div>';
+}
+
+/* ---------------- 공부 · 오늘의 학습 (기존 오늘 탭의 학습 요소) ---------------- */
+function todayStudyHTML() {
   const day = S.days[dkey()] || {};
-  const done = CHECK_ITEMS.filter(c => day[c.key]).length;
+  const done = CHECK_ITEMS.filter(function (c) { return day[c.key]; }).length;
   const words = todayWords();
   const sent = todaySentence();
   const dEntry = diaryFor(dkey());
   const dCount = Object.keys(S.diary || {}).length;
-  const rTotal = routineItems().length;
-  const rDone = routineDone(dkey());
-  const wd = ['일', '월', '화', '수', '목', '금', '토'];
 
-  let dots = '';
-  for (let i = 6; i >= 0; i--) {
-    const dd = new Date();
-    dd.setDate(dd.getDate() - i);
-    const on = !!S.days[dkey(dd)];
-    dots += '<div class="day-cell"><div class="day-dot ' + (on ? 'on' : '') + '">' + (on ? '✓' : dd.getDate()) + '</div>' +
-      '<div class="day-label">' + wd[dd.getDay()] + '</div></div>';
-  }
-
-  const checks = CHECK_ITEMS.map(c =>
-    '<div class="check-row ' + (day[c.key] ? 'done' : '') + '">' +
+  const checks = CHECK_ITEMS.map(function (c) {
+    return '<div class="check-row ' + (day[c.key] ? 'done' : '') + '">' +
       '<div class="check-circle">' + (day[c.key] ? '✓' : '') + '</div>' +
       '<div class="check-txt"><b>' + c.icon + ' ' + esc(c.label) + '</b><span>' + esc(c.hint) + '</span></div>' +
       '<button class="btn btn-sm ' + (day[c.key] ? 'btn-ghost' : 'btn-primary') + '" data-check="' + c.key + '">' +
         (day[c.key] ? '다시' : '시작') + '</button>' +
-    '</div>'
-  ).join('');
+    '</div>';
+  }).join('');
 
-  const wordRows = words.map(w =>
-    '<div class="word-row">' +
+  const wordRows = words.map(function (w) {
+    return '<div class="word-row">' +
       '<div class="word-main"><div class="word-jp">' + rubyHTML(w.jp, w.kana, true) + '</div>' +
         '<div class="word-sub">' + esc(w.kana) + ' · ' + esc(w.romaji) + '</div></div>' +
       '<div class="word-ko">' + esc(w.ko) + '</div>' +
       '<button class="icon-btn" data-speak="' + esc(w.kana) + '" aria-label="발음">🔊</button>' +
-    '</div>'
-  ).join('');
-
-  host.innerHTML =
-    '<div class="view-inner">' +
-      '<div class="hero">' +
-        '<div class="greet">' + greet + ', 세온 님 · ' + koreanDate(now) + '</div>' +
-        '<div class="streak-line"><div class="streak-num">' + (S.streak || 0) + '</div><div class="streak-msg">' + (S.streak ? '일 연속 학습' : '일 연속 · 오늘부터') + '</div></div>' +
-        '<div class="hero-sub">' + (done === 3 ? '오늘 3개 모두 완료했어요. 멋져요! 🎌' : '오늘 ' + done + '/3 완료 · 남은 5분이면 충분해요') + '</div>' +
-        '<div class="week-row">' + dots + '</div>' +
-      '</div>' +
-
-      buddyHTML(rDone, rTotal, { compact: true }) +
-
-      '<div class="card">' +
-        '<div class="card-head"><h3>오늘의 학습</h3><span class="sub">' + done + ' / 3</span></div>' +
-        '<div class="checklist">' + checks + '</div>' +
-        '<div class="progress"><i style="width:' + (done / 3 * 100) + '%"></i></div>' +
-      '</div>' +
-
-      '<button class="btn btn-accent btn-block" data-routine="1" style="min-height:54px;font-size:15px">⚡ 오늘의 5분 추천 루틴 시작</button>' +
-
-      '<button class="btn btn-block" style="justify-content:space-between;min-height:50px" data-goto="routine">' +
-        '<span>📋 데일리 루틴 · 무드·일기 체크</span>' +
-        '<span class="badge ' + (rTotal && rDone >= rTotal ? 'gold' : 'grey') + '">' + rDone + ' / ' + rTotal + '</span>' +
-      '</button>' +
-
-      workoutMiniHTML() +
-
-      dietMiniHTML() +
-
-      '<div class="section-title"><h2>오늘의 한 줄 일기</h2>' +
-        '<button class="hint" data-diary-list="1" style="color:var(--primary);font-weight:600">지난 일기 ' + dCount + '편 ›</button></div>' +
-      '<div class="diary-card">' +
-        (dEntry
-          ? '<div class="diary-meta"><span class="badge">' + koreanDate(new Date()) + ' ひとこと</span>' +
-              '<span class="badge grey">' + esc(dEntry.mood || '') + ' ' + esc(dEntry.weather || '') + '</span></div>' +
-            '<div class="diary-text">' + esc(dEntry.text || '') + '</div>' +
-            (dEntry.ko ? '<div class="diary-ko">' + esc(dEntry.ko) + '</div>' : '') +
-            '<div class="ex-actions" style="margin-top:12px">' +
-              '<button class="mini-btn" data-diary-speak="' + dkey() + '">🔊 듣기</button>' +
-              '<button class="mini-btn" data-diary="' + dkey() + '">✎ 수정</button>' +
-              '<button class="mini-btn" data-dcopykey="' + dkey() + '">📋 첨삭용으로 복사</button>' +
-              '<button class="mini-btn" data-diary-list="1">모아보기</button>' +
-            '</div>'
-          : '<p class="diary-empty">오늘 하루를 일본어 한 줄로 남겨보세요.<br>' +
-              '<span class="diary-ex"><b>今日は日本語を勉強しました。</b> 오늘은 일본어를 공부했어요.</span></p>' +
-            '<button class="btn btn-primary btn-block" style="margin-top:13px" data-diary="' + dkey() + '">✏️ 오늘 일기 쓰기</button>'
-        ) +
-      '</div>' +
-
-      '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
-      '<div class="card tight"><div class="word-list">' + wordRows + '</div></div>' +
-
-      '<div class="section-title"><h2>오늘의 회화 한 문장</h2><span class="hint">' + esc(sent.scene) + '</span></div>' +
-      '<div class="card">' +
-        '<div class="ex-jp" style="font-size:18px">' + rubyHTML(sent.jp, sent.kana, S.settings.furigana) + '</div>' +
-        '<div class="ex-kana">' + esc(sent.kana) + '</div>' +
-        (S.settings.romaji ? '<div class="ex-romaji">' + esc(sent.romaji) + '</div>' : '') +
-        '<div class="ex-ko">' + esc(sent.ko) + '</div>' +
-        '<div class="ex-actions">' +
-          '<button class="mini-btn" data-speak="' + esc(sent.kana) + '">🔊 듣기</button>' +
-          '<button class="mini-btn" data-speak-slow="' + esc(sent.kana) + '">🐢 느리게</button>' +
-          '<button class="mini-btn" data-sent="' + sent.id + '">카드로 보기</button>' +
-        '</div>' +
-      '</div>' +
-
-      '<p class="foot-note">학습 기록은 이 기기의 브라우저에만 저장돼요.<br>복습 탭에서 JSON 백업을 내려받을 수 있어요.</p>' +
     '</div>';
+  }).join('');
+
+  return '<div class="section-title"><h2>오늘의 학습</h2><span class="hint">오늘 ' + done + ' / 3</span></div>' +
+    '<div class="card">' +
+      '<div class="checklist">' + checks + '</div>' +
+      '<div class="progress"><i style="width:' + (done / 3 * 100) + '%"></i></div>' +
+    '</div>' +
+
+    '<button class="btn btn-accent btn-block" data-routine="1" style="min-height:52px;font-size:14.5px">⚡ 오늘의 5분 추천 루틴 시작</button>' +
+
+    '<div class="section-title"><h2>오늘의 한 줄 일기</h2>' +
+      '<button class="hint" data-diary-list="1" style="color:var(--primary);font-weight:600">지난 일기 ' + dCount + '편 ›</button></div>' +
+    '<div class="diary-card">' +
+      (dEntry
+        ? '<div class="diary-meta"><span class="badge">' + koreanDate(new Date()) + ' ひとこと</span>' +
+            '<span class="badge grey">' + esc(dEntry.mood || '') + ' ' + esc(dEntry.weather || '') + '</span></div>' +
+          '<div class="diary-text">' + esc(dEntry.text || '') + '</div>' +
+          (dEntry.ko ? '<div class="diary-ko">' + esc(dEntry.ko) + '</div>' : '') +
+          '<div class="ex-actions" style="margin-top:12px">' +
+            '<button class="mini-btn" data-diary-speak="' + dkey() + '">🔊 듣기</button>' +
+            '<button class="mini-btn" data-diary="' + dkey() + '">✎ 수정</button>' +
+            '<button class="mini-btn" data-dcopykey="' + dkey() + '">📋 첨삭용으로 복사</button>' +
+            '<button class="mini-btn" data-diary-list="1">모아보기</button>' +
+          '</div>'
+        : '<p class="diary-empty">오늘 하루를 일본어 한 줄로 남겨보세요.<br>' +
+            '<span class="diary-ex"><b>今日は日本語を勉強しました。</b> 오늘은 일본어를 공부했어요.</span></p>' +
+          '<button class="btn btn-primary btn-block" style="margin-top:13px" data-diary="' + dkey() + '">✏️ 오늘 일기 쓰기</button>'
+      ) +
+    '</div>' +
+
+    '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
+    '<div class="card tight"><div class="word-list">' + wordRows + '</div></div>' +
+
+    '<div class="section-title"><h2>오늘의 회화 한 문장</h2><span class="hint">' + esc(sent.scene) + '</span></div>' +
+    '<div class="card">' +
+      '<div class="ex-jp" style="font-size:18px">' + rubyHTML(sent.jp, sent.kana, S.settings.furigana) + '</div>' +
+      '<div class="ex-kana">' + esc(sent.kana) + '</div>' +
+      (S.settings.romaji ? '<div class="ex-romaji">' + esc(sent.romaji) + '</div>' : '') +
+      '<div class="ex-ko">' + esc(sent.ko) + '</div>' +
+      '<div class="ex-actions">' +
+        '<button class="mini-btn" data-speak="' + esc(sent.kana) + '">🔊 듣기</button>' +
+        '<button class="mini-btn" data-speak-slow="' + esc(sent.kana) + '">🐢 느리게</button>' +
+        '<button class="mini-btn" data-sent="' + sent.id + '">카드로 보기</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<p class="foot-note">학습 기록은 이 기기의 브라우저에만 저장돼요.<br>복습 탭에서 JSON 백업을 내려받을 수 있어요.</p>';
+}
+function renderStudyToday() {
+  const host = $('#view-studytoday');
+  if (!host) return;
+  host.innerHTML = '<div class="view-inner">' + studyNav() + todayStudyHTML() + '</div>';
 }
 
 /* ---------------- 오늘: 루틴 ---------------- */
@@ -2583,9 +2815,10 @@ function buddyHTML(done, total, opts) {
     : b.state === 'some' ? '같이 하는 중 · ' + done + ' / ' + total
     : '같이 시작해요 · ' + (total ? '0 / ' + total : '');
   const img = buddyImage(!!o.compact);
-  return '<div class="buddy' + (o.compact ? ' compact' : '') + '">' +
+  return '<div class="buddy' + (o.compact ? ' compact' : '') + (o.home ? ' hm-buddy-card' : '') + '">' +
     '<img class="buddy-img" data-buddy-img="1" src="' + img + '" alt="" aria-hidden="true">' +
     '<div class="buddy-body">' +
+      (o.home ? '<div class="hm-bd-date">' + esc(o.dateLine || '') + '</div>' : '') +
       '<div class="buddy-name">爆豪勝己 <span>바쿠고 카츠키 · ' + esc(label) + '</span></div>' +
       '<div class="buddy-jp">「' + esc(b.line.jp) + '」</div>' +
       (o.compact ? '' : '<div class="buddy-read">' + esc(b.line.read) + '</div>') +
@@ -3677,7 +3910,7 @@ function dietQuietSync() {
   syncDietSeed(false).then(function (r) {
     if (!r || !r.applied) return;
     if (currentTab === 'routine') renderRoutine();
-    if (currentTab === 'today') renderToday();
+    if (currentTab === 'home') renderHome();
     if (r.changed) toast('식단 기록을 최신으로 맞췄어요');
   });
 }
@@ -3687,7 +3920,7 @@ function syncDietNow(force) {
     if (!r || r.busy) return;
     if (r.error) { toast('식단을 받지 못했어요 · 오프라인이면 이 기기 기록만 보여요'); return; }
     renderRoutine();
-    if (currentTab === 'today') renderToday();
+    if (currentTab === 'home') renderHome();
     if (r.applied) {
       const t = dietDayTotals(dietDate);
       toast('식단을 맞췄어요 · ' + num1(t.kcal) + ' kcal');
@@ -3984,16 +4217,16 @@ function dietMiniHTML() {
 
 /* ---------------- 탭 ----------------
    (currentTab 은 위에서 선언) */
-const TABS = { today: renderToday, routine: renderRoutine, fridge: renderFridge, kana: renderKana, words: renderWords, gram: renderGram, review: renderReview };
-const STUDY_TABS = ['kana', 'words', 'gram'];
+const TABS = { home: renderHome, studytoday: renderStudyToday, routine: renderRoutine, fridge: renderFridge, kana: renderKana, words: renderWords, gram: renderGram, review: renderReview };
+const STUDY_TABS = ['studytoday', 'kana', 'words', 'gram'];
 function studyNav() {
-  const items = [['kana', '가나'], ['words', '단어'], ['gram', '회화']];
+  const items = [['studytoday', '오늘의 학습'], ['kana', '가나'], ['words', '단어'], ['gram', '회화']];
   return '<div class="seg study-nav">' + items.map(function (it) {
     return '<button class="' + (currentTab === it[0] ? 'active' : '') + '" data-goto="' + it[0] + '">' + it[1] + '</button>';
   }).join('') + '</div>';
 }
 function switchTab(tab) {
-  if (tab === 'study') tab = studyTab || 'kana';
+  if (tab === 'study') tab = studyTab || 'studytoday';
   if (!TABS[tab]) return;
   currentTab = tab;
   if (STUDY_TABS.indexOf(tab) >= 0) studyTab = tab;
@@ -4008,7 +4241,7 @@ function switchTab(tab) {
   if (tab === 'fridge') fridgeQuietSync();
   try { window.scrollTo(0, 0); } catch (e) {}
 }
-function renderCurrent() { (TABS[currentTab] || renderToday)(); updateStreakChip(); }
+function renderCurrent() { (TABS[currentTab] || renderHome)(); updateStreakChip(); }
 
 /* ---------------- 이벤트 ---------------- */
 function toggleStar(kind, id) {
@@ -4021,19 +4254,25 @@ function toggleStar(kind, id) {
   renderCurrent();
 }
 
-function onTodayClick(e) {
+function runTodayCheck(kind) {
+  if (kind === 'kana') startQuiz({ title: '가나 워밍업', items: buildKanaQuestions(5), onDone: function () { markStudy('kana'); } });
+  else if (kind === 'words') startQuiz({ title: '오늘의 단어 5개', items: buildWordQuestions(todayWords(), 5, 'mix'), onDone: function () { markStudy('words'); } });
+  else openSentence(todaySentence().id);
+}
+/* 홈과 공부 › 오늘의 학습이 함께 쓰는 클릭 핸들러 */
+function onHomeClick(e) {
   const t = e.target;
+  if (!t || !t.closest) return;
   const bd = t.closest('[data-buddy]');
   if (bd) { nextBuddy(); return; }
   if (t.closest('[data-buddy-img]')) { nextBuddy(); return; }
+  const hr = t.closest('[data-hrtoggle]');
+  if (hr) { toggleRoutineToday(hr.dataset.hrtoggle); return; }
+  if (t.closest('[data-hwater]')) { homeWaterAdd(); return; }
+  const hw = t.closest('[data-hwo]');
+  if (hw) { toggleWorkoutToday(hw.dataset.hwo); return; }
   const chk = t.closest('[data-check]');
-  if (chk) {
-    const k = chk.dataset.check;
-    if (k === 'kana') startQuiz({ title: '가나 워밍업', items: buildKanaQuestions(5), onDone: function () { markStudy('kana'); } });
-    else if (k === 'words') startQuiz({ title: '오늘의 단어 5개', items: buildWordQuestions(todayWords(), 5, 'mix'), onDone: function () { markStudy('words'); } });
-    else openSentence(todaySentence().id);
-    return;
-  }
+  if (chk) { runTodayCheck(chk.dataset.check); return; }
   if (t.closest('[data-routine]')) { startRoutine(); return; }
   const dl = t.closest('[data-diary-list]');
   if (dl) { openDiaryList(); return; }
@@ -4417,7 +4656,8 @@ function init() {
     if (b) switchTab(b.dataset.tab);
   });
   $('#streakChip').addEventListener('click', function () { switchTab('review'); });
-  $('#view-today').addEventListener('click', onTodayClick);
+  $('#view-home').addEventListener('click', onHomeClick);
+  $('#view-studytoday').addEventListener('click', onHomeClick);
   $('#view-routine').addEventListener('click', onRoutineClick);
   $('#view-routine').addEventListener('input', onRoutineInput);
   $('#view-routine').addEventListener('change', onRoutineInput);
@@ -4426,7 +4666,7 @@ function init() {
   document.querySelector('main').addEventListener('click', function (e) {
     const g = e.target.closest ? e.target.closest('[data-goto]') : null;
     if (!g) return;
-    if (currentTab === 'today') return; /* 오늘 탭은 자체 핸들러가 처리 */
+    if (currentTab === 'home' || currentTab === 'studytoday') return; /* 홈·오늘의 학습은 자체 핸들러가 처리 */
     switchTab(g.dataset.goto);
   });
   $('#view-kana').addEventListener('click', onKanaClick);
