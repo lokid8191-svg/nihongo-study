@@ -1,5 +1,5 @@
 /* 日本語ノート — 오프라인 캐시 (홈 화면 추가·비행기 모드 대비) */
-const CACHE = 'nihongo-note-v8';
+const CACHE = 'nihongo-note-v9';
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',

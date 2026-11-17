@@ -597,6 +597,73 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 .hm-fr-line .hl{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .hm-fr-line.warn{color:#9A6B1E;font-weight:700}
 
+/* ---------- 2단 묶음: 접은 화면에서는 그대로 1열로 쌓임 ---------- */
+.vcols{display:flex;flex-direction:column;gap:14px}
+.vcols > .vcol{display:flex;flex-direction:column;gap:14px;min-width:0}
+
+/* ---------- 펼친 화면(갤럭시 폴드 메인 · 태블릿): 가로 폭을 살린 2단 레이아웃 ---------- */
+@media (min-width:600px){
+  .app{max-width:840px}
+  .topbar{padding:16px 22px 14px}
+  .view-inner{padding:18px 22px 10px}
+  .view-inner.hm-view{padding:14px 22px 6px}
+  .tabbar{max-width:840px;padding:8px 10px calc(8px + env(safe-area-inset-bottom))}
+  .tab{height:54px;font-size:11px;max-width:132px;width:100%;justify-self:center}
+  .tab svg{width:22px;height:22px}
+  .seg{width:100%;max-width:560px;margin-left:auto;margin-right:auto}
+
+  /* 홈: 스터디 메이트는 전체 폭 배너, 나머지 카드는 2열 */
+  .hm-wrap{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;align-items:start}
+  .hm-wrap > .hm-buddy-card{grid-column:1 / -1}
+  .hm-wrap > .hm-wide{grid-column:1 / -1}
+  .buddy.hm-buddy-card{padding:14px 16px;gap:16px}
+  .buddy.hm-buddy-card .buddy-img{width:184px;height:152px;min-height:0;align-self:center;border-radius:13px}
+  .buddy.hm-buddy-card .buddy-name{font-size:12.5px}
+  .buddy.hm-buddy-card .buddy-name span{font-size:10.5px;display:inline;margin-left:4px}
+  .buddy.hm-buddy-card .buddy-jp{font-size:16px;line-height:1.5}
+  .buddy.hm-buddy-card .buddy-ko{font-size:13px;line-height:1.5;margin-top:1px}
+  .hm-bd-date{font-size:11.5px;margin-bottom:4px}
+  .hm-bd-date b{font-size:11.5px}
+  .hm-card{padding:13px 14px;border-radius:16px}
+
+  /* 탭별 2단 구성 */
+  .vcols{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px 18px;align-items:start}
+
+  /* 카드 안쪽도 넓이에 맞춰 펼치기 */
+  .stat-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .mood-grid{grid-template-columns:repeat(5,minmax(0,1fr))}
+  .kana-grid{grid-template-columns:repeat(8,1fr)}
+  .kana-grid.yoon{grid-template-columns:repeat(6,1fr)}
+  .fr-2col{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));column-gap:20px;align-items:start}
+  .fr-2col .fr-row{border-top:0;padding:11px 0}
+  .fr-2col .fr-row:nth-child(n+3){border-top:1px solid var(--surface-2)}
+  .fr-voca{gap:7px}
+  .dm-row{padding:9px 0}
+  /* 혼자 가운데 놓이는 카드(단어 플래시카드·따라쓰기 패드)는 너무 넓어지지 않게 */
+  .flash{max-width:560px;width:100%;margin-left:auto;margin-right:auto}
+  .pad-wrap{max-width:560px;margin-left:auto;margin-right:auto}
+  .chips{flex-wrap:wrap;overflow-x:visible}
+  .btn-block{max-width:440px;margin-left:auto;margin-right:auto}
+  .btn-row{max-width:560px;margin-left:auto;margin-right:auto}
+
+  /* 바텀시트는 가운데 정렬 모달로 (너무 넓어지지 않게) */
+  .sheet{align-items:center;padding:24px 16px}
+  .sheet-panel{max-width:520px;border-radius:20px;padding-bottom:20px;max-height:min(86vh,760px);max-height:min(86dvh,760px)}
+  .sheet-grip{display:none}
+  .toast{max-width:420px}
+}
+/* 갤럭시 폴드 펼침(≈673px)처럼 2열이 아직 좁은 폭: 홈 루틴 칩은 2열로 */
+@media (min-width:600px) and (max-width:719px){
+  .hm-chips{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+
+@media (max-width:340px){
+  /* 갤릭시 폴드 커버(≈280px)처럼 아주 좡은 화면: 날짜가 한 글자씩 쪼개지지 않게 */
+  .hm-bd-date{flex-wrap:wrap;row-gap:3px}
+  .hm-bd-date b{white-space:nowrap}
+  .hm-bd-tools{margin-left:0}
+}
+
 @media (max-width:360px){
   .brand h1{font-size:15px}
   .kana-cell{height:56px}
@@ -1845,7 +1912,7 @@ function renderHome() {
       '</div>' +
 
       /* 6. 냉장고 알림 */
-      '<div class="hm-card">' +
+      '<div class="hm-card hm-wide">' +
         '<div class="hm-h"><span class="t">🧊 냉장고</span>' +
           '<button class="link" data-goto="fridge">냉장고 보기 ›</button></div>' +
         '<div class="hm-fr-line' + (expiring.length ? ' warn' : '') + '" title="' + esc(frLine) + '">' +
@@ -1884,13 +1951,15 @@ function todayStudyHTML() {
     '</div>';
   }).join('');
 
-  return '<div class="section-title"><h2>오늘의 학습</h2><span class="hint">오늘 ' + done + ' / 3</span></div>' +
+  return '<div class="vcols"><div class="vcol">' +
+    '<div class="section-title"><h2>오늘의 학습</h2><span class="hint">오늘 ' + done + ' / 3</span></div>' +
     '<div class="card">' +
       '<div class="checklist">' + checks + '</div>' +
       '<div class="progress"><i style="width:' + (done / 3 * 100) + '%"></i></div>' +
     '</div>' +
 
     '<button class="btn btn-accent btn-block" data-routine="1" style="min-height:52px;font-size:14.5px">⚡ 오늘의 5분 추천 루틴 시작</button>' +
+    '</div><div class="vcol">' +
 
     '<div class="section-title"><h2>오늘의 한 줄 일기</h2>' +
       '<button class="hint" data-diary-list="1" style="color:var(--primary);font-weight:600">지난 일기 ' + dCount + '편 ›</button></div>' +
@@ -1911,9 +1980,12 @@ function todayStudyHTML() {
           '<button class="btn btn-primary btn-block" style="margin-top:13px" data-diary="' + dkey() + '">✏️ 오늘 일기 쓰기</button>'
       ) +
     '</div>' +
+    '</div></div>' +
 
+    '<div class="vcols"><div class="vcol">' +
     '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
     '<div class="card tight"><div class="word-list">' + wordRows + '</div></div>' +
+    '</div><div class="vcol">' +
 
     '<div class="section-title"><h2>오늘의 회화 한 문장</h2><span class="hint">' + esc(sent.scene) + '</span></div>' +
     '<div class="card">' +
@@ -1927,6 +1999,7 @@ function todayStudyHTML() {
         '<button class="mini-btn" data-sent="' + sent.id + '">카드로 보기</button>' +
       '</div>' +
     '</div>' +
+    '</div></div>' +
 
     '<p class="foot-note">학습 기록은 이 기기의 브라우저에만 저장돼요.<br>복습 탭에서 JSON 백업을 내려받을 수 있어요.</p>';
 }
@@ -3246,7 +3319,9 @@ function renderRoutine() {
         '<div class="wk-row">' + wk + '</div>' +
       '</div>' +
 
+      '<div class="vcols"><div class="vcol">' +
       buddyHTML(done, total) +
+      '</div><div class="vcol">' +
 
       '<div class="card">' +
         '<div class="rhead">' +
@@ -3265,7 +3340,9 @@ function renderRoutine() {
           '<button data-redit="1" aria-label="항목 편집">⚙</button>' +
         '</div>' +
       '</div>' +
+      '</div></div>' +
 
+      '<div class="vcols"><div class="vcol">' +
       '<div class="section-title"><h2>데일리 루틴</h2><span class="hint">' + done + ' / ' + total + '</span></div>' +
       '<div class="card tight">' +
         '<div class="rt-list">' + (rows || '<div class="empty">항목이 없어요. ⚙에서 추가해 보세요.</div>') + '</div>' +
@@ -3276,10 +3353,11 @@ function renderRoutine() {
         '</div>' : '') +
       '</div>' +
 
-      workoutHTML(routineDate) +
-
       '<div class="section-title"><h2>오늘의 무드</h2><span class="hint">노션과 같은 9가지</span></div>' +
       '<div class="card"><div class="mood-grid">' + moods + '</div></div>' +
+      '</div><div class="vcol">' +
+
+      workoutHTML(routineDate) +
 
       '<div class="section-title"><h2>자세한 일기</h2><span class="hint">이 날의 메모</span></div>' +
       '<div class="diary-card">' +
@@ -3295,6 +3373,7 @@ function renderRoutine() {
             '<button class="btn btn-primary btn-block" style="margin-top:13px" data-rmemo="' + routineDate + '">✍️ 일기 쓰기</button>'
         ) +
       '</div>' +
+      '</div></div>' +
 
       '<div class="stat-grid">' +
         '<div class="stat"><b>' + rate + '%</b><span>이 날 달성률</span></div>' +
@@ -3736,6 +3815,16 @@ function renderFridge() {
   }).join('');
   const synced = fs2.syncedAt ? new Date(fs2.syncedAt) : null;
 
+  /* 펼친 화면: ‘다 쓴 재료’와 ‘식재료 일본어’를 나란히, 없으면 일본어만 전체 폭 */
+  const goneBlock = (gone.length && fridgeFilter === 'all')
+    ? '<div class="section-title"><h2>다 쓴 재료</h2><span class="hint">' + gone.length + '개</span></div>' +
+      '<div class="card tight"><div class="fr-2col">' + goneRows + '</div></div>'
+    : '';
+  const vocaBlock =
+    '<div class="section-title"><h2>식재료 일본어</h2><span class="hint">눌러서 듣기</span></div>' +
+    '<div class="card"><div class="fr-voca">' + voca + '</div>' +
+      '<p style="font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.6">냉장고를 열 때마다 한 단어씩 읽어 보세요. 卵(たまご) · 牛乳(ぎゅうにゅう)…</p></div>';
+
   host.innerHTML =
     '<div class="view-inner">' +
       '<div class="card">' +
@@ -3756,7 +3845,7 @@ function renderFridge() {
       (all.length ? seg : '') +
 
       '<div class="card tight">' +
-        (rows ? '<div>' + rows + '</div>' :
+        (rows ? '<div class="fr-2col">' + rows + '</div>' :
           '<div class="empty">' +
             (all.length
               ? (fridgeFilter === 'all' ? '냉장고가 비었어요. 잘하셨어요! 🎉' : '이 위치에는 재료가 없어요.')
@@ -3765,14 +3854,9 @@ function renderFridge() {
         (!rows && !all.length ? '<button class="btn btn-primary btn-block" style="margin-top:4px" data-fadd="1">＋ 재료 직접 추가</button>' : '') +
       '</div>' +
 
-      (gone.length && fridgeFilter === 'all'
-        ? '<div class="section-title"><h2>다 쓴 재료</h2><span class="hint">' + gone.length + '개</span></div>' +
-          '<div class="card tight"><div>' + goneRows + '</div></div>'
-        : '') +
-
-      '<div class="section-title"><h2>식재료 일본어</h2><span class="hint">눌러서 듣기</span></div>' +
-      '<div class="card"><div class="fr-voca">' + voca + '</div>' +
-        '<p style="font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.6">냉장고를 열 때마다 한 단어씩 읽어 보세요. 卵(たまご) · 牛乳(ぎゅうにゅう)…</p></div>' +
+      (goneBlock
+        ? '<div class="vcols"><div class="vcol">' + goneBlock + '</div><div class="vcol">' + vocaBlock + '</div></div>'
+        : vocaBlock) +
 
       '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.</p>' +
     '</div>';
@@ -4200,6 +4284,7 @@ function dietViewHTML() {
       '</p>' +
     '</div>' +
 
+    '<div class="vcols"><div class="vcol">' +
     '<div class="section-title"><h2>오늘의 목표</h2><span class="hint">' + num1(t.kcal) + ' / ' + g.calories + ' kcal</span></div>' +
     '<div class="card"><div class="dgo">' +
       dietKcalRow(t.kcal, g.calories) +
@@ -4218,8 +4303,10 @@ function dietViewHTML() {
       '</div>' +
     '</div>' +
 
+    '</div><div class="vcol">' +
     '<div class="section-title"><h2>끼니별 기록</h2><span class="hint">추정치는 배지로</span></div>' +
     '<div class="card tight">' + DIET_MEALS.map(function (m) { return dietMealHTML(m.k, day); }).join('') + '</div>' +
+    '</div></div>' +
 
     '<p class="foot-note">식단은 채팅에서 받은 diet-data.json과 이 기기 기록을 함께 씁니다.<br>복습 탭의 JSON 백업에도 함께 담깁니다.</p>' +
   '</div>';
