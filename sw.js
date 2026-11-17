@@ -1,9 +1,9 @@
 /* 日本語ノート — 오프라인 캐시 (홈 화면 추가·비행기 모드 대비) */
-const CACHE = 'nihongo-note-v4';
+const CACHE = 'nihongo-note-v5';
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
-  './assets/bakugo.jpg', './assets/bakugo-avatar.jpg', './fridge-data.json'
+  './assets/bakugo.jpg', './assets/bakugo-avatar.jpg', './assets/bakugo-portrait.jpg', './fridge-data.json'
 ];
 
 self.addEventListener('install', function (e) {

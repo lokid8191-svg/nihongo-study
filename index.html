@@ -371,7 +371,7 @@ textarea.field:focus,input[type="date"].field:focus{outline:2px solid #C9DED6;ou
 input[type="text"].field{width:100%;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--surface);padding:0 11px;font-family:inherit;font-size:13.5px;color:var(--ink)}
 input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;border-color:#C9DED6}
 .wk-nav{display:flex;gap:5px;align-items:center}
-.wk-nav button{min-height:30px;padding:0 9px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);font-size:12px;font-weight:700;color:var(--ink-2);display:grid;place-items:center}
+.wk-nav button{min-height:30px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);font-size:12px;font-weight:700;color:var(--ink-2);display:grid;place-items:center;white-space:nowrap}
 .wk-nav button:active{background:var(--primary-soft)}
 .wk-row{display:grid;grid-template-columns:repeat(7,1fr);gap:5px}
 .wk-cell{display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0 5px;border-radius:12px;border:1px solid var(--line);background:var(--surface-2)}
@@ -416,7 +416,7 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 /* ---------- 스터디 메이트 (爆豪勝己) ---------- */
 .buddy{display:flex;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:12px;overflow:hidden;position:relative}
 .buddy::before{content:"";position:absolute;left:0;top:0;bottom:0;width:4px;background:linear-gradient(180deg,#E4572E,#D9A441)}
-.buddy-img{width:100px;flex:none;border-radius:12px;object-fit:cover;object-position:50% 6%;background:#F1E9DF;align-self:stretch}
+.buddy-img{width:100px;flex:none;border-radius:12px;object-fit:cover;object-position:50% 10%;background:#F1E9DF;align-self:stretch;min-height:132px}
 .buddy-body{flex:1;min-width:0;display:flex;flex-direction:column;gap:2px;padding-left:4px}
 .buddy-name{font-size:11px;font-weight:800;color:var(--accent);letter-spacing:.1px;margin-bottom:2px}
 .buddy-name span{display:block;font-size:10px;color:var(--ink-3);font-weight:600;margin-top:1px}
@@ -2510,7 +2510,7 @@ function buddyHTML(done, total, opts) {
   const label = b.state === 'all' ? '루틴 완료 · 같이 해냈어요'
     : b.state === 'some' ? '같이 하는 중 · ' + done + ' / ' + total
     : '같이 시작해요 · ' + (total ? '0 / ' + total : '');
-  const img = o.compact ? 'assets/bakugo-avatar.jpg' : 'assets/bakugo.jpg';
+  const img = o.compact ? 'assets/bakugo-avatar.jpg' : 'assets/bakugo-portrait.jpg';
   return '<div class="buddy' + (o.compact ? ' compact' : '') + '">' +
     '<img class="buddy-img" src="' + img + '" alt="" aria-hidden="true">' +
     '<div class="buddy-body">' +
@@ -2583,7 +2583,7 @@ function workoutHTML(dateKey) {  const w = workoutFor(dateKey);
         '</div>' +
         '<div class="wo-actions" style="margin-top:7px">' +
           '<button class="mini-btn" data-wpick="1">🎲 다른 운동 추천</button>' +
-          (done ? '<span class="wo-done">오늘 운동 기록됬요</span>' : '') +
+          (done ? '<span class="wo-done">오늘 운동 완료로 기록됐어요</span>' : '') +
         '</div>' +
       '</div>' +
     '</div>';
