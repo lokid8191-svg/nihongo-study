@@ -1,8 +1,8 @@
 /* 日本語ノート — 오프라인 캐시 (홈 화면 추가·비행기 모드 대비) */
-const CACHE = 'nihongo-note-v13';
+const CACHE = 'nihongo-note-v14';
 const ASSETS = [
   './', './index.html', './manifest.json',
-  './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
+  './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
   /* 바쿠고 사진: index.html의 BAKUGO_IMAGES에 한 줄 넣을 때 여기에도 같은 경로를 넣어 주세요. */
   './assets/bakugo-1.jpg',
   './assets/bakugo-2.jpg',
