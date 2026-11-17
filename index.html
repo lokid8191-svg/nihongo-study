@@ -2571,6 +2571,13 @@ function init() {
 
   renderCurrent();
   updateStreakChip();
+
+  /* 홈 화면 추가·오프라인용 서비스 워커 (http/https에서만, 파일로 열 때는 건너뜀) */
+  if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
+    window.addEventListener('load', function () {
+      navigator.serviceWorker.register('sw.js').catch(function () {});
+    });
+  }
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
