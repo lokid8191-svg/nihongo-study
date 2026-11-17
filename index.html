@@ -5267,6 +5267,9 @@ function menuMealHint(plan) {
   if (plan.light) {
     return '가벼운 한 끼·간식(' + num1(plan.bandLo) + '~' + num1(plan.bandHi) + ' kcal · 남은 칼로리 안에서)';
   }
+  if (plan.bandHi < MENU_MEAL_BAND.max) {
+    return '한 끼 기준 추천(남은 ' + numComma(plan.bandHi) + ' kcal 안에서)';
+  }
   return '한 끼 기준 추천(300~450 kcal · 남은 여유 안에서)';
 }
 function menuSuggest() {
@@ -5404,13 +5407,13 @@ function menuCardHTML() {
     }).join('') + '</div>' +
     '<div class="menu-eff">누르면 <b>' + esc(mealNowLabel()) + '</b>에 들어가고, 숫자로 관리되는 재료는 수량도 함께 줄어요.' +
       (hasDay ? '' : ' · 오늘 첫 기록이에요.') + '</div>' +
-    '<div class="menu-foot"><span>추천 ' + ms.combos.length + '가지</span>' +
+    '<div class="menu-foot"><span>조합 후보 ' + numComma(ms.combos.length) + '가지</span>' +
       '<button class="mini-btn" data-menu-refresh="1">🔄 다른 조합</button></div>';
   }
 
   return '<div class="card menu-card">' +
     '<div class="card-head"><h3>✨ 지금 냉장고로 뭐 먹지?</h3>' +
-      '<span class="sub">' + (plan.rem <= 0 ? '남은 0 kcal' : ((plan.light ? '가볍게 ' : '한 끼 ') + (plan.bandLo >= plan.bandHi ? num1(plan.bandHi) + ' kcal 이내' : num1(plan.bandLo) + '~' + num1(plan.bandHi) + ' kcal') + ' · 남은 ' + num1(ms.remKcal) + ' kcal')) + '</span></div>' +
+      '<span class="sub">' + (plan.rem <= 0 ? '남은 0 kcal' : ((plan.light ? '가볍게 ' : '한 끼 ') + (plan.bandLo >= plan.bandHi ? num1(plan.bandHi) + ' kcal 이내' : num1(plan.bandLo) + '~' + num1(plan.bandHi) + ' kcal') + ' · 남은 ' + numComma(ms.remKcal) + ' kcal')) + '</span></div>' +
     '<div class="menu-hint">🍽️ ' + menuMealHint(plan) + '</div>' +
     body +
   '</div>';
