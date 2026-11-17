@@ -3,7 +3,7 @@ const CACHE = 'nihongo-note-v7';
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
-  './assets/bakugo.jpg', './assets/bakugo-avatar.jpg', './assets/bakugo-portrait.jpg',
+  /* 바쿠고 사진: index.html의 BAKUGO_IMAGES에 한 줄 넣을 때 여기에도 같은 경로를 넣어 주세요. */
   './assets/bakugo-p1.jpg', './assets/bakugo-p2.jpg', './assets/bakugo-p3.jpg',
   './assets/bakugo-p4.jpg', './assets/bakugo-p5.jpg', './assets/bakugo-p6.jpg',
   './assets/bakugo-a1.jpg', './assets/bakugo-a2.jpg', './assets/bakugo-a3.jpg',
