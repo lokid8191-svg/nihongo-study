@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512" role="img" aria-label="日本語ノート">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2D5F54"/>
+      <stop offset="1" stop-color="#203D49"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="118" fill="url(#bg)"/>
+  <circle cx="407" cy="105" r="43" fill="#C65A3E"/>
+  <text x="245" y="356" font-family="'Noto Sans JP','Hiragino Kaku Gothic ProN','Yu Gothic',sans-serif"
+        font-size="268" font-weight="500" fill="#FAF8F3" text-anchor="middle">あ</text>
+</svg>
