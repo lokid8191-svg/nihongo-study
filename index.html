@@ -261,7 +261,7 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .ex-kana{font-size:11.5px;color:var(--primary);margin-top:2px}
 .ex-ko{font-size:12px;color:var(--ink-2);margin-top:3px}
 .ex-romaji{font-size:11px;color:var(--ink-3);margin-top:2px;letter-spacing:.2px}
-.ex-actions{display:flex;gap:6px;margin-top:8px}
+.ex-actions{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
 .mini-btn{
   min-height:32px;padding:0 10px;border-radius:9px;font-size:11.5px;font-weight:600;
   background:var(--surface);border:1px solid var(--line);color:var(--ink-2);display:inline-flex;align-items:center;gap:4px;
@@ -2163,7 +2163,7 @@ function renderDiarySheet() {
     '<label class="field-label" for="diaryKo">한국어 메모<span>선택</span></label>' +
     '<textarea class="field" id="diaryKo" style="min-height:64px" placeholder="나중에 보기 좋게 한국어로 적어두세요">' + esc(diaryDraft.ko) + '</textarea>' +
     '<button class="btn btn-copy btn-block" style="margin-top:12px" data-dcopy="1">📋 첨삭용으로 복사</button>' +
-    '<p class="copy-hint">채팅창에 붙여넣으면 첨삭을 받을 수 있는 형식으로 복사돼요</p>' +
+    '<p class="copy-hint">채팅창에 붙여넣으면 첨삭을 받을 수 있어요</p>' +
     '<div class="q-foot">' + (existing ? '<button class="btn btn-danger" data-ddel="' + esc(k) + '">삭제</button>' : '') +
       '<button class="btn btn-primary" data-dsave="1">저장</button></div>' +
     (list.length ? '<button class="btn btn-ghost btn-block" style="margin-top:8px" data-diary-list="1">지난 일기 ' + list.length + '편 보기</button>' : '')
