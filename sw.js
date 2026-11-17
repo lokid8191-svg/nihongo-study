@@ -1,5 +1,5 @@
 /* 日本語ノート — 오프라인 캐시 (홈 화면 추가·비행기 모드 대비) */
-const CACHE = 'nihongo-note-v10';
+const CACHE = 'nihongo-note-v11';
 const ASSETS = [
   './', './index.html', './manifest.json',
   './icon.svg', './icon-192.png', './icon-512.png', './icon-maskable-512.png', './apple-touch-icon.png',
@@ -62,7 +62,7 @@ const ASSETS = [
   './assets/bakugo-56.jpg',
   './assets/bakugo-57.jpg',
   './assets/bakugo-58.jpg',
-  './fridge-data.json', './diet-data.json'
+  './fridge-data.json', './diet-data.json', './weight-data.json'
 ];
 
 self.addEventListener('install', function (e) {
@@ -89,9 +89,9 @@ self.addEventListener('fetch', function (e) {
   const url = new URL(req.url);
   if (url.origin !== location.origin) return;
 
-  /* 냉장고 재료·식단 기록은 네트워크 우선: 새 파일을 올리면 바로 반영되고, 오프라인이면 마지막 사본을 씁니다. */
-  if (/\/(fridge|diet)-data\.json$/.test(url.pathname)) {
-    const fallback = /\/diet-data\.json$/.test(url.pathname) ? './diet-data.json' : './fridge-data.json';
+  /* 냉장고 재료·식단·체중 기록은 네트워크 우선: 새 파일을 올리면 바로 반영되고, 오프라인이면 마지막 사본을 씁니다. */
+  if (/\/(fridge|diet|weight)-data\.json$/.test(url.pathname)) {
+    const fallback = /\/diet-data\.json$/.test(url.pathname) ? './diet-data.json' : /\/weight-data\.json$/.test(url.pathname) ? './weight-data.json' : './fridge-data.json';
     e.respondWith(
       fetch(req, { cache: 'no-store' }).then(function (r) {
         if (r && r.ok) { const copy = r.clone(); caches.open(CACHE).then(function (c) { c.put(req, copy); }); }

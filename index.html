@@ -674,6 +674,112 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
   .hm-chip{font-size:10px;padding:0 6px}
   .hm-chip .dot{width:13px;height:13px}
 }
+/* ---------- ⚖️ 체중·마운자로 ---------- */
+.wt-top{display:flex;align-items:flex-end;gap:9px;flex-wrap:wrap}
+.wt-kg{font-size:30px;font-weight:800;letter-spacing:-.6px;line-height:1}
+.wt-kg small{font-size:13px;font-weight:600;color:var(--ink-3);margin-left:2px}
+.wt-delta{font-size:12.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--primary-soft);color:var(--primary)}
+.wt-delta.up{background:var(--accent-soft);color:var(--accent)}
+.wt-sub{font-size:11.5px;color:var(--ink-3);margin-top:6px;line-height:1.55}
+.wt-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:12px}
+.wt-stat{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:9px 10px;min-width:0}
+.wt-stat b{display:block;font-size:15px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.wt-stat span{display:block;font-size:10.5px;color:var(--ink-3);margin-top:1px}
+.wt-chart{width:100%;height:auto;display:block;margin-top:4px}
+.wt-legend{display:flex;gap:10px;font-size:10.5px;color:var(--ink-3);margin-top:5px;flex-wrap:wrap}
+.wt-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:3px}
+.wt-tools{display:flex;gap:6px;flex:none}
+.wt-dose{display:flex;gap:6px;flex-wrap:wrap;margin-top:2px}
+.wt-dose span{font-size:11px;font-weight:600;padding:4px 9px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
+.wt-dose span.hi{background:var(--primary-soft);border-color:#CFE0D8;color:var(--primary)}
+.wt-row{display:flex;align-items:center;gap:7px;padding:8px 0;border-top:1px solid var(--surface-2);min-width:0}
+.wt-row:first-child{border-top:0}
+.wt-row .d{font-size:11px;color:var(--ink-3);width:56px;flex:none;font-variant-numeric:tabular-nums}
+.wt-row .k{font-size:13px;font-weight:700;flex:none;font-variant-numeric:tabular-nums}
+.wt-row .bi{font-size:10px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:2px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+.wt-row .sp{flex:1}
+.wt-row .mini-btn{flex:none;padding:0 9px;height:26px}
+.hm-weight{display:flex;align-items:center;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--surface-2);font-size:11.5px;color:var(--ink-2);flex-wrap:wrap;min-width:0}
+.hm-weight b{font-size:13.5px;color:var(--ink)}
+.hm-weight .d{font-weight:700;color:var(--primary)}
+.hm-weight .d.up{color:var(--accent)}
+.hm-weight .sp{flex:1}
+.hm-menu{display:flex;align-items:flex-start;gap:8px;margin-top:9px;width:100%;text-align:left;padding:10px 11px;border-radius:12px;background:var(--primary-soft);border:1px solid #CFE0D8;color:var(--primary);font-size:14px;line-height:1.2}
+.hm-menu span{min-width:0}
+.hm-menu b{display:block;font-size:12.5px;letter-spacing:-.1px}
+.hm-menu small{display:block;font-size:10.5px;color:var(--ink-2);margin-top:2px;line-height:1.4}
+
+/* ---------- ✨ 냉장고 맞춤 메뉴 ---------- */
+.menu-list{display:grid;gap:8px;margin-top:2px}
+.menu-item{border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:var(--surface-2);min-width:0}
+.menu-item.best{border-color:#CFE0D8;background:#F3F8F5}
+.menu-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.menu-top b{font-size:12.5px;line-height:1.4;min-width:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.menu-k{font-size:12px;font-weight:700;color:var(--primary);flex:none;font-variant-numeric:tabular-nums}
+.menu-mac{font-size:10.5px;color:var(--ink-2);margin-top:2px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}
+.menu-why{font-size:10.5px;color:var(--ink-3);margin-top:3px;line-height:1.5}
+.menu-item .btn{width:100%;margin-top:8px}
+.menu-eff{font-size:10.5px;color:var(--ink-3);margin-top:8px;line-height:1.6}
+.menu-foot{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:9px;font-size:10.5px;color:var(--ink-3)}
+.menu-card .empty{padding:14px 6px}
+
+/* ---------- 🎯 N3 로드맵 ---------- */
+.n3-sum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
+.n3-sum b{font-size:22px;font-weight:800;letter-spacing:-.5px}
+.n3-sum span{font-size:11px;color:var(--ink-3)}
+.n3-sum .n3-bar{flex:1;min-width:80px;margin:0}
+.n3-dday{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);flex:none}
+.n3-grid{display:grid;gap:9px;margin-top:10px}
+.n3-step{border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:var(--surface-2);min-width:0}
+.n3-step.now{border-color:#CFE0D8;background:#F3F8F5}
+.n3-step.done{opacity:.9}
+.n3-head{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
+.n3-head b{font-size:12.5px}
+.n3-head .st{font-size:9.5px;font-weight:700;color:#fff;background:var(--primary);border-radius:99px;padding:2px 7px;flex:none}
+.n3-head .pd{font-size:10px;color:var(--ink-3);margin-left:auto;flex:none}
+.n3-bar{display:block;height:5px;border-radius:99px;background:#E9E4DA;margin:7px 0 6px;overflow:hidden}
+.n3-bar.wide{height:7px;margin:6px 0 2px}
+.n3-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#4E8A76);border-radius:99px;transition:width .3s ease}
+.n3-items{display:flex;flex-direction:column}
+.n3-it{display:flex;align-items:flex-start;gap:7px;width:100%;text-align:left;padding:4px 0;font-size:11.5px;color:var(--ink-2);line-height:1.45}
+.n3-it .box{flex:none;width:16px;height:16px;border-radius:5px;border:1.5px solid #CFC8BA;display:grid;place-items:center;font-size:10px;color:#fff;margin-top:1px}
+.n3-it.on .box{background:var(--primary);border-color:var(--primary)}
+.n3-it.on{color:var(--ink-3);text-decoration:line-through}
+.n3-foot{font-size:10px;color:var(--ink-3);margin-top:5px;text-align:right;font-variant-numeric:tabular-nums}
+
+/* ---------- 🔁 오답 플래시카드 ---------- */
+.fc-cta .btn{margin-top:10px}
+.fc-wrap{display:flex;flex-direction:column;gap:10px}
+.fc-card{min-height:210px;border:1px solid var(--line);border-radius:18px;background:var(--surface);box-shadow:var(--shadow);padding:18px 15px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:5px;width:100%;min-width:0}
+.fc-card:active{transform:scale(.993)}
+.fc-type{font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-soft);border-radius:99px;padding:2px 8px}
+.fc-front{font-size:24px;font-weight:700;line-height:1.35;margin-top:5px;word-break:keep-all;overflow-wrap:anywhere}
+.fc-front.small{font-size:16.5px;font-weight:600}
+.fc-back{font-size:19px;font-weight:700;color:var(--primary);line-height:1.35;overflow-wrap:anywhere}
+.fc-back-sub{font-size:12px;color:var(--ink-2);margin-top:3px;line-height:1.6;overflow-wrap:anywhere}
+.fc-hint{font-size:10.5px;color:var(--ink-3);margin-top:10px}
+.fc-btns{display:flex;gap:8px}
+.fc-btns .btn{flex:1}
+.fc-wrap .btn-ghost{color:var(--ink-3)}
+
+@media (min-width:600px){
+  .wt-top{gap:12px}
+  .wt-kg{font-size:34px}
+  .menu-list{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .menu-item{display:flex;flex-direction:column}
+  .menu-item .btn{margin-top:auto}
+  .n3-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .fc-card{min-height:250px}
+  .fc-front{font-size:28px}
+}
+@media (max-width:360px){
+  .wt-kg{font-size:26px}
+  .wt-stat b{font-size:13.5px}
+  .wt-row .d{width:50px}
+  .menu-top b{font-size:12px}
+  .fc-front{font-size:21px}
+}
+
 </style>
 </head>
 <body>
@@ -1261,6 +1367,8 @@ function defaultState() {
     routine: { items: routineDefaultItems(), days: {} },
     fridge: { items: [], seedVersion: 0, syncedAt: '' },
     diet: { goals: null, days: {}, seedVersion: 0, syncedAt: '' },
+    weight: { profile: null, entries: {}, doses: [], seedVersion: 0, syncedAt: '' },
+    n3: { checks: {} },
     streak: 0
   };
 }
@@ -1278,6 +1386,8 @@ function normalizeState(raw) {
     routine: normalizeRoutine(p.routine),
     fridge: normalizeFridge(p.fridge),
     diet: normalizeDiet(p.diet),
+    weight: normalizeWeight(p.weight),
+    n3: normalizeN3(p.n3),
     streak: Number(p.streak) || 0
   };
   ['kana', 'word', 'sent'].forEach(k => { if (!Array.isArray(s.star[k])) s.star[k] = []; });
@@ -1314,6 +1424,21 @@ function normalizeRoutine(raw) {
   return { items: items, days: days };
 }
 /* 냉장고 재료: 백업·예전 저장본에 없으면 빈 목록 */
+/* 1회분 영양성분(추천 계산용). 없는 재료는 이름으로 짐작합니다. */
+function normalizeFridgeNutri(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const n = {};
+  ['kcal', 'carb', 'protein', 'fat'].forEach(function (k) {
+    const v = Number(raw[k]);
+    if (isFinite(v) && v >= 0) n[k] = Math.round(v * 100) / 100;
+  });
+  if (n.kcal === undefined) return null;
+  if (typeof raw.label === 'string' && raw.label) n.label = raw.label.slice(0, 30);
+  if (typeof raw.serving === 'string' && raw.serving) n.serving = raw.serving.slice(0, 20);
+  if (typeof raw.unit === 'string' && raw.unit) n.unit = raw.unit.slice(0, 6);
+  if (raw.est) n.est = true;
+  return n;
+}
 function normalizeFridge(raw) {
   const f = raw && typeof raw === 'object' ? raw : {};
   const items = Array.isArray(f.items) ? f.items.filter(function (it) { return it && it.name; }).map(function (it) {
@@ -1327,12 +1452,21 @@ function normalizeFridge(raw) {
       qty: String(it.qty || '').slice(0, 24),
       expires: /^\d{4}-\d{2}-\d{2}$/.test(String(it.expires || '')) ? it.expires : '',
       memo: String(it.memo || '').slice(0, 120),
+      nutri: normalizeFridgeNutri(it.nutri),
       out: !!it.out,
       src: it.src === 'seed' ? 'seed' : 'user',
       edited: !!it.edited
     };
   }) : [];
   return { items: items, seedVersion: Number(f.seedVersion) || 0, syncedAt: typeof f.syncedAt === 'string' ? f.syncedAt : '' };
+}
+function normalizeN3(raw) {
+  const r = raw && typeof raw === 'object' ? raw : {};
+  const checks = {};
+  if (r.checks && typeof r.checks === 'object') {
+    Object.keys(r.checks).forEach(function (k) { if (r.checks[k]) checks[String(k).slice(0, 40)] = true; });
+  }
+  return { checks: checks };
 }
 let S = defaultState();
 function loadState() {
@@ -1883,6 +2017,8 @@ function renderHome() {
         '</div>' +
         '<div class="hm-water">💧 <b>' + num1(water) + '</b><small>mL</small><span class="sp"></span>' +
           '<button class="btn btn-sm btn-primary" data-hwater="1">+' + step + 'mL</button></div>' +
+        homeMenuLineHTML() +
+        homeWeightLineHTML() +
       '</div>' +
 
       /* 4. 오늘의 5~10분 운동 */
@@ -1981,6 +2117,8 @@ function todayStudyHTML() {
       ) +
     '</div>' +
     '</div></div>' +
+
+    n3CardHTML() +
 
     '<div class="vcols"><div class="vcol">' +
     '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
@@ -2448,6 +2586,7 @@ function wrongItems(type) {
 }
 function renderReview() {
   const host = $('#view-review');
+  if (fc.active) { host.innerHTML = '<div class="view-inner">' + fcViewHTML() + '</div>'; return; }
   const acc = S.stats.answered ? Math.round(S.stats.correct / S.stats.answered * 100) : 0;
   const days = Object.keys(S.days).length;
   const wKana = wrongItems('kana'), wWord = wrongItems('word'), wSent = wrongItems('sent'), wJlpt = wrongItems('jlpt');
@@ -2536,6 +2675,11 @@ function renderReview() {
         '<div class="stat"><b>' + acc + '%</b><span>정답률</span></div>' +
       '</div>' +
       '<div class="section-title"><h2>오답노트</h2><span class="hint">' + totalWrong + '개</span></div>' +
+      '<div class="card fc-cta">' +
+        '<div class="card-head"><h3>🔁 오답 집중 플래시카드</h3><span class="sub">' + totalWrong + '장</span></div>' +
+        '<p style="font-size:12px;color:var(--ink-2);line-height:1.6">틀린 가나·단어·회화·JLPT만 모아 <b>앞면 일본어 → 뒷면 읽기·뜻</b>으로 빠르게 회독해요. [다시 볼래요]를 누른 카드는 맨 뒤로 갑니다.</p>' +
+        '<button class="btn btn-accent btn-block" data-fc="start"' + (totalWrong ? '' : ' disabled') + '>오답 ' + totalWrong + '장 회독 시작</button>' +
+      '</div>' +
       wrongHTML +
       (totalWrong ? '<button class="btn btn-block" data-review="all">오답 전체 다시 풀기</button>' : '') +
       '<div class="section-title"><h2>★ 즐겨찾기</h2><span class="hint">' + (starKana.length + starWord.length + starSent.length) + '개</span></div>' +
@@ -3239,6 +3383,7 @@ function renderRoutine() {
   const host = $('#view-routine');
   if (!host) return;
   if (routineSub === 'diet') { host.innerHTML = dietViewHTML(); return; }
+  if (routineSub === 'weight') { host.innerHTML = weightViewHTML(); return; }
   const items = routineItems();
   const total = items.length;
   const day = routineDay(routineDate) || { checks: {}, mood: '', memo: '' };
@@ -3471,6 +3616,7 @@ function onRoutineClick(e) {
   const t = e.target;
   if (!t.closest) return;
   if (onDietClick(e)) return;
+  if (onWeightClick(e)) return;
   const bd = t.closest('[data-buddy]');
   if (bd) { nextBuddy(); return; }
   if (t.closest('[data-buddy-img]')) { nextBuddy(); return; }
@@ -3688,6 +3834,7 @@ function applyFridgeSeed(data) {
       qty: String(raw.qty || '').slice(0, 24),
       expires: /^\d{4}-\d{2}-\d{2}$/.test(String(raw.expires || '')) ? raw.expires : '',
       memo: String(raw.memo || '').slice(0, 120),
+      nutri: normalizeFridgeNutri(raw.nutri),
       out: false,
       src: 'seed'
     };
@@ -4203,6 +4350,7 @@ function routineSubNav() {
   return '<div class="seg dsub">' +
     '<button class="' + (routineSub === 'routine' ? 'active' : '') + '" data-rsub="routine" aria-pressed="' + (routineSub === 'routine') + '">📋 루틴</button>' +
     '<button class="' + (routineSub === 'diet' ? 'active' : '') + '" data-rsub="diet" aria-pressed="' + (routineSub === 'diet') + '">🥗 식단</button>' +
+    '<button class="' + (routineSub === 'weight' ? 'active' : '') + '" data-rsub="weight" aria-pressed="' + (routineSub === 'weight') + '">⚖️ 체중</button>' +
   '</div>';
 }
 
@@ -4271,6 +4419,7 @@ function dietViewHTML() {
   const cups = Math.floor(day.water / 500);
   return '<div class="view-inner">' +
     routineSubNav() +
+    menuCardHTML() +
     '<div class="card">' +
       '<div class="card-head"><h3>🥗 ' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + wd[dt.getDay()] + '요일' + (isToday ? ' · 오늘' : '') + '</h3>' +
         '<span class="sub">' + (t.count ? t.count + '개 · ' + num1(t.kcal) + ' kcal' : '기록 없음') + '</span></div>' +
@@ -4431,12 +4580,14 @@ function onDietClick(e) {
   const sub = t.closest('[data-rsub]');
   if (sub) {
     flushMemo(true);
-    routineSub = sub.dataset.rsub === 'diet' ? 'diet' : 'routine';
+    const rs = sub.dataset.rsub;
+    routineSub = (rs === 'diet' || rs === 'weight') ? rs : 'routine';
     renderRoutine();
     try { window.scrollTo(0, 0); } catch (err) {}
     return true;
   }
   if (routineSub !== 'diet') return false;
+  if (onMenuClick(e)) return true;
   const dd = t.closest('[data-dday]');
   if (dd) {
     const v = dd.dataset.dday;
@@ -4484,6 +4635,1012 @@ function dietMiniHTML() {
     '<div class="dmin-s">단백질 ' + num1(t.protein) + 'g / ' + g.protein[0] + '~' + g.protein[1] + 'g · 💧 ' + num1(water) + ' mL' +
       (t.count ? '' : ' · 눌러서 기록하기') + '</div>' +
   '</div>';
+}
+
+
+/* ---------------- 체중 · 인바디 · 마운자로 (weight-data.json 시드 동기화) ----------------
+   채팅에서 넘겨준 체중·인바디 기록(weight-data.json)을 받아 주간 추세로 보여주고,
+   앱에서 직접 넣은 체중·허리둘레·주사 기록은 이 기기에 남깁니다.
+   하루 수치가 아니라 주간 평균으로 판단하는 기준을 그대로 따릅니다. */
+const WEIGHT_SEED_KEY = 'weight_seed_version';
+const WEIGHT_DEFAULT_PROFILE = {
+  heightCm: 158, startDate: '2026-07-21', startWeight: 91.2, goalWeight: 58,
+  bmr: 1230, startWaist: 100, latestWaist: 97, waistNote: ''
+};
+let weightSyncing = false;
+let weightDraft = null;
+let weightDelAsk = false;
+let weightChartRange = 12;   /* 12주 | 0(전체) */
+
+function wtNum(v) { const n = Number(v); return (v === '' || v === null || v === undefined || !isFinite(n)) ? null : n; }
+function wtDateStr(v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? String(v) : ''; }
+
+function normalizeWeightProfile(raw) {
+  const p = Object.assign({}, WEIGHT_DEFAULT_PROFILE);
+  const r = raw && typeof raw === 'object' ? raw : {};
+  ['heightCm', 'startWeight', 'goalWeight', 'bmr', 'startWaist', 'latestWaist'].forEach(function (k) {
+    const v = wtNum(r[k]);
+    if (v !== null && v > 0) p[k] = v;
+  });
+  if (wtDateStr(r.startDate)) p.startDate = wtDateStr(r.startDate);
+  if (typeof r.waistNote === 'string') p.waistNote = r.waistNote.slice(0, 120);
+  return p;
+}
+function normalizeWeightEntry(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const date = wtDateStr(raw.date);
+  const kg = wtNum(raw.kg);
+  if (!date || kg === null || kg <= 0) return null;
+  const e = { date: date, kg: Math.round(kg * 100) / 100, src: raw.src === 'user' ? 'user' : 'seed' };
+  ['bodyFat', 'fatMass', 'muscle', 'visceral', 'waist'].forEach(function (f) {
+    const v = wtNum(raw[f]);
+    if (v !== null && v > 0) e[f] = Math.round(v * 100) / 100;
+  });
+  if (raw.edited) e.edited = true;
+  return e;
+}
+function normalizeWeightDose(raw) {
+  if (!raw || typeof raw !== 'object') return null;
+  const date = wtDateStr(raw.date);
+  const mg = wtNum(raw.mg);
+  if (!date || mg === null || mg <= 0) return null;
+  return { date: date, mg: mg, memo: String(raw.memo || '').slice(0, 30), src: raw.src === 'user' ? 'user' : 'seed' };
+}
+function normalizeWeight(raw) {
+  const w = raw && typeof raw === 'object' ? raw : {};
+  const entries = {};
+  if (w.entries && typeof w.entries === 'object') {
+    Object.keys(w.entries).forEach(function (k) {
+      const e = normalizeWeightEntry(Object.assign({ date: k }, w.entries[k] || {}));
+      if (e) entries[e.date] = e;
+    });
+  }
+  const doses = (Array.isArray(w.doses) ? w.doses : []).map(normalizeWeightDose).filter(Boolean)
+    .sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  return {
+    profile: normalizeWeightProfile(w.profile),
+    entries: entries,
+    doses: doses,
+    seedVersion: Number(w.seedVersion) || 0,
+    syncedAt: typeof w.syncedAt === 'string' ? w.syncedAt : ''
+  };
+}
+function weightState() {
+  if (!S.weight || typeof S.weight !== 'object') S.weight = normalizeWeight(null);
+  if (!S.weight.entries || typeof S.weight.entries !== 'object') S.weight.entries = {};
+  if (!S.weight.profile) S.weight.profile = normalizeWeightProfile(null);
+  if (!Array.isArray(S.weight.doses)) S.weight.doses = [];
+  return S.weight;
+}
+function weightProfile() { return weightState().profile; }
+function weightEntries() {
+  const m = weightState().entries;
+  return Object.keys(m).sort().map(function (k) { return m[k]; });
+}
+function weightLatest() { const a = weightEntries(); return a.length ? a[a.length - 1] : null; }
+function weightDoses() {
+  return weightState().doses.slice().sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+}
+function weightLastDose() { const d = weightDoses(); return d.length ? d[d.length - 1] : null; }
+
+/* 주간(월~일) 평균 체중. 기록이 없는 주는 건너뛰고, 전주 대비 변화도 함께 계산합니다. */
+function weightWeeks(limit) {
+  const map = {};
+  weightEntries().forEach(function (e) {
+    const w = weekStartOf(e.date);
+    (map[w] = map[w] || []).push(e.kg);
+  });
+  let weeks = Object.keys(map).sort().map(function (w) {
+    const arr = map[w];
+    const avg = arr.reduce(function (a, b) { return a + b; }, 0) / arr.length;
+    const d = parseDkey(w);
+    return {
+      week: w,
+      label: (d.getMonth() + 1) + '/' + d.getDate(),
+      avg: Math.round(avg * 100) / 100,
+      n: arr.length,
+      min: Math.min.apply(null, arr),
+      max: Math.max.apply(null, arr)
+    };
+  });
+  weeks.forEach(function (x, i) {
+    x.delta = i ? Math.round((x.avg - weeks[i - 1].avg) * 100) / 100 : 0;
+  });
+  if (limit && weeks.length > limit) weeks = weeks.slice(-limit);
+  return weeks;
+}
+
+/* 주간 평균 SVG 라인 + 전주 대비 막대(아래로 = 감소) */
+function weightChartSVG(limit) {
+  const weeks = weightWeeks(limit);
+  if (weeks.length < 2) {
+    return '<div class="empty">기록이 2주 이상 쌓이면 주간 추세선이 그려져요.<br>아래 <b>＋ 기록 추가</b>로 체중을 남겨 보세요.</div>';
+  }
+  const W = 340, H = 176;
+  const x0 = 32, x1 = 332, yTop = 12, yBot = 104;
+  const barMid = 137, barMax = 15;
+  const vals = weeks.map(function (w) { return w.avg; });
+  let lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
+  if (hi - lo < 1) { hi = lo + 0.5; lo -= 0.5; }
+  const padY = (hi - lo) * 0.18;
+  lo -= padY; hi += padY;
+  const X = function (i) { return weeks.length === 1 ? x0 : x0 + (x1 - x0) * i / (weeks.length - 1); };
+  const Y = function (v) { return yBot - (v - lo) / (hi - lo) * (yBot - yTop); };
+
+  let line = '', dots = '';
+  weeks.forEach(function (w, i) {
+    const x = X(i), y = Y(w.avg);
+    line += (i ? ' L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
+    const last = i === weeks.length - 1;
+    dots += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (last ? 3.4 : 2.1) + '" fill="' + (last ? '#C2563C' : '#2C5D52') + '"/>';
+  });
+  const area = '<path d="' + line + ' L' + X(weeks.length - 1).toFixed(1) + ' ' + (yBot + 2) +
+    ' L' + X(0).toFixed(1) + ' ' + (yBot + 2) + ' Z" fill="#2C5D52" opacity=".07"/>';
+  /* 마지막 값 라벨 */
+  const lastW = weeks[weeks.length - 1];
+  const lx = Math.min(x1 - 16, Math.max(x0 + 16, X(weeks.length - 1)));
+  const ly = Math.max(yTop + 8, Y(lastW.avg) - 8);
+
+  const deltas = weeks.map(function (w, i) { return i ? w.delta : 0; });
+  const maxAbs = Math.max(0.4, Math.max.apply(null, deltas.map(function (v) { return Math.abs(v); })));
+  const bw = Math.max(6, Math.min(16, (x1 - x0) / weeks.length * 0.5));
+  let bars = '';
+  weeks.forEach(function (w, i) {
+    if (!i) return;
+    const cx = X(i);
+    const h = Math.max(1, Math.min(barMax, Math.abs(w.delta) / maxAbs * barMax));
+    const up = w.delta > 0;
+    bars += '<rect x="' + (cx - bw / 2).toFixed(1) + '" y="' + (up ? barMid - h : barMid).toFixed(1) +
+      '" width="' + bw.toFixed(1) + '" height="' + h.toFixed(1) + '" rx="2" fill="' + (up ? '#C2563C' : '#2C5D52') + '" opacity=".72"/>';
+  });
+
+  const step = weeks.length > 8 ? Math.ceil(weeks.length / 5) : 1;
+  let labels = '';
+  weeks.forEach(function (w, i) {
+    if (i % step && i !== weeks.length - 1) return;
+    labels += '<text x="' + X(i).toFixed(1) + '" y="' + (H - 5) + '" text-anchor="middle" font-size="7.5" fill="#8D939C">' + esc(w.label) + '</text>';
+  });
+
+  return '<svg class="wt-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="주간 평균 체중 추세선과 전주 대비 막대">' +
+    '<line x1="' + x0 + '" y1="' + yTop + '" x2="' + x1 + '" y2="' + yTop + '" stroke="#EDE8DE" stroke-width="1"/>' +
+    '<line x1="' + x0 + '" y1="' + yBot + '" x2="' + x1 + '" y2="' + yBot + '" stroke="#EDE8DE" stroke-width="1"/>' +
+    '<text x="' + (x0 - 4) + '" y="' + (yTop + 3) + '" text-anchor="end" font-size="7.5" fill="#8D939C">' + hi.toFixed(1) + '</text>' +
+    '<text x="' + (x0 - 4) + '" y="' + (yBot - 1) + '" text-anchor="end" font-size="7.5" fill="#8D939C">' + lo.toFixed(1) + '</text>' +
+    area +
+    '<path d="' + line + '" fill="none" stroke="#2C5D52" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
+    dots +
+    '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle" font-size="8.5" font-weight="700" fill="#C2563C">' + lastW.avg.toFixed(2) + '</text>' +
+    '<line x1="' + x0 + '" y1="' + barMid + '" x2="' + x1 + '" y2="' + barMid + '" stroke="#E7E2D8" stroke-width="1"/>' +
+    bars + labels +
+  '</svg>';
+}
+
+function weightSummary() {
+  const p = weightProfile();
+  const latest = weightLatest();
+  const kg = latest ? latest.kg : p.startWeight;
+  const loss = Math.round((kg - p.startWeight) * 100) / 100;
+  const lossPct = p.startWeight ? Math.round(loss / p.startWeight * 1000) / 10 : 0;
+  const remain = Math.round((kg - p.goalWeight) * 100) / 100;
+  const bmi = (kg && p.heightCm) ? Math.round(kg / Math.pow(p.heightCm / 100, 2) * 10) / 10 : null;
+  const weeks = weightWeeks();
+  const lastW = weeks.length ? weeks[weeks.length - 1] : null;
+  const prevW = weeks.length > 1 ? weeks[weeks.length - 2] : null;
+  return {
+    profile: p, latest: latest, kg: kg, loss: loss, lossPct: lossPct, remain: remain, bmi: bmi,
+    weeks: weeks, lastW: lastW, prevW: prevW,
+    weekDelta: (lastW && prevW) ? Math.round((lastW.avg - prevW.avg) * 100) / 100 : null
+  };
+}
+function wtSigned(v, unit) {
+  if (v === null || v === undefined || !isFinite(v)) return '—';
+  return (v > 0 ? '+' : '') + (Math.round(v * 100) / 100) + (unit || '');
+}
+function weightLatestInBody() {
+  const list = weightEntries().filter(function (e) { return e.bodyFat != null || e.muscle != null; });
+  return list.length ? list[list.length - 1] : null;
+}
+
+function weightViewHTML() {
+  const ws = weightState();
+  const s = weightSummary();
+  const p = s.profile;
+  const latest = s.latest;
+  const inb = weightLatestInBody();
+  const doses = weightDoses();
+  const lastDose = weightLastDose();
+  const synced = ws.syncedAt ? new Date(ws.syncedAt) : null;
+  const rangeLabel = weightChartRange ? '최근 ' + weightChartRange + '주' : '전체';
+  const wd = ['일', '월', '화', '수', '목', '금', '토'];
+  const dates = weightEntries().slice(-8).reverse();
+
+  const rows = dates.map(function (e) {
+    const d = parseDkey(e.date);
+    const inbody = [];
+    if (e.bodyFat != null) inbody.push('체지방 ' + e.bodyFat + '%');
+    if (e.muscle != null) inbody.push('근육 ' + e.muscle + 'kg');
+    if (e.waist != null) inbody.push('허리 ' + e.waist + 'cm');
+    return '<div class="wt-row">' +
+      '<span class="d">' + (d.getMonth() + 1) + '/' + d.getDate() + '(' + wd[d.getDay()] + ')</span>' +
+      '<span class="k">' + e.kg.toFixed(2) + 'kg</span>' +
+      (inbody.length ? '<span class="bi">' + esc(inbody.join(' · ')) + '</span>' : '') +
+      '<span class="sp"></span>' +
+      '<button class="mini-btn" data-wedit="' + e.date + '" aria-label="' + e.date + ' 기록 수정">✎</button>' +
+    '</div>';
+  }).join('');
+
+  const doseChips = doses.slice(-8).map(function (d) {
+    const dt = parseDkey(d.date);
+    return '<span class="' + (lastDose && lastDose.date === d.date && lastDose.mg === d.mg ? 'hi' : '') + '">' +
+      (dt.getMonth() + 1) + '/' + dt.getDate() + ' · ' + d.mg + 'mg</span>';
+  }).join('');
+
+  return '<div class="view-inner">' +
+    routineSubNav() +
+
+    '<div class="vcols"><div class="vcol">' +
+    '<div class="card">' +
+      '<div class="card-head"><h3>⚖️ 최근 체중</h3><span class="sub">' +
+        (latest ? koreanDate(parseDkey(latest.date)) : '기록 없음') + '</span></div>' +
+      '<div class="wt-top"><span class="wt-kg">' + s.kg.toFixed(2) + '<small>kg</small></span>' +
+        '<span class="wt-delta' + (s.loss > 0 ? ' up' : '') + '">' + wtSigned(s.loss, 'kg') + '</span></div>' +
+      '<div class="wt-sub">시작 ' + p.startWeight + 'kg (' + p.startDate.slice(5).replace('-', '/') + ') · 목표 ' + p.goalWeight + 'kg' +
+        (s.bmi ? ' · BMI ' + s.bmi : '') + '</div>' +
+      '<div class="wt-grid">' +
+        '<div class="wt-stat"><b>' + wtSigned(s.loss, 'kg') + '</b><span>시작 대비 (' + wtSigned(s.lossPct, '%') + ')</span></div>' +
+        '<div class="wt-stat"><b>' + (s.remain > 0 ? s.remain.toFixed(2) + 'kg' : '달성') + '</b><span>목표까지 남은 체중</span></div>' +
+        '<div class="wt-stat"><b>' + (s.lastW ? s.lastW.avg.toFixed(2) + 'kg' : '—') + '</b><span>이번 주 평균</span></div>' +
+        '<div class="wt-stat"><b>' + (s.weekDelta === null ? '—' : wtSigned(s.weekDelta, 'kg')) + '</b><span>지난주 대비</span></div>' +
+      '</div>' +
+      '<div class="btn-row" style="margin-top:12px">' +
+        '<button class="btn btn-sm btn-primary" data-wadd="1">＋ 기록 추가</button>' +
+        '<button class="btn btn-sm" data-wsync="1">🔄 최신 기록 동기화</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="section-title"><h2>인바디</h2><span class="hint">' + (inb ? koreanDate(parseDkey(inb.date)) : '기록 없음') + '</span></div>' +
+    '<div class="card">' +
+      (inb
+        ? '<div class="wt-grid">' +
+            '<div class="wt-stat"><b>' + (inb.bodyFat != null ? inb.bodyFat + '%' : '—') + '</b><span>체지방률</span></div>' +
+            '<div class="wt-stat"><b>' + (inb.fatMass != null ? inb.fatMass + 'kg' : '—') + '</b><span>체지방량</span></div>' +
+            '<div class="wt-stat"><b>' + (inb.muscle != null ? inb.muscle + 'kg' : '—') + '</b><span>골격근량</span></div>' +
+            '<div class="wt-stat"><b>' + (inb.visceral != null ? inb.visceral : '—') + '</b><span>내장지방지수</span></div>' +
+          '</div>' +
+          '<p class="menu-eff">하루 사이 체지방량·골격근량이 크게 바뀐 기록은 수분·측정 조건에 따른 오차일 수 있어요. 하루 수치보다 주간 흐름으로 봅니다.</p>'
+        : '<div class="empty">인바디 기록이 아직 없어요.<br>측정했다면 <b>＋ 기록 추가</b>에 체지방률·골격근량을 함께 넣어 주세요.</div>') +
+    '</div>' +
+    '</div><div class="vcol">' +
+
+    '<div class="card">' +
+      '<div class="card-head"><h3>📈 주간 평균 체중 추세</h3>' +
+        '<div class="wt-tools"><button class="mini-btn" data-wtrange="' + (weightChartRange ? 0 : 12) + '">' + rangeLabel + ' ▾</button></div></div>' +
+      weightChartSVG(weightChartRange) +
+      '<div class="wt-legend"><span><i style="background:#2C5D52"></i>주간 평균</span>' +
+        '<span><i style="background:#2C5D52"></i>줄었어요</span><span><i style="background:#C2563C"></i>늘었어요</span></div>' +
+      '<p class="menu-eff">하루 수분 오차에 흔들리지 않게 주간 평균으로 봅니다. 기록이 없는 기간은 선으로 이어 그렸어요.</p>' +
+    '</div>' +
+
+    '<div class="section-title"><h2>💉 마운자로</h2><span class="hint">' + (lastDose ? '최근 ' + lastDose.date.slice(5).replace('-', '/') + ' · ' + lastDose.mg + 'mg' : '기록 없음') + '</span></div>' +
+    '<div class="card">' +
+      (doses.length
+        ? '<div class="wt-dose">' + doseChips + '</div>' +
+          '<p class="menu-eff">2.5mg 3회(7/21·7/28·8/10) 뒤 8/19부터 5mg. 용량·주사일은 <b>＋ 기록 추가</b>에서 남길 수 있어요.</p>'
+        : '<div class="empty">주사 기록이 아직 없어요.<br><b>＋ 기록 추가</b>에 오늘 용량을 넣어 주세요.</div>') +
+    '</div>' +
+    '</div></div>' +
+
+    '<div class="section-title"><h2>최근 기록</h2><span class="hint">' + weightEntries().length + '일</span></div>' +
+    '<div class="card tight">' +
+      (rows || '<div class="empty">아직 체중 기록이 없어요.</div>') +
+      '<p class="menu-eff">' + (synced
+        ? '마지막 동기화 · ' + (synced.getMonth() + 1) + '월 ' + synced.getDate() + '일 ' + pad2(synced.getHours()) + ':' + pad2(synced.getMinutes()) + ' (v' + (ws.seedVersion || 0) + ')'
+        : '채팅에서 넘겨준 체중 기록을 아직 받지 않았어요') +
+        ' · 허리둘레는 매주 월요일 측정' + (p.waistNote ? ' (' + esc(p.waistNote) + ')' : '') + '</p>' +
+    '</div>' +
+
+    '<p class="foot-note">체중·마운자로 기록은 이 기기와 <b>weight-data.json</b>을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.</p>' +
+  '</div>';
+}
+
+/* 채팅으로 넘겨받은 최신 기록(weight-data.json) 반영.
+   앱에서 직접 넣은 날짜 기록은 그대로 두고, 채팅 기록이 새 날짜를 채웁니다. */
+function applyWeightSeed(data) {
+  if (!data || typeof data !== 'object') return { added: 0, updated: 0 };
+  const ws = weightState();
+  ws.profile = normalizeWeightProfile(data.profile);
+  let added = 0, updated = 0;
+  (Array.isArray(data.entries) ? data.entries : []).forEach(function (raw) {
+    const e = normalizeWeightEntry(raw);
+    if (!e) return;
+    const cur = ws.entries[e.date];
+    if (cur && cur.src === 'user' && cur.edited) return;
+    if (!cur) added++;
+    else if (cur.kg !== e.kg) updated++;
+    ws.entries[e.date] = e;
+  });
+  const keepUser = ws.doses.filter(function (d) { return d.src === 'user'; });
+  const seedDoses = (Array.isArray(data.doses) ? data.doses : []).map(function (d) { return normalizeWeightDose(Object.assign({ src: 'seed' }, d)); }).filter(Boolean);
+  ws.doses = seedDoses.concat(keepUser).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  return { added: added, updated: updated };
+}
+function syncWeightSeed(force) {
+  if (weightSyncing) return Promise.resolve({ busy: true });
+  weightSyncing = true;
+  return fetch('weight-data.json?t=' + Date.now(), { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (data) {
+      const ver = Number(data && data.version) || 0;
+      let cur = 0;
+      try { cur = Number(localStorage.getItem(WEIGHT_SEED_KEY)) || 0; } catch (e) { cur = 0; }
+      const ws = weightState();
+      if (Number(ws.seedVersion) > cur) cur = Number(ws.seedVersion);
+      if (!force && ver > 0 && ver <= cur) return { applied: false, version: ver, current: cur };
+      const res = applyWeightSeed(data || {});
+      ws.seedVersion = ver;
+      ws.syncedAt = new Date().toISOString();
+      try { localStorage.setItem(WEIGHT_SEED_KEY, String(ver)); } catch (e) {}
+      save();
+      return Object.assign({ applied: true, version: ver }, res);
+    })
+    .catch(function (e) { return { error: String((e && e.message) || e) }; })
+    .then(function (out) { weightSyncing = false; return out; });
+}
+function weightQuietSync() {
+  syncWeightSeed(false).then(function (r) {
+    if (r && r.applied) {
+      if (currentTab === 'home') renderHome();
+      else if (currentTab === 'routine' && routineSub === 'weight') renderRoutine();
+    }
+  });
+}
+function syncWeightNow(force) {
+  toast(force ? '최신 체중 기록을 확인하는 중…' : '체중 기록을 확인하는 중…');
+  syncWeightSeed(force).then(function (r) {
+    if (r && r.error) { toast('동기화하지 못했어요 · ' + r.error); return; }
+    if (r && r.applied) {
+      renderRoutine();
+      toast('체중 기록을 받았어요 · 새 기록 ' + r.added + '일');
+    } else if (r && r.version) {
+      toast('이미 최신 기록이에요 (v' + r.version + ')');
+    } else {
+      renderRoutine();
+      toast('체중 기록 파일을 찾지 못했어요');
+    }
+  });
+}
+
+/* 기록 추가/수정 시트 */
+function openWeightEntry(date) {
+  const k = date || dkey();
+  const e = weightState().entries[k];
+  weightDraft = {
+    date: k,
+    kg: e ? String(e.kg) : '',
+    bodyFat: e && e.bodyFat != null ? String(e.bodyFat) : '',
+    muscle: e && e.muscle != null ? String(e.muscle) : '',
+    waist: e && e.waist != null ? String(e.waist) : '',
+    mg: '',
+    memo: ''
+  };
+  weightDelAsk = false;
+  renderWeightSheet();
+}
+function syncWeightInputs() {
+  if (!weightDraft) return;
+  const g = function (id) { const el = document.getElementById(id); return el ? String(el.value || '') : ''; };
+  weightDraft.date = g('wDate') || weightDraft.date;
+  weightDraft.kg = g('wKg');
+  weightDraft.bodyFat = g('wFat');
+  weightDraft.muscle = g('wMuscle');
+  weightDraft.waist = g('wWaist');
+  weightDraft.mg = g('wMg');
+  weightDraft.memo = g('wMemo');
+}
+function renderWeightSheet() {
+  if (!weightDraft) return;
+  const edit = !!weightState().entries[weightDraft.date];
+  openSheet(
+    '<div class="quiz-head"><b>⚖️ ' + (edit ? '체중 기록 수정' : '체중 기록 추가') + '</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<label class="field-label" for="wDate">날짜</label>' +
+    '<input class="field" type="date" id="wDate" value="' + esc(weightDraft.date) + '">' +
+    '<label class="field-label" for="wKg">체중<span>kg · 필수</span></label>' +
+    '<input class="field" type="number" id="wKg" inputmode="decimal" min="20" max="300" step="0.01" value="' + esc(weightDraft.kg) + '" placeholder="예: 84.51">' +
+    '<label class="field-label">인바디 · 허리둘레<span>모르면 비워두세요</span></label>' +
+    '<div class="dmac">' +
+      '<input class="field" type="number" id="wFat" inputmode="decimal" min="0" step="0.1" value="' + esc(weightDraft.bodyFat) + '" placeholder="체지방 %" aria-label="체지방률 %">' +
+      '<input class="field" type="number" id="wMuscle" inputmode="decimal" min="0" step="0.01" value="' + esc(weightDraft.muscle) + '" placeholder="골격근 kg" aria-label="골격근량 kg">' +
+      '<input class="field" type="number" id="wWaist" inputmode="decimal" min="0" step="0.1" value="' + esc(weightDraft.waist) + '" placeholder="허리 cm" aria-label="허리둘레 cm">' +
+    '</div>' +
+    '<label class="field-label" for="wMg">오늘 마운자로 주사<span>mg · 주사한 날만</span></label>' +
+    '<input class="field" type="number" id="wMg" inputmode="decimal" min="0" max="15" step="0.5" value="' + esc(weightDraft.mg) + '" placeholder="예: 5">' +
+    '<label class="field-label" for="wMemo">메모<span>선택</span></label>' +
+    '<input class="field" type="text" id="wMemo" value="' + esc(weightDraft.memo) + '" placeholder="예: 제주 여행 이후" maxlength="30">' +
+    '<div class="q-foot">' +
+      (edit ? (weightDelAsk
+        ? '<button class="btn btn-danger" data-wdelok="1">정말 삭제</button><button class="btn" data-wdelno="1">취소</button>'
+        : '<button class="btn btn-danger" data-wdel="1">삭제</button>') : '') +
+      '<button class="btn btn-primary" data-wsave="1">저장</button>' +
+    '</div>'
+  );
+}
+function saveWeightEntry() {
+  if (!weightDraft) return;
+  syncWeightInputs();
+  const date = wtDateStr(weightDraft.date);
+  if (!date) { toast('날짜를 골라 주세요'); return; }
+  const kg = wtNum(weightDraft.kg);
+  if (kg === null || kg < 20 || kg > 300) { toast('체중을 숫자로 적어 주세요 (kg)'); return; }
+  const ws = weightState();
+  const prev = ws.entries[date];
+  const e = {
+    date: date, kg: Math.round(kg * 100) / 100, src: 'user', edited: true
+  };
+  [['bodyFat', 'bodyFat'], ['muscle', 'muscle'], ['waist', 'waist']].forEach(function (pair) {
+    const v = wtNum(weightDraft[pair[0]]);
+    if (v !== null && v > 0) e[pair[1]] = Math.round(v * 100) / 100;
+  });
+  if (prev && prev.fatMass != null && e.bodyFat == null) e.fatMass = prev.fatMass;
+  if (prev && prev.visceral != null && e.bodyFat == null) e.visceral = prev.visceral;
+  ws.entries[date] = e;
+  const mg = wtNum(weightDraft.mg);
+  if (mg !== null && mg > 0) {
+    ws.doses = ws.doses.filter(function (d) { return d.date !== date; });
+    ws.doses.push({ date: date, mg: mg, memo: String(weightDraft.memo || '').slice(0, 30), src: 'user' });
+    ws.doses.sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
+  }
+  weightDelAsk = false;
+  save();
+  closeSheet();
+  renderRoutine();
+  toast('체중 기록 저장 · ' + date.slice(5).replace('-', '/') + ' ' + e.kg.toFixed(2) + 'kg' + (mg ? ' · ' + mg + 'mg' : ''));
+}
+function deleteWeightEntry(date) {
+  const ws = weightState();
+  if (!ws.entries[date]) return;
+  delete ws.entries[date];
+  ws.doses = ws.doses.filter(function (d) { return !(d.date === date && d.src === 'user'); });
+  weightDelAsk = false;
+  save();
+  closeSheet();
+  renderRoutine();
+  toast('기록을 지웠어요');
+}
+function onWeightClick(e) {
+  const t = e.target;
+  if (!t || !t.closest) return false;
+  if (routineSub !== 'weight') return false;
+  const rng = t.closest('[data-wtrange]');
+  if (rng) { weightChartRange = Number(rng.dataset.wtrange) || 0; renderRoutine(); return true; }
+  if (t.closest('[data-wadd]')) { openWeightEntry(); return true; }
+  const we = t.closest('[data-wedit]');
+  if (we) { openWeightEntry(we.dataset.wedit); return true; }
+  if (t.closest('[data-wsync]')) { syncWeightNow(true); return true; }
+  const wd = t.closest('[data-wdel]');
+  if (wd) { openWeightEntry(wd.dataset.wdel); weightDelAsk = true; renderWeightSheet(); return true; }
+  const sp = t.closest('[data-speak]');
+  if (sp) { speak(sp.dataset.speak); return true; }
+  return false;
+}
+function onWeightSheetClick(e) {
+  if (!weightDraft) return false;
+  const t = e.target;
+  if (!t || !t.closest) return false;
+  if (t.closest('[data-wsave]')) { saveWeightEntry(); return true; }
+  if (t.closest('[data-wdelok]')) { const d = weightDraft; deleteWeightEntry(d.date); return true; }
+  if (t.closest('[data-wdel]')) { syncWeightInputs(); weightDelAsk = true; renderWeightSheet(); return true; }
+  if (t.closest('[data-wdelno]')) { weightDelAsk = false; renderWeightSheet(); return true; }
+  return false;
+}
+/* 홈 식단 카드에 붙는 체중 요약 한 줄 */
+function homeWeightLineHTML() {
+  const s = weightSummary();
+  if (!s.latest) {
+    return '<div class="hm-weight"><span>⚖️ 체중 기록을 남겨 보세요</span><span class="sp"></span>' +
+      '<button class="link" data-goto-weight="1">기록하기 ›</button></div>';
+  }
+  return '<div class="hm-weight">⚖️ <b>' + s.kg.toFixed(2) + 'kg</b>' +
+    '<span class="d' + (s.loss > 0 ? ' up' : '') + '">' + wtSigned(s.loss, 'kg') + '</span>' +
+    '<span>· 목표까지 ' + (s.remain > 0 ? s.remain.toFixed(2) + 'kg' : '달성') + '</span>' +
+    '<span class="sp"></span><button class="link" data-goto-weight="1">체중·마운자로 ›</button></div>';
+}
+
+
+/* ---------------- 냉장고 × 남은 칼로리 맞춤 메뉴 (원탭 식단·재고 반영) ----------------
+   오늘 남은 칼로리·단백질 안에서 냉장고에 실제로 있는 재료만 골라 2~3가지를 제안합니다.
+   [🍽️ 이거 먹었음]을 누르면 오늘 식단에 들어가고, 숫자로 관리되는 재료는 수량도 함께 줄어요. */
+const MENU_FOODS = {
+  'oven-chicken-tender': { label: '오븐구이 닭안심살', serving: '1팩 100g', unit: '팩', kcal: 90, carb: 0.5, protein: 21, fat: 0.5, role: '고기·해산물', est: false },
+  'hyunmi-crunch-chicken': { label: '현미크런치 닭가슴살', serving: '1팩 100g', unit: '팩', kcal: 129, carb: 4, protein: 17, fat: 4, role: '고기·해산물', est: false },
+  'soymilk-blackbean': { label: '매일두유 고단백 검은콩', serving: '1팩 190mL', unit: '팩', kcal: 110, carb: 6, protein: 12, fat: 5, role: '음료', est: false },
+  'soymilk': { label: '두유', serving: '1팩 190mL', unit: '팩', kcal: 110, carb: 6, protein: 12, fat: 5, role: '음료', est: true },
+  'egg': { label: '계란', serving: '1알 50g', unit: '알', kcal: 70, carb: 0.5, protein: 6, fat: 5, role: '달걀·두부', est: false },
+  'enoki': { label: '팽이버섯', serving: '1묶음 100g', unit: '묶음', kcal: 35, carb: 7, protein: 2.5, fat: 0.2, role: '채소', est: true },
+  'tofu': { label: '순두부', serving: '100g', unit: '봉', kcal: 50, carb: 2, protein: 5, fat: 2.5, role: '달걀·두부', est: true },
+  'frozen-chicken-tender': { label: '냉동 닭안심살', serving: '100g', unit: '봉', kcal: 105, carb: 0, protein: 22, fat: 1.5, role: '고기·해산물', est: true },
+  'frozen-chicken-breast': { label: '냉동 닭가슴살', serving: '100g', unit: '봉', kcal: 110, carb: 0, protein: 23, fat: 1.5, role: '고기·해산물', est: true },
+  'frozen-shrimp': { label: '냉동새우', serving: '100g', unit: '봉', kcal: 90, carb: 0.5, protein: 20, fat: 1, role: '고기·해산물', est: true },
+  'frozen-squid': { label: '냉동오징어', serving: '100g', unit: '봉', kcal: 92, carb: 3, protein: 18, fat: 0.8, role: '고기·해산물', est: true },
+  'frozen-lamb-skewer': { label: '냉동양꼬치', serving: '1꼬치 30g', unit: '개', kcal: 75, carb: 1, protein: 5.4, fat: 5.5, role: '고기·해산물', est: true }
+};
+let menuState = { combos: [], offset: 0, remKcal: 0, remProtein: 0 };
+
+function menuNum(v) { const n = Number(v); return (v === '' || v === null || v === undefined || !isFinite(n)) ? null : n; }
+/* 사용자가 직접 넣은 재료도 이름으로 영양성분을 짐작합니다 (추정 표시) */
+function menuFoodByName(name) {
+  const s = String(name || '');
+  if (/현미크런치|닭가슴살.*크런치/.test(s)) return MENU_FOODS['hyunmi-crunch-chicken'];
+  if (/오븐구이|닭안심/.test(s)) return MENU_FOODS['oven-chicken-tender'];
+  if (/닭가슴살/.test(s)) return MENU_FOODS['frozen-chicken-breast'];
+  if (/두유/.test(s)) return MENU_FOODS['soymilk'];
+  if (/계란|달걀/.test(s)) return MENU_FOODS['egg'];
+  if (/팽이/.test(s)) return MENU_FOODS['enoki'];
+  if (/순두부|두부/.test(s)) return MENU_FOODS['tofu'];
+  if (/새우/.test(s)) return MENU_FOODS['frozen-shrimp'];
+  if (/오징어/.test(s)) return MENU_FOODS['frozen-squid'];
+  if (/양꼬치/.test(s)) return MENU_FOODS['frozen-lamb-skewer'];
+  return null;
+}
+function fridgeNutri(it) {
+  if (!it) return null;
+  const base = MENU_FOODS[it.id] || menuFoodByName(it.name);
+  const n = it.nutri && typeof it.nutri === 'object' ? it.nutri : null;
+  const pick = function (key, alt, def) {
+    const v = n ? menuNum(n[key]) : null;
+    if (v !== null && v >= 0) return v;
+    if (base && typeof base[alt] === 'number') return base[alt];
+    return def;
+  };
+  const kcal = pick('kcal', 'kcal', null);
+  if (kcal === null || kcal <= 0) return null;
+  return {
+    label: (base && base.label) || it.name,
+    serving: (n && typeof n.serving === 'string' && n.serving) || (base && base.serving) || '1회분',
+    unit: (n && typeof n.unit === 'string' && n.unit) || (base && base.unit) || '개',
+    kcal: kcal,
+    carb: pick('carb', 'carb', 0),
+    protein: pick('protein', 'protein', 0),
+    fat: pick('fat', 'fat', 0),
+    role: (base && base.role) || '기타',
+    est: !!(n && n.est) || !!(base && base.est) || !base
+  };
+}
+function fridgeQtyParts(qty) {
+  const m = String(qty || '').match(/^\s*(\d+(?:\.\d+)?)\s*(.*)$/);
+  return m ? { n: Number(m[1]), unit: m[2] || '' } : null;
+}
+function mealNowKey() {
+  const h = new Date().getHours();
+  if (h < 11) return 'breakfast';
+  if (h < 15) return 'lunch';
+  if (h < 21) return 'dinner';
+  return 'snack';
+}
+function mealNowLabel() {
+  const m = DIET_MEALS.filter(function (x) { return x.k === mealNowKey(); })[0];
+  return m ? m.l : '간식';
+}
+function menuSuggest() {
+  const t = dietTotals(dietState().days[dkey()]);
+  const g = dietGoals();
+  const remKcal = Math.round(Math.max(0, g.calories - t.kcal) * 10) / 10;
+  const remProtein = Math.round(Math.max(0, g.protein[0] - t.protein) * 10) / 10;
+  const pool = [];
+  fridgeItems().forEach(function (it) {
+    if (it.out) return;
+    const n = fridgeNutri(it);
+    if (!n) return;
+    const q = fridgeQtyParts(it.qty);
+    if (q && q.n <= 0) return;
+    /* 2인분은 알·개처럼 작은 단위만 (계란 2알 등). 팩·봉은 1회분씩 */
+    const maxN = (q && (q.unit === '알' || q.unit === '개') && q.n >= 2) ? 2 : 1;
+    pool.push(Object.assign({ id: it.id, name: it.name, maxN: maxN, qty: it.qty }, n));
+  });
+
+  const combos = [];
+  const maxPick = Math.min(3, pool.length);
+  function rec(start, picks, kcal, carb, protein, fat, doubled) {
+    if (picks.length) {
+      if (kcal >= 40 && kcal <= remKcal * 1.06 + 25) {
+        const ratio = remKcal > 0 ? kcal / remKcal : 0;
+        let kcalScore = 1 - Math.abs(ratio - 0.95);
+        if (ratio > 1.06) kcalScore -= (ratio - 1.06) * 3;
+        const proScore = remProtein > 3 ? Math.min(1.2, protein / remProtein) : 0.5;
+        const servings = picks.reduce(function (a, p) { return a + p.count; }, 0);
+        const roleSet = {};
+        picks.forEach(function (p) { roleSet[p.role || '기타'] = 1; });
+        const roleBonus = 0.3 * (Object.keys(roleSet).length - 1);
+        const overPenalty = (remProtein > 3 && protein > remProtein * 1.15) ? (protein / remProtein - 1.15) * 1.2 : 0;
+        const score = kcalScore * 2 + proScore * 1.6 + roleBonus - overPenalty - 0.18 * (servings - 1);
+        combos.push({
+          picks: picks.slice(),
+          kcal: Math.round(kcal * 10) / 10,
+          carb: Math.round(carb * 10) / 10,
+          protein: Math.round(protein * 10) / 10,
+          fat: Math.round(fat * 10) / 10,
+          score: score
+        });
+      }
+    }
+    if (picks.length >= maxPick) return;
+    for (let i = start; i < pool.length; i++) {
+      const p = pool[i];
+      /* 한 조합에서 2인분은 한 재료까지만 (계란 2알 정도) */
+      const cap = doubled ? 1 : p.maxN;
+      for (let c = 1; c <= cap; c++) {
+        picks.push({ id: p.id, name: p.label, unit: p.unit, serving: p.serving, count: c, kcal: p.kcal, carb: p.carb, protein: p.protein, fat: p.fat, role: p.role, est: p.est });
+        rec(i + 1, picks, kcal + p.kcal * c, carb + p.carb * c, protein + p.protein * c, fat + p.fat * c, doubled || c > 1);
+        picks.pop();
+      }
+    }
+  }
+  rec(0, [], 0, 0, 0, 0, false);
+  combos.sort(function (a, b) { return b.score - a.score; });
+  /* 같은 재료 구성은 한 번만, 그리고 서로 다른 재료가 섞인 조합을 우선 */
+  const seen = {}, out = [];
+  combos.forEach(function (c) {
+    const sig = c.picks.map(function (p) { return p.id + 'x' + p.count; }).sort().join('|');
+    if (seen[sig]) return;
+    seen[sig] = 1;
+    out.push(c);
+  });
+  return { remKcal: remKcal, remProtein: remProtein, total: t, combos: out, poolSize: pool.length };
+}
+function menuComboTitle(c) {
+  return c.picks.map(function (p) {
+    return p.name + ' ' + p.count + p.unit;
+  }).join(' + ');
+}
+function menuCardHTML() {
+  const ms = menuSuggest();
+  const off = ms.combos.length ? (menuState.offset || 0) % ms.combos.length : 0;
+  const ordered = ms.combos.slice(off).concat(ms.combos.slice(0, off));
+  const shown = [];
+  const idsUsed = {};
+  ordered.forEach(function (c) {
+    if (shown.length >= 3) return;
+    const ids = c.picks.map(function (p) { return p.id; }).sort().join('|');
+    if (idsUsed[ids]) return;
+    idsUsed[ids] = 1;
+    shown.push(c);
+  });
+  menuState = { combos: shown, offset: off, remKcal: ms.remKcal, remProtein: ms.remProtein };
+  const day = dietState().days[dkey()];
+  const hasDay = !!(day && dietTotals(day).count);
+
+  let body;
+  if (!ms.poolSize) {
+    body = '<div class="empty">냉장고에 영양 정보를 아는 재료가 없어요.<br><b>냉장고</b> 탭에서 재료를 넣으면 남은 칼로리에 맞춰 조합을 골라 드려요.</div>';
+  } else if (!shown.length) {
+    const why = ms.remKcal <= 0
+      ? '오늘 목표를 이미 채웠어요. 더 먹었다면 식단에 직접 기록해 주세요.'
+      : ms.remKcal < 200
+        ? '남은 ' + num1(ms.remKcal) + ' kcal가 적어서 조합을 만들기 어려워요. 오늘은 여기서 마무리해도 좋아요.'
+        : '냉장고 재료로는 남은 ' + num1(ms.remKcal) + ' kcal에 맞는 조합이 없어요. 재료를 조금 더 넣어 보세요.';
+    body = '<div class="empty">' + why + '</div>' +
+      (ms.remKcal >= 120
+        ? '<div class="menu-item" style="margin-top:9px"><div class="menu-top"><b>가볍게 한 끼</b><span class="menu-k">직접 기록</span></div>' +
+          '<div class="menu-mac">오늘 남은 칼로리 안에서 직접 골라 기록할 수 있어요.</div>' +
+          '<button class="btn btn-sm" data-dgoto="1">🥗 식단에 직접 추가</button></div>'
+        : '');
+  } else {
+    body = '<div class="menu-list">' + shown.map(function (c, i) {
+      const pct = ms.remKcal > 0 ? Math.round(c.kcal / ms.remKcal * 100) : 0;
+      const proPct = ms.remProtein > 0 ? Math.round(Math.min(100, c.protein / ms.remProtein * 100)) : 100;
+      const estBadge = c.picks.some(function (p) { return p.est; }) ? '<span class="dm-est">추정</span>' : '';
+      return '<div class="menu-item' + (i === 0 ? ' best' : '') + '">' +
+        '<div class="menu-top"><b>' + esc(menuComboTitle(c)) + '</b><span class="menu-k">' + num1(c.kcal) + ' kcal</span></div>' +
+        '<div class="menu-mac">단 ' + num1(c.protein) + 'g · 탄 ' + num1(c.carb) + 'g · 지 ' + num1(c.fat) + 'g ' + estBadge + '</div>' +
+        '<div class="menu-why">남은 칼로리의 ' + pct + '% · 남은 단백질의 ' + proPct + '%' +
+          (i === 0 ? ' · 가장 잘 맞아요' : '') + '</div>' +
+        '<button class="btn btn-sm ' + (i === 0 ? 'btn-primary' : '') + '" data-menu-eat="' + i + '">🍽️ 이거 먹었음</button>' +
+      '</div>';
+    }).join('') + '</div>' +
+    '<div class="menu-eff">누르면 <b>' + esc(mealNowLabel()) + '</b>에 들어가고, 숫자로 관리되는 재료는 수량도 함께 줄어요.' +
+      (hasDay ? '' : ' · 오늘 첫 기록이에요.') + '</div>' +
+    '<div class="menu-foot"><span>추천 ' + ms.combos.length + '가지</span>' +
+      '<button class="mini-btn" data-menu-refresh="1">🔄 다른 조합</button></div>';
+  }
+
+  return '<div class="card menu-card">' +
+    '<div class="card-head"><h3>✨ 지금 냉장고로 뭐 먹지?</h3>' +
+      '<span class="sub">남은 ' + num1(ms.remKcal) + ' kcal' + (ms.remProtein > 0 ? ' · 단백질 ' + num1(ms.remProtein) + 'g' : '') + '</span></div>' +
+    body +
+  '</div>';
+}
+function eatMenuCombo(idx) {
+  const c = (menuState.combos || [])[idx];
+  if (!c) { toast('추천이 바뀌었어요 · 다시 골라 주세요'); renderRoutine(); return; }
+  const day = dietDay(dkey(), true);
+  const meal = mealNowKey();
+  if (!Array.isArray(day.meals[meal])) day.meals[meal] = [];
+  const stamp = Date.now().toString(36);
+  const used = [];
+  c.picks.forEach(function (p, i) {
+    day.meals[meal].push({
+      id: 'mn-' + stamp + '-' + i,
+      name: p.name + ' ' + p.count + p.unit,
+      kcal: Math.round(p.kcal * p.count * 10) / 10,
+      carb: Math.round(p.carb * p.count * 10) / 10,
+      protein: Math.round(p.protein * p.count * 10) / 10,
+      fat: Math.round(p.fat * p.count * 10) / 10,
+      est: !!p.est,
+      src: 'menu'
+    });
+    const it = fridgeState().items.filter(function (x) { return x.id === p.id; })[0];
+    if (!it) return;
+    const q = fridgeQtyParts(it.qty);
+    if (!q) return;
+    const next = Math.round((q.n - p.count) * 100) / 100;
+    if (next <= 0) {
+      it.qty = '0' + (q.unit || '');
+      it.out = true;
+      used.push(it.name + ' 다 먹었어요');
+    } else {
+      it.qty = next + (q.unit || '');
+      it.edited = true;
+      used.push(it.name + ' ' + it.qty);
+    }
+  });
+  day.edited = true;
+  save();
+  renderRoutine();
+  toast('🍽️ ' + mealNowLabel() + '에 넣었어요 · ' + num1(c.kcal) + ' kcal' + (used.length ? ' · ' + used.slice(0, 2).join(' · ') : ''));
+}
+function homeMenuLineHTML() {
+  const ms = menuSuggest();
+  const top = ms.combos[0];
+  let line;
+  if (top) {
+    line = top.picks.map(function (p) { return p.name + ' ' + p.count + p.unit; }).join(' + ') + ' · ' + num1(top.kcal) + ' kcal';
+  } else if (!ms.poolSize) {
+    line = '냉장고 재료를 넣으면 남은 칼로리에 맞춰 골라 드려요';
+  } else {
+    line = '남은 ' + num1(ms.remKcal) + ' kcal 안에서 조합을 찾아 볼게요';
+  }
+  return '<button class="hm-menu" data-hmmenu="1" aria-label="냉장고 재료로 맞춤 메뉴 추천 보기">✨' +
+    '<span><b>지금 냉장고로 뭐 먹지?</b><small>' + esc(line) + '</small></span></button>';
+}
+function onMenuClick(e) {
+  const t = e.target;
+  if (!t || !t.closest) return false;
+  const eat = t.closest('[data-menu-eat]');
+  if (eat) { eatMenuCombo(Number(eat.dataset.menuEat)); return true; }
+  if (t.closest('[data-menu-refresh]')) {
+    const ms = menuSuggest();
+    menuState.offset = (menuState.offset + 3) % Math.max(3, ms.combos.length || 3);
+    renderRoutine();
+    return true;
+  }
+  if (t.closest('[data-dgoto]')) { openDietItem(mealNowKey(), ''); return true; }
+  return false;
+}
+
+
+/* ---------------- 🎯 2027.07 JLPT N3 로드맵 ----------------
+   Step 1 N5 1회독 → Step 2 N4 핵심 → Step 3 N3 집중 → 2027.07 시험.
+   체크한 항목은 이 기기에 저장되고 복습 탭의 JSON 백업에도 담깁니다. */
+const N3_EXAM_DATE = '2027-07-04';   /* 7월 첫째 일요일 · 공식 일정은 접수 전에 확인 */
+const N3_ROADMAP = [
+  {
+    id: 's1', step: 'Step 1', title: 'N5 1회독', period: '2026.11~12',
+    items: [
+      '가나 46음 + 탁음·요음 읽고 쓰기',
+      'N5 단어·한자 131개 1회독',
+      'N5 문법 15개 정리',
+      '일상·여행 회화 48문장 소리 내어 읽기',
+      '한 줄 일기 20일 이상 쓰기'
+    ]
+  },
+  {
+    id: 's2', step: 'Step 2', title: 'N4 핵심', period: '2027.01~02',
+    items: [
+      'N4 한자 300자 익히기',
+      'N4 문법 80개 정리',
+      'N4 단어 1,500개 중 800개 익히기',
+      '짧은 독해 하루 1지문',
+      '오답노트 주 1회 회독'
+    ]
+  },
+  {
+    id: 's3', step: 'Step 3', title: 'N3 집중', period: '2027.03~06',
+    items: [
+      'N3 문법 120개 정리',
+      'N3 단어 2,500개 회독',
+      '독해 지문 하루 2개',
+      '청해 30분 매일 듣기',
+      '모의고사 3회 이상 풀기'
+    ]
+  },
+  {
+    id: 's4', step: '시험', title: '2027.07 JLPT N3', period: '2027.07.04(일) 예정',
+    items: [
+      '접수 일정 확인하고 접수하기',
+      '수험표·신분증 준비',
+      '시험 전 주 오답 총정리'
+    ]
+  }
+];
+function n3State() {
+  if (!S.n3 || typeof S.n3 !== 'object') S.n3 = { checks: {} };
+  if (!S.n3.checks || typeof S.n3.checks !== 'object') S.n3.checks = {};
+  return S.n3;
+}
+function n3Key(stepId, i) { return stepId + ':' + i; }
+function n3Done(stepId, i) { return !!n3State().checks[n3Key(stepId, i)]; }
+function n3StepStat(step) {
+  const total = step.items.length;
+  let done = 0;
+  step.items.forEach(function (_, i) { if (n3Done(step.id, i)) done++; });
+  return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
+}
+function n3Stats() {
+  let done = 0, total = 0;
+  N3_ROADMAP.forEach(function (s) { const st = n3StepStat(s); done += st.done; total += st.total; });
+  return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
+}
+function n3DDay() {
+  const today = parseDkey(dkey());
+  const exam = parseDkey(N3_EXAM_DATE);
+  return Math.round((exam - today) / 86400000);
+}
+function n3Toggle(key) {
+  const st = n3State();
+  if (st.checks[key]) delete st.checks[key];
+  else st.checks[key] = true;
+  save();
+  if (currentTab === 'studytoday') renderStudyToday();
+  else if (currentTab === 'home') renderHome();
+  const s = n3Stats();
+  toast((st.checks[key] ? '✓ ' : '') + 'N3 로드맵 ' + s.done + ' / ' + s.total + ' (' + s.pct + '%)');
+}
+function n3CardHTML() {
+  const s = n3Stats();
+  const dday = n3DDay();
+  const steps = N3_ROADMAP.map(function (step, si) {
+    const st = n3StepStat(step);
+    const complete = st.total && st.done === st.total;
+    const prevDone = si === 0 ? true : (function () {
+      const p = n3StepStat(N3_ROADMAP[si - 1]);
+      return p.total && p.done === p.total;
+    })();
+    const now = !complete && (si === 0 || prevDone);
+    const items = step.items.map(function (label, i) {
+      const on = n3Done(step.id, i);
+      return '<button class="n3-it' + (on ? ' on' : '') + '" data-n3="' + n3Key(step.id, i) + '" aria-pressed="' + on + '">' +
+        '<span class="box">' + (on ? '✓' : '') + '</span><span>' + esc(label) + '</span></button>';
+    }).join('');
+    return '<div class="n3-step' + (now ? ' now' : '') + (complete ? ' done' : '') + '">' +
+      '<div class="n3-head"><span class="st">' + esc(step.step) + '</span><b>' + esc(step.title) + '</b>' +
+        '<span class="pd">' + esc(step.period) + '</span></div>' +
+      '<div class="n3-bar"><i style="width:' + st.pct + '%"></i></div>' +
+      '<div class="n3-items">' + items + '</div>' +
+      '<div class="n3-foot">' + st.done + ' / ' + st.total + ' · ' + st.pct + '%' + (complete ? ' · 완료 ✓' : '') + '</div>' +
+    '</div>';
+  }).join('');
+
+  return '<div class="card">' +
+    '<div class="card-head"><h3>🎯 2027.07 JLPT N3 로드맵</h3>' +
+      '<span class="n3-dday">' + (dday > 0 ? 'D-' + dday : dday === 0 ? 'D-DAY' : 'D+' + Math.abs(dday)) + '</span></div>' +
+    '<div class="n3-sum"><b>' + s.pct + '%</b><span>전체 진도 ' + s.done + ' / ' + s.total + '</span>' +
+      '<span class="n3-bar wide"><i style="width:' + s.pct + '%\"></i></span></div>' +
+    '<div class="n3-grid">' + steps + '</div>' +
+    '<p class="menu-eff">체크는 이 기기에 저장돼요. 시험일은 7월 첫째 일요일 기준(예정)이라 <b>접수 전에 공식 일정</b>을 꼭 확인하세요.</p>' +
+  '</div>';
+}
+
+/* ---------------- 🔁 오답 집중 플래시카드 ----------------
+   틀린 문제만 모아 앞면(일본어) → 뒷면(읽기·뜻·예문)으로 빠르게 회독합니다.
+   [다시 볼래요]를 누른 카드는 맨 뒤로 돌아가고, [알겠음]을 누른 카드는 이번 회독에서 빠집니다. */
+let fc = { active: false, deck: [], i: 0, flipped: false, known: 0, again: 0, total: 0, done: false };
+
+function fcBuildDeck() {
+  const cards = [];
+  wrongItems('kana').forEach(function (x) {
+    const info = kanaInfo(x.id);
+    if (!info) return;
+    cards.push({ type: '가나', id: x.id, front: x.id, frontSub: '이 가나의 발음은?', back: info.r,
+      backSub: (isKata(x.id) ? '가타카나' : '히라가나'), speak: x.id, n: x.n });
+  });
+  wrongItems('word').forEach(function (x) {
+    const w = WORDS.filter(function (v) { return v.id === x.id; })[0];
+    if (!w) return;
+    cards.push({ type: '단어', id: w.id, front: w.jp, frontSub: '읽기와 뜻은?',
+      back: w.ko, backSub: w.kana + ' · ' + w.romaji, speak: w.kana, n: x.n });
+  });
+  wrongItems('sent').forEach(function (x) {
+    const s = SENTENCES.filter(function (v) { return v.id === x.id; })[0];
+    if (!s) return;
+    cards.push({ type: '회화', id: s.id, front: s.jp, frontSub: s.scene || '뜻은?',
+      back: s.ko, backSub: s.kana || '', speak: s.kana || s.jp, n: x.n });
+  });
+  wrongItems('jlpt').forEach(function (x) {
+    const q = JLPT.filter(function (v) { return v.id === x.id; })[0];
+    if (!q) return;
+    cards.push({ type: 'JLPT', id: q.id, front: q.prompt, frontSub: q.sub || '정답은?',
+      back: q.options[q.answer], backSub: q.exp || '', speak: '', n: x.n });
+  });
+  /* 많이 틀린 카드부터, 같은 횟수면 섞어서 */
+  return shuffle(cards).sort(function (a, b) { return (b.n || 1) - (a.n || 1); });
+}
+function startFlashcards() {
+  const deck = fcBuildDeck();
+  if (!deck.length) { toast('오답이 없어요 · 퀴즈를 먼저 풀어 주세요'); return; }
+  fc = { active: true, deck: deck, i: 0, flipped: false, known: 0, again: 0, total: deck.length, done: false };
+  renderReview();
+  try { window.scrollTo(0, 0); } catch (e) {}
+}
+function fcViewHTML() {
+  const card = fc.deck[fc.i];
+  const pct = fc.total ? Math.round(fc.known / fc.total * 100) : 0;
+  if (!card || fc.done) {
+    const left = Math.max(0, fc.deck.length - fc.i);
+    return '<div class="fc-wrap">' +
+      '<div class="card">' +
+        '<div class="card-head"><h3>🔁 오답 집중 플래시카드</h3><span class="sub">' + (fc.done ? '한 바퀴 끝' : '진행 중') + '</span></div>' +
+        '<div class="wt-grid" style="margin-top:0">' +
+          '<div class="wt-stat"><b>' + fc.known + '</b><span>알겠음</span></div>' +
+          '<div class="wt-stat"><b>' + fc.again + '</b><span>다시 볼래요</span></div>' +
+          '<div class="wt-stat"><b>' + left + '</b><span>남은 카드</span></div>' +
+          '<div class="wt-stat"><b>' + pct + '%</b><span>이번 회독</span></div>' +
+        '</div>' +
+        '<p class="menu-eff" style="margin-top:10px">' + (fc.done
+          ? '이번 오답 카드를 모두 봤어요. 틀린 문제는 퀴즈를 풀수록 다시 쌓입니다.'
+          : '카드를 모두 확인했어요.') + '</p>' +
+        '<div class="btn-row" style="margin-top:12px">' +
+          '<button class="btn btn-primary" data-fc="start">🔁 다시 시작</button>' +
+          '<button class="btn" data-fc="stop">복습 화면으로</button>' +
+        '</div>' +
+      '</div>' +
+    '</div>';
+  }
+  const isLong = card.front.length > 12;
+  return '<div class="fc-wrap">' +
+    '<div class="card">' +
+      '<div class="card-head"><h3>🔁 오답 집중 플래시카드</h3>' +
+        '<span class="sub">' + (fc.i + 1) + ' / ' + fc.deck.length + ' · 알겠음 ' + fc.known + '</span></div>' +
+      '<div class="n3-bar wide"><i style="width:' + pct + '%\"></i></div>' +
+    '</div>' +
+    '<button class="fc-card" data-fc="flip" aria-label="카드를 눌러 ' + (fc.flipped ? '앞면' : '뒷면') + ' 보기">' +
+      '<span class="fc-type">' + esc(card.type) + ' · 오답 ' + (card.n || 1) + '회</span>' +
+      (fc.flipped
+        ? '<span class="fc-back">' + esc(card.back) + '</span>' +
+          (card.backSub ? '<span class="fc-back-sub">' + esc(card.backSub) + '</span>' : '') +
+          '<span class="fc-front' + (isLong ? ' small' : '') + '" style="color:var(--ink-2)">' + esc(card.front) + '</span>'
+        : '<span class="fc-front' + (isLong ? ' small' : '') + '">' + esc(card.front) + '</span>' +
+          (card.frontSub ? '<span class="fc-back-sub">' + esc(card.frontSub) + '</span>' : '')) +
+      '<span class="fc-hint">' + (fc.flipped ? '카드를 누르면 앞면' : '카드를 누르면 읽기·뜻이 보여요') + '</span>' +
+    '</button>' +
+    (card.speak ? '<button class="mini-btn" data-speak="' + esc(card.speak) + '" style="align-self:center">🔊 발음 듣기</button>' : '') +
+    '<div class="fc-btns">' +
+      '<button class="btn btn-primary" data-fc="known">✓ 알겠음</button>' +
+      '<button class="btn btn-accent" data-fc="again">↻ 다시 볼래요</button>' +
+    '</div>' +
+    '<button class="btn btn-ghost" data-fc="stop">그만두기</button>' +
+  '</div>';
+}
+function fcAct(act) {
+  if (act === 'start') { startFlashcards(); return; }
+  if (act === 'stop') { fc.active = false; renderReview(); return; }
+  const card = fc.deck[fc.i];
+  if (!card) { fc.done = true; renderReview(); return; }
+  if (act === 'flip') { fc.flipped = !fc.flipped; renderReview(); return; }
+  if (act === 'known') {
+    fc.known++;
+    fc.i++;
+    fc.flipped = false;
+    if (fc.i >= fc.deck.length) fc.done = true;
+    renderReview();
+    return;
+  }
+  if (act === 'again') {
+    fc.again++;
+    fc.deck.push(card);
+    fc.i++;
+    fc.flipped = false;
+    if (fc.i >= fc.deck.length) fc.done = true;
+    renderReview();
+  }
 }
 
 /* ---------------- 탭 ----------------
@@ -4534,6 +5691,18 @@ function runTodayCheck(kind) {
 function onHomeClick(e) {
   const t = e.target;
   if (!t || !t.closest) return;
+  const n3b = t.closest('[data-n3]');
+  if (n3b) { n3Toggle(n3b.dataset.n3); return; }
+  if (t.closest('[data-goto-weight]')) { routineSub = 'weight'; switchTab('routine'); return; }
+  if (t.closest('[data-hmmenu]')) {
+    routineSub = 'diet';
+    switchTab('routine');
+    setTimeout(function () {
+      const el = document.querySelector('.menu-card');
+      if (el && el.scrollIntoView) el.scrollIntoView({ block: 'center', behavior: 'smooth' });
+    }, 60);
+    return;
+  }
   const bd = t.closest('[data-buddy]');
   if (bd) { nextBuddy(); return; }
   if (t.closest('[data-buddy-img]')) { nextBuddy(); return; }
@@ -4732,6 +5901,8 @@ function onGramClick(e) {
 
 function onReviewClick(e) {
   const t = e.target;
+  const fcb = t.closest('[data-fc]');
+  if (fcb) { fcAct(fcb.dataset.fc); return; }
   const rv = t.closest('[data-review]');
   if (rv) {
     const kind = rv.dataset.review;
@@ -4815,6 +5986,7 @@ function onSheetClick(e) {
   if (onRoutineSheetClick(e)) return;
   if (onFridgeSheetClick(e)) return;
   if (onDietSheetClick(e)) return;
+  if (onWeightSheetClick(e)) return;
   if (t.closest('[data-rmemosave]')) { saveRoutineMemo(); return; }
   if (t.closest('[data-rmemodel]')) {
     const mk = rMemoDraft ? rMemoDraft.date : routineDate;
@@ -4982,6 +6154,7 @@ function init() {
   updateStreakChip();
   fridgeQuietSync();
   dietQuietSync();
+  weightQuietSync();
 
   /* 홈 화면 추가·오프라인용 서비스 워커 (http/https에서만, 파일로 열 때는 건너뜀) */
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {
