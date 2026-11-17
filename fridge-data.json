@@ -1,6 +1,15 @@
 {
-  "version": 1,
+  "version": 2,
   "updatedAt": "2026-11-17",
   "note": "채팅으로 냉장고 재료를 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 목록을 새로 받아갑니다.",
-  "items": []
+  "items": [
+    { "id": "frozen-chicken-breast", "name": "냉동 닭가슴살", "jp": "鶏むね肉", "kana": "とりむねにく", "place": "freezer", "qty": "", "expires": "", "memo": "수시 보충 품목" },
+    { "id": "frozen-chicken-tender", "name": "냉동 닭안심살", "jp": "鶏ささみ", "kana": "とりささみ", "place": "freezer", "qty": "", "expires": "", "memo": "수시 보충 품목" },
+    { "id": "frozen-shrimp", "name": "냉동새우", "jp": "海老", "kana": "えび", "place": "freezer", "qty": "", "expires": "", "memo": "" },
+    { "id": "frozen-squid", "name": "냉동오징어", "jp": "烏賊", "kana": "いか", "place": "freezer", "qty": "", "expires": "", "memo": "" },
+    { "id": "frozen-lamb-skewer", "name": "냉동양꼬치", "jp": "ラム串", "kana": "ラムくし", "place": "freezer", "qty": "", "expires": "", "memo": "" },
+    { "id": "egg", "name": "계란", "jp": "卵", "kana": "たまご", "place": "fridge", "qty": "15알", "expires": "", "memo": "" },
+    { "id": "enoki", "name": "팽이버섯", "jp": "えのき茸", "kana": "えのきだけ", "place": "fridge", "qty": "3묶음", "expires": "", "memo": "" },
+    { "id": "soymilk-blackbean", "name": "매일두유 검은콩 고단백", "jp": "豆乳", "kana": "とうにゅう", "place": "room", "qty": "10팩", "expires": "", "memo": "떨어질 때쯤 네이버 재주문 대상" }
+  ]
 }

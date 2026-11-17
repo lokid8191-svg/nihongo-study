@@ -1121,7 +1121,7 @@ function normalizeRoutine(raw) {
 function normalizeFridge(raw) {
   const f = raw && typeof raw === 'object' ? raw : {};
   const items = Array.isArray(f.items) ? f.items.filter(function (it) { return it && it.name; }).map(function (it) {
-    const place = (it.place === 'freezer' || it.place === 'room') ? it.place : 'fridge';
+    const place = normFridgePlace(it.place);
     return {
       id: String(it.id || ('x-' + Math.random().toString(36).slice(2, 8))),
       name: String(it.name).slice(0, 40),
@@ -2528,8 +2528,8 @@ function buddyHTML(done, total, opts) {
 /* 🏃 5~10분 운동 추천 (유튜브 실제 영상 · 제목·채널·길이를 검색으로 확인)
    임베드 차단이 있어 링크는 새 창으로 엽니다. */
 const WORKOUTS = [
-  { id:'w-am',    theme:'body',   len:'6:00',  title:'아침 눈뜨자마자 5분 스트레칭', ch:'다노언니 제시', yt:'S_XjbPjWL3o', note:'가법게 몸을 깨우는 전신 스트레칭' },
-  { id:'w-body',  theme:'body',   len:'4:09',  title:'매일 가법게 전신 5분 스트레칭', ch:'서울척병원', yt:'2j9SRYlolfQ', note:'물리치료사가 알려주는 기본 동작' },
+  { id:'w-am',    theme:'body',   len:'6:00',  title:'아침 눈뜨자마자 5분 스트레칭', ch:'다노언니 제시', yt:'S_XjbPjWL3o', note:'가볍게 몸을 깨우는 전신 스트레칭' },
+  { id:'w-body',  theme:'body',   len:'4:09',  title:'매일 가볍게 전신 5분 스트레칭', ch:'서울척병원', yt:'2j9SRYlolfQ', note:'물리치료사가 알려주는 기본 동작' },
   { id:'w-shoul', theme:'neck',   len:'5:54',  title:'예쁜 일자어깨·승모근 스트레칭 BEST3', ch:'Thankyou BUBU', yt:'dJXZRZvqbYg', note:'거북목·굽은등·라운드숄더 교정' },
   { id:'w-neck',  theme:'neck',   len:'10:47', title:'딱 10분! 거북목·버섯증후군 교정 운동', ch:'자세요정', yt:'kgCj8UUEWjU', note:'목·어깨가 뻬뻬한 날' },
   { id:'w-night', theme:'night',  len:'9:31',  title:'자기 전 숙면을 도와주는 10분 스트레칭', ch:'힙으뜸', yt:'8VtkpMGw0hw', note:'자기 전 몸 풀고 자는 루틴' },
@@ -3049,12 +3049,35 @@ let fridgeDelAsk = false;
 let fridgeDelId = '';
 let fridgeSyncing = false;
 
+/* 이미 쓴 한 줄 일기도 루틴의 '일기쓰기' 체크로 맞춰 둔다 */
+function syncDiaryToRoutine() {
+  const items = routineItems();
+  if (!items.some(function (it) { return it.id === 'diary'; })) return;
+  const r = routineState();
+  let changed = false;
+  Object.keys(S.diary || {}).forEach(function (k) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+    if (!r.days[k]) r.days[k] = { checks: {}, mood: '', memo: '' };
+    const d = r.days[k];
+    if (!d.checks) d.checks = {};
+    if (!d.checks.diary) { d.checks.diary = true; changed = true; }
+  });
+  if (changed) save();
+}
+
 function fridgeState() {
   if (!S.fridge || typeof S.fridge !== 'object') S.fridge = { items: [], seedVersion: 0, syncedAt: '' };
   if (!Array.isArray(S.fridge.items)) S.fridge.items = [];
   return S.fridge;
 }
 function fridgeItems() { return fridgeState().items; }
+/* 보관 위치 이름은 frozen/freezer/냉동 → 냉동, pantry/room/실온 → 실온 처럼 여러 표기를 받아 줍니다 */
+function normFridgePlace(v) {
+  const s = String(v || '').trim().toLowerCase();
+  if (s === 'freezer' || s === 'frozen' || s === '냉동' || s === 'frozen_food') return 'freezer';
+  if (s === 'room' || s === 'pantry' || s === 'shelf' || s === '실온') return 'room';
+  return 'fridge';
+}
 function fridgePlaceInfo(k) {
   return FRIDGE_PLACES.filter(function (p) { return p.k === k; })[0] || FRIDGE_PLACES[0];
 }
@@ -3091,7 +3114,7 @@ function applyFridgeSeed(data) {
       name: String(raw.name).slice(0, 40),
       jp: String(raw.jp || '').slice(0, 40),
       kana: String(raw.kana || '').slice(0, 60),
-      place: (raw.place === 'freezer' || raw.place === 'room') ? raw.place : 'fridge',
+      place: normFridgePlace(raw.place),
       qty: String(raw.qty || '').slice(0, 24),
       expires: /^\d{4}-\d{2}-\d{2}$/.test(String(raw.expires || '')) ? raw.expires : '',
       memo: String(raw.memo || '').slice(0, 120),
@@ -3149,7 +3172,7 @@ function fridgeQuietSync() {
   syncFridgeSeed(false).then(function (r) {
     if (!r || !r.applied) return;
     if (currentTab === 'fridge') renderFridge();
-    toast('냉장고 목록을 최신으로 맞췄어요');
+    if (r.added || r.removed) toast('냉장고 목록을 최신으로 맞췄어요');
   });
 }
 function syncFridgeNow(force) {  toast(force ? '최신 목록을 확인하는 중…' : '냉장고 목록을 확인하는 중…');
@@ -3826,6 +3849,7 @@ function onSheetClick(e) {
 function init() {
   loadState();
   updateStreak();
+  syncDiaryToRoutine();
   save();
 
   $('#tabbar').addEventListener('click', function (e) {
