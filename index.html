@@ -576,7 +576,7 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 /* 냉장고 */
 .hm-fr{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
 .hm-fr span{font-size:10.5px;font-weight:700;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:8px;padding:2px 7px}
-.hm-fr span b{color:var(--primary);font-weight:800;margin-left:2px}
+.hm-fr span b{color:var(--primary);font-weight:800;margin-left:1px}
 .hm-fr span.warn{background:#FDF3E7;border-color:#F0DCC0;color:#9A6B1E}
 .hm-fr span.warn b{color:#9A6B1E}
 .hm-fr-line{font-size:10.5px;color:var(--ink-2);margin-top:5px;line-height:1.5;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -1731,7 +1731,10 @@ function renderHome() {
   const expiring = live.map(function (it) { return { it: it, d: daysUntil(it.expires) }; })
     .filter(function (x) { return x.d !== null && x.d <= 3; })
     .sort(function (a, b) { return a.d - b.d; });
-  const stocked = live.filter(function (it) { return it.qty; });
+  const stocked = live.filter(function (it) { return it.qty; })
+    .map(function (it, i) { return { it: it, i: i }; })
+    .sort(function (a, b) { return (b.it.memo ? 1 : 0) - (a.it.memo ? 1 : 0) || a.i - b.i; })
+    .map(function (x) { return x.it; });
   let frLines = '';
   if (expiring.length) {
     const x = expiring[0];
@@ -1740,7 +1743,7 @@ function renderHome() {
       (expiring.length > 1 ? ' 외 ' + (expiring.length - 1) + '개' : '') + '</div>';
   }
   if (stocked.length) {
-    frLines += '<div class="hm-fr-line">🍱 ' + stocked.slice(0, 2).map(function (it) {
+    frLines += '<div class="hm-fr-line">📦 ' + stocked.slice(0, 2).map(function (it) {
       return esc(it.name) + ' <b>' + esc(it.qty) + '</b>';
     }).join(' · ') + '</div>';
   }
@@ -1768,9 +1771,9 @@ function renderHome() {
         '<div class="hm-h"><span class="t">🥗 오늘의 식단 & 수분</span>' +
           '<button class="link" data-goto-diet="1">식단 기록 ›</button></div>' +
         '<div class="hm-gauges">' +
-          hmGaugeHTML('🔥 칼로리', num1(dt.kcal) + '<small>/ ' + g.calories + ' kcal</small>',
+          hmGaugeHTML('🔥 칼로리', num1(dt.kcal) + '<small> / ' + numComma(g.calories) + ' kcal</small>',
             dt.kcal / kcalMax * 100, { over: dt.kcal > g.calories }) +
-          hmGaugeHTML('🍗 단백질', num1(dt.protein) + '<small>/ ' + g.protein[0] + '~' + g.protein[1] + 'g</small>',
+          hmGaugeHTML('🍗 단백질', num1(dt.protein) + '<small> / ' + g.protein[0] + '~' + g.protein[1] + 'g</small>',
             dt.protein / proMax * 100,
             { over: dt.protein > g.protein[1], zone: [g.protein[0] / proMax * 100, g.protein[1] / proMax * 100] }) +
         '</div>' +
@@ -1781,7 +1784,7 @@ function renderHome() {
       /* 4. 오늘의 5~10분 운동 */
       '<div class="hm-card">' +
         '<div class="hm-h"><span class="t">🏃 오늘의 5~10분 운동</span>' +
-          '<span class="v">약 ' + workoutMinutes(wo) + '분<small>' + workoutThemeLabel(wo.theme) + '</small></span></div>' +
+          '<span class="v">약 ' + workoutMinutes(wo) + '분 · ' + workoutThemeLabel(wo.theme) + '</span></div>' +
         '<div class="hm-wo-t">' + esc(wo.title) + '</div>' +
         '<div class="hm-wo-s">' + esc(wo.ch) + (woDone ? ' · 오늘 완료 ✓' : '') + '</div>' +
         '<div class="hm-acts">' +
@@ -1813,10 +1816,10 @@ function renderHome() {
         '<div class="hm-h"><span class="t">🧊 냉장고</span>' +
           '<button class="link" data-goto="fridge">냉장고 보기 ›</button></div>' +
         '<div class="hm-fr">' +
-          '<span>🧊 냉동<b>' + counts.freezer + '</b></span>' +
-          '<span>❄️ 냉장<b>' + counts.fridge + '</b></span>' +
-          '<span>🍎 실온<b>' + counts.room + '</b></span>' +
-          (expiring.length ? '<span class="warn">⏳ 임박<b>' + expiring.length + '</b></span>' : '') +
+          '<span>🧊 냉동 <b>' + counts.freezer + '</b></span>' +
+          '<span>❄️ 냉장 <b>' + counts.fridge + '</b></span>' +
+          '<span>🍎 실온 <b>' + counts.room + '</b></span>' +
+          (expiring.length ? '<span class="warn">⏳ 임박 <b>' + expiring.length + '</b></span>' : '') +
         '</div>' +
         frLines +
       '</div>' +
@@ -2772,7 +2775,9 @@ const BAKUGO_LINES = {
   ]
 };
 let buddyIdx = { none: 0, some: 0, all: 0 };
-/* 바쿠고 이미지 여러 장 · 페이지를 열 때마다 다른 사진으로 시작하고 '다른 한마디'에서도 함께 바뀝니다. */
+/* 바쿠고 이미지 여러 장 · 페이지를 열 때마다 다른 사진으로 시작하고 '다른 한마디'에서도 함께 바뀝니다.
+   사진을 더 넣을 때: assets/에 bakugo-p7.jpg(+a7.jpg)를 올리고 이 배열에 한 줄,
+   sw.js의 ASSETS에 같은 경로를 한 줄 적으면 바로 로테이션에 들어갑니다. */
 const BAKUGO_IMAGES = [
   { p: 'assets/bakugo-p1.jpg', a: 'assets/bakugo-a1.jpg', t: '히어로 슈트' },
   { p: 'assets/bakugo-p2.jpg', a: 'assets/bakugo-a2.jpg', t: '히어로 슈트' },
@@ -2784,7 +2789,7 @@ const BAKUGO_IMAGES = [
 let buddyImgIdx = Math.floor(Math.random() * BAKUGO_IMAGES.length);
 function buddyImage(compact) {
   const pick = BAKUGO_IMAGES[buddyImgIdx % BAKUGO_IMAGES.length] || BAKUGO_IMAGES[0];
-  return compact ? pick.a : pick.p;
+  return (compact && pick.a) ? pick.a : pick.p;
 }
 function buddyNextImage() {
   const n = BAKUGO_IMAGES.length;
@@ -3752,6 +3757,8 @@ let dietDelAsk = false;
 let dietSyncing = false;
 
 function num1(v) { const n = Number(v); if (!isFinite(n)) return '0'; return String(Math.round(n * 10) / 10); }
+/* 1,250 처럼 세 자리 쉼표 */
+function numComma(v) { return String(Math.round(Number(v) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 /* 받침에 따라 조사를 골라 "초콜릿을" / "샐러드를" 처럼 읽히게 합니다. */
 function josaKo(word, withB, withoutB) {
   const s = String(word || '').trim();
