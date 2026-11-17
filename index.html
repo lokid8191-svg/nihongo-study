@@ -473,6 +473,54 @@ input[type="text"].field:focus{outline:2px solid #C9DED6;outline-offset:1px;bord
 .wo-mini .wo-t{font-size:13px;font-weight:700;margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wo-mini .wo-s{font-size:11px;color:var(--ink-3);margin-top:1px}
 
+/* ---------- 식단 기록 ---------- */
+.dsub{margin-bottom:10px}
+.dgo{display:flex;flex-direction:column;gap:12px}
+.dgo-row{display:flex;flex-direction:column;gap:5px}
+.dgo-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.dgo-k{font-size:12.5px;font-weight:700;color:var(--ink-2)}
+.dgo-v{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.2px}
+.dgo-v small{font-size:10.5px;font-weight:600;color:var(--ink-3);margin-left:4px;letter-spacing:0}
+.dgo-bar{position:relative;height:9px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.dgo-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--primary),#4E8A76);border-radius:99px;transition:width .3s ease}
+.dgo-fill.over{background:linear-gradient(90deg,#D97757,var(--bad))}
+.dgo-zone{position:absolute;top:0;bottom:0;background:rgba(44,93,82,.14);border-left:1.5px dashed rgba(44,93,82,.45);border-right:1.5px dashed rgba(44,93,82,.45)}
+.dgo-state{font-size:10.5px;font-weight:700;color:var(--ink-3)}
+.dgo-state.ok{color:var(--ok)}
+.dgo-state.over{color:var(--bad)}
+.dgo-state.short{color:var(--accent)}
+.dwater{display:flex;align-items:center;gap:7px}
+.dwater .dw-v{font-size:20px;font-weight:800;letter-spacing:-.6px}
+.dwater .dw-v small{font-size:11px;font-weight:600;color:var(--ink-3);margin-left:3px;letter-spacing:0}
+.dwater .sp{flex:1}
+.dwater .btn{min-width:62px}
+.dmeal + .dmeal{margin-top:12px;padding-top:12px;border-top:1px solid var(--surface-2)}
+.dmeal-head{display:flex;align-items:center;gap:7px;margin-bottom:3px}
+.dmeal-head .dmh-t{font-size:13px;font-weight:800}
+.dmeal-head .dmh-k{font-size:11.5px;font-weight:700;color:var(--ink-3)}
+.dmeal-head .sp{flex:1}
+.dmeal-head .dmh-add{min-height:30px;padding:0 10px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);font-size:11.5px;font-weight:700;color:var(--primary);flex:none}
+.dm-row{display:flex;align-items:flex-start;gap:6px;padding:8px 0;border-top:1px solid var(--surface-2)}
+.dm-main{flex:1;min-width:0}
+.dm-name{font-size:13px;font-weight:600;line-height:1.4}
+.dm-est{font-size:9.5px;font-weight:800;color:#9A6B1E;background:#FDF3E7;border:1px solid #F0DCC0;border-radius:99px;padding:1px 6px;margin-left:5px;vertical-align:1px;white-space:nowrap}
+.dm-meta{font-size:11px;color:var(--ink-3);margin-top:2px}
+.dm-btn{width:30px;height:30px;border-radius:9px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-3);font-size:12px;flex:none;display:grid;place-items:center}
+.dm-btn:active{background:var(--primary-soft)}
+.dm-empty{font-size:12px;color:var(--ink-3);padding:7px 0}
+.dmac{display:flex;gap:6px}
+.dmac .field{flex:1;min-width:0;text-align:center;padding:0 6px}
+.dcheck{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);margin-top:12px}
+.dcheck input{width:18px;height:18px;accent-color:var(--primary)}
+.diet-mini{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;cursor:pointer}
+.diet-mini .dmin-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
+.diet-mini .dmin-t{font-size:13px;font-weight:700}
+.diet-mini .dmin-v{font-size:15px;font-weight:800;color:var(--primary);letter-spacing:-.3px}
+.diet-mini .dmin-bar{height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.diet-mini .dmin-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#4E8A76);border-radius:99px}
+.diet-mini .dmin-bar i.over{background:var(--bad)}
+.diet-mini .dmin-s{font-size:11.5px;color:var(--ink-3);line-height:1.5}
+
 @media (max-width:360px){
   .brand h1{font-size:15px}
   .kana-cell{height:56px}
@@ -1066,6 +1114,7 @@ function defaultState() {
     diary: {},
     routine: { items: routineDefaultItems(), days: {} },
     fridge: { items: [], seedVersion: 0, syncedAt: '' },
+    diet: { goals: null, days: {}, seedVersion: 0, syncedAt: '' },
     streak: 0
   };
 }
@@ -1082,6 +1131,7 @@ function normalizeState(raw) {
     diary: p.diary && typeof p.diary === 'object' ? p.diary : {},
     routine: normalizeRoutine(p.routine),
     fridge: normalizeFridge(p.fridge),
+    diet: normalizeDiet(p.diet),
     streak: Number(p.streak) || 0
   };
   ['kana', 'word', 'sent'].forEach(k => { if (!Array.isArray(s.star[k])) s.star[k] = []; });
@@ -1578,6 +1628,8 @@ function renderToday() {
       '</button>' +
 
       workoutMiniHTML() +
+
+      dietMiniHTML() +
 
       '<div class="section-title"><h2>오늘의 한 줄 일기</h2>' +
         '<button class="hint" data-diary-list="1" style="color:var(--primary);font-weight:600">지난 일기 ' + dCount + '편 ›</button></div>' +
@@ -2171,7 +2223,7 @@ function renderReview() {
         '</div>' +
         '<input type="file" id="importFile" accept="application/json,.json" class="hidden">' +
         '<p style="font-size:11.5px;color:var(--ink-3);margin-top:11px;line-height:1.6">' +
-          '백업 파일에는 학습일·즐겨찾기·오답 기록과 <b>루틴·냉장고 기록</b>이 함께 담깁니다. 브라우저 데이터를 지우기 전에 내려받아 두세요.</p>' +
+          '백업 파일에는 학습일·즐겨찾기·오답 기록과 <b>루틴·냉장고·식단 기록</b>이 함께 담깁니다. 브라우저 데이터를 지우기 전에 내려받아 두세요.</p>' +
       '</div>' +
       '<p class="foot-note">日本語ノート · JLPT N5 · 일상회화<br>외부 연결 없이 이 파일만으로 동작합니다.</p>' +
     '</div>';
@@ -2488,6 +2540,25 @@ const BAKUGO_LINES = {
   ]
 };
 let buddyIdx = { none: 0, some: 0, all: 0 };
+/* 바쿠고 이미지 여러 장 · 페이지를 열 때마다 다른 사진으로 시작하고 '다른 한마디'에서도 함께 바뀝니다. */
+const BAKUGO_IMAGES = [
+  { p: 'assets/bakugo-p1.jpg', a: 'assets/bakugo-a1.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p2.jpg', a: 'assets/bakugo-a2.jpg', t: '히어로 슈트' },
+  { p: 'assets/bakugo-p3.jpg', a: 'assets/bakugo-a3.jpg', t: '교복' },
+  { p: 'assets/bakugo-p4.jpg', a: 'assets/bakugo-a4.jpg', t: '교복' },
+  { p: 'assets/bakugo-p5.jpg', a: 'assets/bakugo-a5.jpg', t: '사복' },
+  { p: 'assets/bakugo-p6.jpg', a: 'assets/bakugo-a6.jpg', t: '사복' }
+];
+let buddyImgIdx = Math.floor(Math.random() * BAKUGO_IMAGES.length);
+function buddyImage(compact) {
+  const pick = BAKUGO_IMAGES[buddyImgIdx % BAKUGO_IMAGES.length] || BAKUGO_IMAGES[0];
+  return compact ? pick.a : pick.p;
+}
+function buddyNextImage() {
+  const n = BAKUGO_IMAGES.length;
+  if (n < 2) return;
+  buddyImgIdx = (buddyImgIdx + 1 + rand(n - 1)) % n;
+}
 function buddyState(done, total) {
   if (!total || done <= 0) return 'none';
   return done >= total ? 'all' : 'some';
@@ -2502,6 +2573,7 @@ function nextBuddy() {
   const k = currentTab === 'routine' ? routineDate : dkey();
   const s = buddyState(routineDone(k), routineItems().length);
   buddyIdx[s] = (buddyIdx[s] || 0) + 1;
+  buddyNextImage();
   renderCurrent();
 }
 function buddyHTML(done, total, opts) {
@@ -2510,9 +2582,9 @@ function buddyHTML(done, total, opts) {
   const label = b.state === 'all' ? '루틴 완료 · 같이 해냈어요'
     : b.state === 'some' ? '같이 하는 중 · ' + done + ' / ' + total
     : '같이 시작해요 · ' + (total ? '0 / ' + total : '');
-  const img = o.compact ? 'assets/bakugo-avatar.jpg' : 'assets/bakugo-portrait.jpg';
+  const img = buddyImage(!!o.compact);
   return '<div class="buddy' + (o.compact ? ' compact' : '') + '">' +
-    '<img class="buddy-img" src="' + img + '" alt="" aria-hidden="true">' +
+    '<img class="buddy-img" data-buddy-img="1" src="' + img + '" alt="" aria-hidden="true">' +
     '<div class="buddy-body">' +
       '<div class="buddy-name">爆豪勝己 <span>바쿠고 카츠키 · ' + esc(label) + '</span></div>' +
       '<div class="buddy-jp">「' + esc(b.line.jp) + '」</div>' +
@@ -2690,6 +2762,7 @@ function setAllRoutine(on) {
 function renderRoutine() {
   const host = $('#view-routine');
   if (!host) return;
+  if (routineSub === 'diet') { host.innerHTML = dietViewHTML(); return; }
   const items = routineItems();
   const total = items.length;
   const day = routineDay(routineDate) || { checks: {}, mood: '', memo: '' };
@@ -2760,6 +2833,7 @@ function renderRoutine() {
 
   host.innerHTML =
     '<div class="view-inner">' +
+      routineSubNav() +
       '<div class="card">' +
         '<div class="card-head"><h3>' + wkLabel + '</h3>' +
           '<div class="wk-nav">' +
@@ -2904,8 +2978,10 @@ function deleteRoutineItem(id) {
 function onRoutineClick(e) {
   const t = e.target;
   if (!t.closest) return;
+  if (onDietClick(e)) return;
   const bd = t.closest('[data-buddy]');
   if (bd) { nextBuddy(); return; }
+  if (t.closest('[data-buddy-img]')) { nextBuddy(); return; }
   const nav = t.closest('[data-rday]');
   if (nav) {
     flushMemo(true);
@@ -3425,6 +3501,487 @@ function onFridgeSheetClick(e) {
   return false;
 }
 
+/* ---------------- 식단 기록 (diet-data.json 시드 동기화) ----------------
+   채팅에서 넘겨준 식단(diet-data.json)을 목표·하루 기록으로 반영하고,
+   앱에서 직접 넣고 지운 날짜·항목은 이 기기에 남깁니다. */
+const DIET_MEALS = [
+  { k: 'breakfast', l: '아침', e: '🌅' },
+  { k: 'lunch',     l: '점심', e: '🍚' },
+  { k: 'dinner',    l: '저녁', e: '🌙' },
+  { k: 'snack',     l: '간식', e: '🍪' }
+];
+const DIET_GOALS_DEFAULT = { calories: 1250, carbs: [110, 120], protein: [75, 85], fat: [35, 45], waterStepMl: 500 };
+const DIET_SEED_KEY = 'diet_seed_version';
+let dietDate = dkey();
+let routineSub = 'routine';   /* 루틴 탭 안의 서브 화면: routine | diet */
+let dietDraft = null;
+let dietDelAsk = false;
+let dietSyncing = false;
+
+function num1(v) { const n = Number(v); if (!isFinite(n)) return '0'; return String(Math.round(n * 10) / 10); }
+/* 받침에 따라 조사를 골라 "초콜릿을" / "샐러드를" 처럼 읽히게 합니다. */
+function josaKo(word, withB, withoutB) {
+  const s = String(word || '').trim();
+  if (!s) return withB;
+  const c = s.charCodeAt(s.length - 1);
+  if (c < 0xac00 || c > 0xd7a3) return withB;
+  return (c - 0xac00) % 28 !== 0 ? withB : withoutB;
+}
+function dietNum(v, max) {
+  const n = Number(v);
+  if (!isFinite(n) || n < 0) return 0;
+  const r = Math.round(n * 10) / 10;
+  return max ? Math.min(r, max) : r;
+}
+function dietRange(v, fallback) {
+  const a = Array.isArray(v) ? v : null;
+  const lo = a ? dietNum(a[0]) : fallback[0];
+  const hi = a ? dietNum(a[1] === undefined ? a[0] : a[1]) : fallback[1];
+  return [Math.min(lo, hi), Math.max(lo, hi)];
+}
+function normalizeDietGoals(raw) {
+  const g = raw && typeof raw === 'object' ? raw : {};
+  const def = DIET_GOALS_DEFAULT;
+  return {
+    calories: dietNum(g.calories, 10000) || def.calories,
+    carbs: dietRange(g.carbs, def.carbs),
+    protein: dietRange(g.protein, def.protein),
+    fat: dietRange(g.fat, def.fat),
+    waterStepMl: dietNum(g.waterStepMl, 2000) || def.waterStepMl
+  };
+}
+function normalizeDietItem(raw) {
+  if (!raw || !raw.name) return null;
+  return {
+    id: String(raw.id || ('x-' + Math.random().toString(36).slice(2, 8))),
+    name: String(raw.name).slice(0, 50),
+    kcal: dietNum(raw.kcal, 5000),
+    carb: dietNum(raw.carb, 500),
+    protein: dietNum(raw.protein, 500),
+    fat: dietNum(raw.fat, 500),
+    est: !!raw.est,
+    src: raw.src === 'user' ? 'user' : 'seed'
+  };
+}
+function normalizeDietDay(raw) {
+  const d = raw && typeof raw === 'object' ? raw : {};
+  const meals = {};
+  DIET_MEALS.forEach(function (m) {
+    const arr = d.meals && Array.isArray(d.meals[m.k]) ? d.meals[m.k] : [];
+    meals[m.k] = arr.map(normalizeDietItem).filter(Boolean);
+  });
+  return {
+    water: dietNum(d.water, 20000),
+    meals: meals,
+    edited: !!d.edited,
+    del: Array.isArray(d.del) ? d.del.map(String).slice(0, 200) : []
+  };
+}
+function normalizeDiet(raw) {
+  const d = raw && typeof raw === 'object' ? raw : {};
+  const days = {};
+  if (d.days && typeof d.days === 'object') {
+    Object.keys(d.days).forEach(function (k) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+      days[k] = normalizeDietDay(d.days[k]);
+    });
+  }
+  return {
+    goals: normalizeDietGoals(d.goals),
+    days: days,
+    seedVersion: Number(d.seedVersion) || 0,
+    syncedAt: typeof d.syncedAt === 'string' ? d.syncedAt : ''
+  };
+}
+function dietState() {
+  if (!S.diet || typeof S.diet !== 'object') S.diet = normalizeDiet(null);
+  if (!S.diet.days || typeof S.diet.days !== 'object') S.diet.days = {};
+  if (!S.diet.goals || typeof S.diet.goals !== 'object') S.diet.goals = normalizeDietGoals(null);
+  return S.diet;
+}
+function dietGoals() { return dietState().goals; }
+function dietDay(k, create) {
+  const ds = dietState();
+  let d = ds.days[k];
+  if (!d && create) d = ds.days[k] = { water: 0, meals: { breakfast: [], lunch: [], dinner: [], snack: [] }, edited: true, del: [] };
+  return d || null;
+}
+function dietTotals(day) {
+  const t = { kcal: 0, carb: 0, protein: 0, fat: 0, count: 0 };
+  if (!day || !day.meals) return t;
+  DIET_MEALS.forEach(function (m) {
+    (day.meals[m.k] || []).forEach(function (it) {
+      t.kcal += it.kcal; t.carb += it.carb; t.protein += it.protein; t.fat += it.fat; t.count++;
+    });
+  });
+  ['kcal', 'carb', 'protein', 'fat'].forEach(function (k) { t[k] = Math.round(t[k] * 10) / 10; });
+  return t;
+}
+function dietDayTotals(k) { return dietTotals(dietState().days[k]); }
+function dietMealSum(day, meal) {
+  const arr = (day && day.meals && day.meals[meal]) || [];
+  return Math.round(arr.reduce(function (a, it) { return a + it.kcal; }, 0) * 10) / 10;
+}
+
+/* 채팅으로 넘겨받은 최신 식단(diet-data.json)을 반영.
+   앱에서 고친 날은 그 기록을 살리고, 새로 온 항목만 더하며, 앱에서 지운 항목은 되살리지 않습니다. */
+function applyDietSeed(data) {
+  const ds = dietState();
+  if (data && data.goals) ds.goals = normalizeDietGoals(data.goals);
+  const seedDays = data && data.days && typeof data.days === 'object' ? data.days : {};
+  let changed = 0;
+  Object.keys(seedDays).forEach(function (k) {
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+    const seed = normalizeDietDay(seedDays[k]);
+    const cur = ds.days[k];
+    if (!cur) { ds.days[k] = seed; changed++; return; }
+    if (!cur.edited) { ds.days[k] = seed; changed++; return; }
+    const del = cur.del || [];
+    DIET_MEALS.forEach(function (m) {
+      const have = {};
+      (cur.meals[m.k] || []).forEach(function (it) { have[it.id] = true; });
+      (seed.meals[m.k] || []).forEach(function (it) {
+        if (have[it.id] || del.indexOf(it.id) >= 0) return;
+        cur.meals[m.k].push(it); changed++;
+      });
+    });
+    if (!cur.water && seed.water) { cur.water = seed.water; changed++; }
+  });
+  return changed;
+}
+function syncDietSeed(force) {
+  if (dietSyncing) return Promise.resolve({ busy: true });
+  dietSyncing = true;
+  const url = 'diet-data.json?t=' + Date.now();
+  return fetch(url, { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (data) {
+      const ver = Number(data && data.version) || 0;
+      let cur = 0;
+      try { cur = Number(localStorage.getItem(DIET_SEED_KEY)) || 0; } catch (e) { cur = 0; }
+      const ds = dietState();
+      if (Number(ds.seedVersion) > cur) cur = Number(ds.seedVersion);
+      if (!force && ver > 0 && ver <= cur) return { applied: false, version: ver, current: cur };
+      const changed = applyDietSeed(data || {});
+      ds.seedVersion = ver;
+      ds.syncedAt = new Date().toISOString();
+      try { localStorage.setItem(DIET_SEED_KEY, String(ver)); } catch (e) {}
+      save();
+      return { applied: true, version: ver, changed: changed, days: Object.keys(ds.days).length };
+    })
+    .catch(function (e) { return { error: String((e && e.message) || e) }; })
+    .then(function (out) { dietSyncing = false; return out; });
+}
+/* 앱을 열 때 조용히 최신 식단 확인 */
+function dietQuietSync() {
+  syncDietSeed(false).then(function (r) {
+    if (!r || !r.applied) return;
+    if (currentTab === 'routine') renderRoutine();
+    if (currentTab === 'today') renderToday();
+    if (r.changed) toast('식단 기록을 최신으로 맞췄어요');
+  });
+}
+function syncDietNow(force) {
+  toast('최신 식단을 확인하는 중…');
+  syncDietSeed(force).then(function (r) {
+    if (!r || r.busy) return;
+    if (r.error) { toast('식단을 받지 못했어요 · 오프라인이면 이 기기 기록만 보여요'); return; }
+    renderRoutine();
+    if (currentTab === 'today') renderToday();
+    if (r.applied) {
+      const t = dietDayTotals(dietDate);
+      toast('식단을 맞췄어요 · ' + num1(t.kcal) + ' kcal');
+    } else if (force) {
+      toast('이미 최신 식단이에요 (v' + r.version + ')');
+    }
+  });
+}
+
+/* 루틴 탭 상단의 서브 전환 */
+function routineSubNav() {
+  return '<div class="seg dsub">' +
+    '<button class="' + (routineSub === 'routine' ? 'active' : '') + '" data-rsub="routine" aria-pressed="' + (routineSub === 'routine') + '">📋 루틴</button>' +
+    '<button class="' + (routineSub === 'diet' ? 'active' : '') + '" data-rsub="diet" aria-pressed="' + (routineSub === 'diet') + '">🥗 식단</button>' +
+  '</div>';
+}
+
+function dietKcalRow(value, goal) {
+  const max = Math.max(goal * 1.2, value * 1.05, 1);
+  const fill = Math.min(100, value / max * 100);
+  const left = Math.round((goal - value) * 10) / 10;
+  const st = left < 0
+    ? { t: '목표보다 ' + num1(-left) + ' kcal 많아요', c: 'over' }
+    : { t: '남은 ' + num1(left) + ' kcal', c: left === 0 ? 'ok' : (left < goal * 0.15 ? 'ok' : '') };
+  return '<div class="dgo-row">' +
+    '<div class="dgo-top"><span class="dgo-k">🔥 칼로리</span>' +
+      '<span class="dgo-v">' + num1(value) + '<small>/ ' + goal + ' kcal</small></span></div>' +
+    '<div class="dgo-bar"><span class="dgo-fill' + (value > goal ? ' over' : '') + '" style="width:' + fill + '%"></span></div>' +
+    '<div class="dgo-state ' + st.c + '">' + st.t + '</div>' +
+  '</div>';
+}
+function dietRangeRow(label, value, range, cls) {
+  const max = Math.max(range[1] * 1.25, value * 1.05, 1);
+  const fill = Math.min(100, value / max * 100);
+  const z0 = range[0] / max * 100, z1 = range[1] / max * 100;
+  const st = value > range[1]
+    ? { t: '목표 ' + range[1] + 'g보다 ' + num1(value - range[1]) + 'g 많아요', c: 'over' }
+    : value < range[0]
+      ? { t: num1(range[0] - value) + 'g 더 필요', c: 'short' }
+      : { t: '목표 범위 안', c: 'ok' };
+  return '<div class="dgo-row">' +
+    '<div class="dgo-top"><span class="dgo-k">' + label + '</span>' +
+      '<span class="dgo-v">' + num1(value) + 'g<small>/ ' + range[0] + '~' + range[1] + 'g</small></span></div>' +
+    '<div class="dgo-bar"><span class="dgo-fill' + (cls ? ' ' + cls : '') + (value > range[1] ? ' over' : '') + '" style="width:' + fill + '%"></span>' +
+      '<span class="dgo-zone" style="left:' + z0 + '%;width:' + (z1 - z0) + '%"></span></div>' +
+    '<div class="dgo-state ' + st.c + '">' + st.t + '</div>' +
+  '</div>';
+}
+function dietMealHTML(meal, day) {
+  const m = DIET_MEALS.filter(function (x) { return x.k === meal; })[0] || DIET_MEALS[0];
+  const items = (day && day.meals && day.meals[meal]) || [];
+  const rows = items.map(function (it) {
+    return '<div class="dm-row">' +
+      '<div class="dm-main">' +
+        '<div class="dm-name">' + esc(it.name) + (it.est ? '<span class="dm-est">추정</span>' : '') + '</div>' +
+        '<div class="dm-meta">' + num1(it.kcal) + ' kcal · 탄 ' + num1(it.carb) + ' · 단 ' + num1(it.protein) + ' · 지 ' + num1(it.fat) + ' g</div>' +
+      '</div>' +
+      '<button class="dm-btn" data-dedit="' + esc(meal + ':' + it.id) + '" aria-label="수정">✎</button>' +
+      '<button class="dm-btn" data-drowdel="' + esc(meal + ':' + it.id) + '" aria-label="삭제">✕</button>' +
+    '</div>';
+  }).join('');
+  return '<div class="dmeal">' +
+    '<div class="dmeal-head"><span class="dmh-t">' + m.e + ' ' + m.l + '</span>' +
+      '<span class="dmh-k">' + (items.length ? num1(dietMealSum(day, meal)) + ' kcal' : '기록 없음') + '</span>' +
+      '<span class="sp"></span>' +
+      '<button class="dmh-add" data-dadd="' + m.k + '">＋ 추가</button></div>' +
+    (rows || '<div class="dm-empty">아직 없어요 · ＋ 추가로 넣을 수 있어요</div>') +
+  '</div>';
+}
+function dietViewHTML() {
+  const ds = dietState();
+  const g = ds.goals;
+  const day = ds.days[dietDate] || { water: 0, meals: { breakfast: [], lunch: [], dinner: [], snack: [] } };
+  const t = dietTotals(day);
+  const dt = parseDkey(dietDate);
+  const wd = ['일', '월', '화', '수', '목', '금', '토'];
+  const isToday = dietDate === dkey();
+  const step = Number(g.waterStepMl) || 500;
+  const synced = ds.syncedAt ? new Date(ds.syncedAt) : null;
+  const cups = Math.floor(day.water / 500);
+  return '<div class="view-inner">' +
+    routineSubNav() +
+    '<div class="card">' +
+      '<div class="card-head"><h3>🥗 ' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + wd[dt.getDay()] + '요일' + (isToday ? ' · 오늘' : '') + '</h3>' +
+        '<span class="sub">' + (t.count ? t.count + '개 · ' + num1(t.kcal) + ' kcal' : '기록 없음') + '</span></div>' +
+      '<div class="rdaynav" style="margin-top:0">' +
+        '<button data-dday="-1" aria-label="이전 날">‹</button>' +
+        '<button data-dday="1" aria-label="다음 날">›</button>' +
+        '<span class="sp"></span>' +
+        (isToday ? '' : '<button data-dday="today" style="padding:0 12px">오늘로</button>') +
+        '<button data-dsync="1" style="padding:0 12px">🔄 최신 식단 동기화</button>' +
+      '</div>' +
+      '<p style="font-size:11px;color:var(--ink-3);margin-top:9px;line-height:1.6">' +
+        (synced ? '마지막 동기화 · ' + (synced.getMonth() + 1) + '월 ' + synced.getDate() + '일 ' + pad2(synced.getHours()) + ':' + pad2(synced.getMinutes()) + ' (v' + (ds.seedVersion || 0) + ')' : '채팅에서 넘겨준 식단을 아직 받지 않았어요') +
+      '</p>' +
+    '</div>' +
+
+    '<div class="section-title"><h2>오늘의 목표</h2><span class="hint">' + num1(t.kcal) + ' / ' + g.calories + ' kcal</span></div>' +
+    '<div class="card"><div class="dgo">' +
+      dietKcalRow(t.kcal, g.calories) +
+      dietRangeRow('🍚 탄수화물', t.carb, g.carbs) +
+      dietRangeRow('🍗 단백질', t.protein, g.protein) +
+      dietRangeRow('🥑 지방', t.fat, g.fat) +
+    '</div></div>' +
+
+    '<div class="section-title"><h2>수분</h2><span class="hint">' + step + 'mL 버튼</span></div>' +
+    '<div class="card">' +
+      '<div class="dwater">' +
+        '<span class="dw-v">💧 ' + num1(day.water) + '<small>mL' + (cups ? ' · ' + cups + '잔' : '') + '</small></span>' +
+        '<span class="sp"></span>' +
+        '<button class="btn btn-sm" data-dwater="-1">-' + step + '</button>' +
+        '<button class="btn btn-sm btn-primary" data-dwater="1">+' + step + '</button>' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="section-title"><h2>끼니별 기록</h2><span class="hint">추정치는 배지로</span></div>' +
+    '<div class="card tight">' + DIET_MEALS.map(function (m) { return dietMealHTML(m.k, day); }).join('') + '</div>' +
+
+    '<p class="foot-note">식단은 채팅에서 받은 diet-data.json과 이 기기 기록을 함께 씁니다.<br>복습 탭의 JSON 백업에도 함께 담깁니다.</p>' +
+  '</div>';
+}
+
+/* 날짜 바뀔 때 화면에 남은 메모를 먼저 저장하기 위한 자리 (루틴 메모와 같은 방식) */
+function dietShiftWater(dir) {
+  const g = dietGoals();
+  const step = Number(g.waterStepMl) || 500;
+  const day = dietDay(dietDate, true);
+  const next = Math.max(0, Math.round((day.water + dir * step) * 10) / 10);
+  if (next === day.water) { toast('더 줄일 수 없어요'); return; }
+  day.water = next;
+  day.edited = true;
+  save();
+  renderRoutine();
+  toast('물 ' + num1(next) + ' mL');
+}
+function openDietItem(meal, id) {
+  const ds = dietState();
+  const day = ds.days[dietDate];
+  const arr = (day && day.meals && day.meals[meal]) || [];
+  const it = id ? arr.filter(function (x) { return x.id === id; })[0] : null;
+  dietDelAsk = false;
+  dietDraft = it
+    ? { meal: meal, id: it.id, name: it.name, kcal: String(it.kcal), carb: String(it.carb), protein: String(it.protein), fat: String(it.fat), est: !!it.est }
+    : { meal: meal, id: '', name: '', kcal: '', carb: '', protein: '', fat: '', est: false };
+  renderDietSheet();
+}
+function syncDietInputs() {
+  if (!dietDraft) return;
+  const g = function (id) { const el = document.getElementById(id); return el ? String(el.value || '') : ''; };
+  dietDraft.name = g('dName');
+  dietDraft.kcal = g('dKcal');
+  dietDraft.carb = g('dCarb');
+  dietDraft.protein = g('dProtein');
+  dietDraft.fat = g('dFat');
+  const cb = document.getElementById('dEst');
+  dietDraft.est = !!(cb && cb.checked);
+}
+function renderDietSheet() {
+  if (!dietDraft) return;
+  const edit = !!dietDraft.id;
+  const m = DIET_MEALS.filter(function (x) { return x.k === dietDraft.meal; })[0] || DIET_MEALS[0];
+  openSheet(
+    '<div class="quiz-head"><b>' + m.e + ' ' + m.l + ' · ' + (edit ? '음식 수정' : '음식 추가') + '</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<label class="field-label" for="dName">음식 이름</label>' +
+    '<input class="field" type="text" id="dName" value="' + esc(dietDraft.name) + '" placeholder="예: 현미볶음밥 200g" maxlength="50">' +
+    '<label class="field-label" for="dKcal">칼로리<span>kcal · 필수</span></label>' +
+    '<input class="field" type="number" id="dKcal" inputmode="decimal" min="0" step="1" value="' + esc(dietDraft.kcal) + '" placeholder="예: 335">' +
+    '<label class="field-label">탄수화물 · 단백질 · 지방<span>g · 모르면 비워두세요</span></label>' +
+    '<div class="dmac">' +
+      '<input class="field" type="number" id="dCarb" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.carb) + '" placeholder="탄수" aria-label="탄수화물 g">' +
+      '<input class="field" type="number" id="dProtein" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.protein) + '" placeholder="단백" aria-label="단백질 g">' +
+      '<input class="field" type="number" id="dFat" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.fat) + '" placeholder="지방" aria-label="지방 g">' +
+    '</div>' +
+    '<label class="dcheck" for="dEst"><input type="checkbox" id="dEst"' + (dietDraft.est ? ' checked' : '') + '> 추정치로 표시</label>' +
+    '<div class="q-foot">' +
+      (edit ? (dietDelAsk
+        ? '<button class="btn btn-danger" data-ddelok="1">정말 삭제</button><button class="btn" data-ddelno="1">취소</button>'
+        : '<button class="btn btn-danger" data-ddel="1">삭제</button>') : '') +
+      '<button class="btn btn-primary" data-dsave="1">저장</button>' +
+    '</div>'
+  );
+}
+function saveDietItem() {
+  if (!dietDraft) return;
+  syncDietInputs();
+  const name = String(dietDraft.name || '').trim();
+  if (!name) { toast('음식 이름을 잠깐 적어 주세요'); return; }
+  if (String(dietDraft.kcal).trim() === '' || !isFinite(Number(dietDraft.kcal))) { toast('칼로리를 숫자로 적어 주세요'); return; }
+  const editing = !!dietDraft.id;
+  const meal = dietDraft.meal || 'snack';
+  const day = dietDay(dietDate, true);
+  if (!Array.isArray(day.meals[meal])) day.meals[meal] = [];
+  const val = {
+    name: name.slice(0, 50),
+    kcal: dietNum(dietDraft.kcal, 5000),
+    carb: dietNum(dietDraft.carb, 500),
+    protein: dietNum(dietDraft.protein, 500),
+    fat: dietNum(dietDraft.fat, 500),
+    est: !!dietDraft.est
+  };
+  if (editing) {
+    const it = day.meals[meal].filter(function (x) { return x.id === dietDraft.id; })[0];
+    if (it) Object.assign(it, val, { src: 'user' });
+    else day.meals[meal].push(Object.assign({ id: 'u-' + Date.now().toString(36) + '-' + rand(999), src: 'user' }, val));
+  } else {
+    day.meals[meal].push(Object.assign({ id: 'u-' + Date.now().toString(36) + '-' + rand(999), src: 'user' }, val));
+  }
+  day.edited = true;
+  save();
+  closeSheet();
+  renderRoutine();
+  const m = DIET_MEALS.filter(function (x) { return x.k === meal; })[0] || DIET_MEALS[0];
+  toast((editing ? '기록을 고쳤어요' : m.l + '에 넣었어요') + ' · ' + name);
+}
+function deleteDietItem(meal, id) {
+  const ds = dietState();
+  const day = ds.days[dietDate];
+  if (!day) return;
+  const arr = day.meals[meal] || [];
+  const i = arr.map(function (x) { return x.id; }).indexOf(id);
+  if (i < 0) return;
+  const name = arr[i].name;
+  arr.splice(i, 1);
+  if (!Array.isArray(day.del)) day.del = [];
+  if (day.del.indexOf(id) < 0) day.del.push(id);
+  day.edited = true;
+  dietDelAsk = false;
+  save();
+  closeSheet();
+  renderRoutine();
+  toast(name + josaKo(name, '을', '를') + ' 지웠어요');
+}
+
+function onDietClick(e) {
+  const t = e.target;
+  if (!t || !t.closest) return false;
+  const sub = t.closest('[data-rsub]');
+  if (sub) {
+    flushMemo(true);
+    routineSub = sub.dataset.rsub === 'diet' ? 'diet' : 'routine';
+    renderRoutine();
+    try { window.scrollTo(0, 0); } catch (err) {}
+    return true;
+  }
+  if (routineSub !== 'diet') return false;
+  const dd = t.closest('[data-dday]');
+  if (dd) {
+    const v = dd.dataset.dday;
+    dietDate = v === 'today' ? dkey() : shiftKey(dietDate, Number(v) || 0);
+    renderRoutine();
+    return true;
+  }
+  if (t.closest('[data-dsync]')) { syncDietNow(true); return true; }
+  const wt = t.closest('[data-dwater]');
+  if (wt) { dietShiftWater(Number(wt.dataset.dwater) >= 0 ? 1 : -1); return true; }
+  const ad = t.closest('[data-dadd]');
+  if (ad) { openDietItem(ad.dataset.dadd, ''); return true; }
+  const ed = t.closest('[data-dedit]');
+  if (ed) { const p = String(ed.dataset.dedit).split(':'); openDietItem(p[0], p.slice(1).join(':')); return true; }
+  const rdl = t.closest('[data-drowdel]');
+  if (rdl) { const p = String(rdl.dataset.drowdel).split(':'); openDietItem(p[0], p.slice(1).join(':')); dietDelAsk = true; renderDietSheet(); return true; }
+  const sp = t.closest('[data-speak]');
+  if (sp) { speak(sp.dataset.speak); return true; }
+  return false;
+}
+function onDietSheetClick(e) {
+  if (!dietDraft) return false;
+  const t = e.target;
+  if (!t || !t.closest) return false;
+  if (t.closest('[data-dsave]')) { saveDietItem(); return true; }
+  if (t.closest('[data-ddelok]')) { const d = dietDraft; deleteDietItem(d.meal, d.id); return true; }
+  if (t.closest('[data-ddel]')) { syncDietInputs(); dietDelAsk = true; renderDietSheet(); return true; }
+  if (t.closest('[data-ddelno]')) { dietDelAsk = false; renderDietSheet(); return true; }
+  return false;
+}
+
+/* 오늘 탭용 식단 요약 카드 */
+function dietMiniHTML() {
+  const ds = dietState();
+  const g = ds.goals;
+  const k = dkey();
+  const day = ds.days[k];
+  const t = dietTotals(day);
+  const water = day ? day.water : 0;
+  const ratio = Math.min(100, t.kcal / Math.max(1, g.calories) * 100);
+  return '<div class="card tight diet-mini" data-goto-diet="1" role="button" tabindex="0" aria-label="오늘 식단 기록 열기">' +
+    '<div class="dmin-top"><span class="dmin-t">🥗 오늘 식단</span>' +
+      '<span class="dmin-v">' + (t.count ? num1(t.kcal) + ' kcal' : '기록 전') + '</span></div>' +
+    '<div class="dmin-bar"><i class="' + (t.kcal > g.calories ? 'over' : '') + '" style="width:' + ratio + '%"></i></div>' +
+    '<div class="dmin-s">단백질 ' + num1(t.protein) + 'g / ' + g.protein[0] + '~' + g.protein[1] + 'g · 💧 ' + num1(water) + ' mL' +
+      (t.count ? '' : ' · 눌러서 기록하기') + '</div>' +
+  '</div>';
+}
+
 /* ---------------- 탭 ----------------
    (currentTab 은 위에서 선언) */
 const TABS = { today: renderToday, routine: renderRoutine, fridge: renderFridge, kana: renderKana, words: renderWords, gram: renderGram, review: renderReview };
@@ -3468,6 +4025,7 @@ function onTodayClick(e) {
   const t = e.target;
   const bd = t.closest('[data-buddy]');
   if (bd) { nextBuddy(); return; }
+  if (t.closest('[data-buddy-img]')) { nextBuddy(); return; }
   const chk = t.closest('[data-check]');
   if (chk) {
     const k = chk.dataset.check;
@@ -3491,6 +4049,7 @@ function onTodayClick(e) {
   if (dcp) { copyDiaryEntry(dcp.dataset.dcopykey, dcp); return; }
   const go = t.closest('[data-goto]');
   if (go) { switchTab(go.dataset.goto); return; }
+  if (t.closest('[data-goto-diet]')) { routineSub = 'diet'; switchTab('routine'); return; }
   const sp = t.closest('[data-speak-slow]');
   if (sp) { speak(sp.dataset.speakSlow, 0.6); return; }
   const s2 = t.closest('[data-speak]');
@@ -3745,6 +4304,7 @@ function onSheetClick(e) {
   const t = e.target;
   if (onRoutineSheetClick(e)) return;
   if (onFridgeSheetClick(e)) return;
+  if (onDietSheetClick(e)) return;
   if (t.closest('[data-qnext]')) {
     Q.i++;
     Q.answered = false;
@@ -3899,6 +4459,7 @@ function init() {
   renderCurrent();
   updateStreakChip();
   fridgeQuietSync();
+  dietQuietSync();
 
   /* 홈 화면 추가·오프라인용 서비스 워커 (http/https에서만, 파일로 열 때는 건너뜀) */
   if ('serviceWorker' in navigator && /^https?:$/.test(location.protocol)) {

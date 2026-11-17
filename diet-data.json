@@ -1,0 +1,34 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-17",
+  "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
+  "goals": {
+    "calories": 1250,
+    "carbs": [110, 120],
+    "protein": [75, 85],
+    "fat": [35, 45],
+    "waterStepMl": 500
+  },
+  "days": {
+    "2026-11-17": {
+      "water": 1500,
+      "meals": {
+        "breakfast": [
+          { "id": "b1", "name": "매일두유 고단백 검은콩 190mL", "kcal": 110, "carb": 6, "protein": 12, "fat": 5 }
+        ],
+        "lunch": [
+          { "id": "l1", "name": "현미볶음밥 200g", "kcal": 335, "carb": 67, "protein": 8, "fat": 4.1 },
+          { "id": "l2", "name": "달걀 프라이 1개", "kcal": 100, "carb": 0.5, "protein": 6, "fat": 8, "est": true }
+        ],
+        "dinner": [
+          { "id": "d1", "name": "오븐구이 닭안심살 오리지널 100g", "kcal": 90, "carb": 0.5, "protein": 21, "fat": 0.5 },
+          { "id": "d2", "name": "현미크런치 닭가슴살 핫골드 100g", "kcal": 129, "carb": 4, "protein": 17, "fat": 4 }
+        ],
+        "snack": [
+          { "id": "s1", "name": "식빵 2장", "kcal": 210, "carb": 40, "protein": 6.5, "fat": 2.5, "est": true },
+          { "id": "s2", "name": "디카페인 커피", "kcal": 0, "carb": 0, "protein": 0, "fat": 0 }
+        ]
+      }
+    }
+  }
+}
