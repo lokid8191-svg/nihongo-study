@@ -5753,7 +5753,7 @@ function n3OpenEdit() {
     '<p class="sheet-date">' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + N3_WD[dt.getDay()] + ' · 이 날만 바뀌어요</p>' +
     base.map(function (t, i) {
       const v = (typeof lb[t.key] === 'string' && lb[t.key].trim()) ? lb[t.key] : t.t;
-      return '<label class="n3-ed-l" for="n3ed' + i + '">' + (i + 1) + (t.opt ? ' (선택)' : '') + '</label>' +
+      return '<label class="n3-ed-l" for="n3ed' + i + '">' + (i + 1) + (t.opt ? ' (선택)' : '') + (t.s ? ' · ' + esc(t.s) : '') + '</label>' +
         '<input type="text" class="field" id="n3ed' + i + '" value="' + esc(v) + '" maxlength="60">';
     }).join('') +
     '<p class="copy-hint">비워 두면 원래 계획 문구로 돌아가요.</p>' +
@@ -5881,7 +5881,7 @@ function n3DailyInner() {
         '<button data-n3w="0" aria-label="이번 주">이번 주</button>' +
         '<button data-n3w="1" aria-label="다음 주">›</button>' +
       '</div></div>' +
-    '<div class="n3-wlabel">' + wkLabel + ' · 이번 주 ' + wkS.done + '/' + wkS.total + ' (' + wkS.pct + '%)</div>' +
+    '<div class="n3-wlabel">' + wkLabel + ' · ' + (ws === weekStartOf(today) ? '이번 주 ' : '그 주 ') + wkS.done + '/' + wkS.total + ' (' + wkS.pct + '%)</div>' +
     '<div class="wk-row">' + n3WeekStrip(sel) + '</div>' +
     '<div class="n3-dhead"><div><b>' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + N3_WD[dt.getDay()] +
         (isToday ? ' · 오늘' : '') + '</b>' +
