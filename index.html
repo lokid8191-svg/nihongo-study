@@ -725,39 +725,72 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .menu-hint{font-size:10.5px;color:var(--ink-2);margin-top:-2px;margin-bottom:9px;line-height:1.5}
 
 /* ---------- 🎯 N3 로드맵 ---------- */
-.n3-sum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:2px}
-.n3-sum b{font-size:22px;font-weight:800;letter-spacing:-.5px}
-.n3-sum span{font-size:11px;color:var(--ink-3)}
-.n3-sum .n3-bar{flex:1;min-width:80px;margin:0}
 .n3-dday{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent);flex:none}
-.n3-grid{display:grid;gap:9px;margin-top:10px}
-.n3-step{border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:var(--surface-2);min-width:0}
-.n3-step.now{border-color:#FECACA;background:#FFF5F5}
-.n3-step.done{opacity:.9}
-.n3-head{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
-.n3-head b{font-size:12.5px}
-.n3-head .st{font-size:9.5px;font-weight:700;color:#fff;background:var(--primary);border-radius:99px;padding:2px 7px;flex:none}
-.n3-head .pd{font-size:10px;color:var(--ink-3);margin-left:auto;flex:none}
 .n3-bar{display:block;height:5px;border-radius:99px;background:#E5E7EB;margin:7px 0 6px;overflow:hidden}
 .n3-bar.wide{height:7px;margin:6px 0 2px}
 .n3-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#F87171);border-radius:99px;transition:width .3s ease}
-.n3-items{display:flex;flex-direction:column}
-.n3-it{display:flex;align-items:flex-start;gap:7px;width:100%;text-align:left;padding:4px 0;font-size:11.5px;color:var(--ink-2);line-height:1.45}
-.n3-it .box{flex:none;width:16px;height:16px;border-radius:5px;border:1.5px solid #C6C9CF;display:grid;place-items:center;font-size:10px;color:#fff;margin-top:1px}
-.n3-it.on .box{background:var(--primary);border-color:var(--primary)}
-.n3-it.on{color:var(--ink-3);text-decoration:line-through}
-.n3-foot{font-size:10px;color:var(--ink-3);margin-top:5px;text-align:right;font-variant-numeric:tabular-nums}
-.n3-pace{margin-top:10px;border:1px solid var(--line);border-radius:13px;padding:10px 11px;background:var(--surface-2)}
-.n3-pace-h{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap}
-.n3-pace-h b{font-size:11.5px;font-weight:800}
-.n3-pace-h span{margin-left:auto;font-size:10px;font-weight:700;color:var(--primary);background:var(--primary-soft);border-radius:99px;padding:2px 8px;flex:none;white-space:nowrap}
-.n3-pace-list{display:flex;flex-direction:column;gap:3px;margin-top:7px}
-.n3-pace-row{display:flex;align-items:flex-start;gap:7px;font-size:11px;color:var(--ink-2);line-height:1.45;min-width:0}
-.n3-pace-row b{flex:none;width:60px;font-weight:700;color:var(--ink);font-size:11px}
-.n3-pace-row.wk{color:var(--ink-3)}
-.n3-pace-note{margin-top:7px;padding-top:6px;border-top:1px dashed var(--line);font-size:10.5px;color:var(--ink-3);line-height:1.55;font-variant-numeric:tabular-nums}
-.n3-pace-note b{color:var(--primary);font-weight:800}
-
+/* 한눈 요약 (지금 단계 · 기간 경과 · D-day) */
+.n3-ov{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:12px}
+.n3-ov > div{background:var(--surface-2);border:1px solid var(--line);border-radius:12px;padding:8px 9px;min-width:0}
+.n3-ov b{display:block;font-size:15px;font-weight:800;letter-spacing:-.4px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.n3-ov span{display:block;font-size:9.5px;color:var(--ink-3);margin-top:1px;line-height:1.3}
+.n3-ov .cur b{color:var(--primary)}
+/* 전체 일정 타임라인 */
+.n3-tl{display:flex;flex-direction:column}
+.n3-tl-item{display:grid;grid-template-columns:24px minmax(0,1fr);gap:9px;min-width:0}
+.n3-tl-rail{display:flex;flex-direction:column;align-items:center;min-width:0}
+.n3-tl-dot{flex:none;width:22px;height:22px;border-radius:50%;border:1.5px solid var(--line);background:var(--surface);color:var(--ink-3);font-size:10.5px;font-weight:800;display:grid;place-items:center;margin-top:10px;line-height:1}
+.n3-tl-rail::after{content:"";flex:1;width:2px;background:var(--line);margin:4px 0 0;border-radius:2px}
+.n3-tl-item:last-child .n3-tl-rail::after{display:none}
+.n3-tl-item.now .n3-tl-dot{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 0 0 4px var(--primary-soft)}
+.n3-tl-item.done .n3-tl-dot{background:var(--surface);border-color:var(--primary);color:var(--primary)}
+.n3-tl-item.exam .n3-tl-dot{font-size:11px}
+.n3-tl-body{border:1px solid var(--line);border-radius:13px;background:var(--surface-2);padding:9px 11px 10px;margin-bottom:9px;min-width:0}
+.n3-tl-item.now .n3-tl-body{border-color:#FECACA;background:#FFF5F5}
+.n3-tl-item.done .n3-tl-body{opacity:.92}
+.n3-tl-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.n3-tl-no{font-size:9.5px;font-weight:700;color:#fff;background:var(--primary);border-radius:99px;padding:2px 7px;flex:none}
+.n3-tl-item.done .n3-tl-no{background:var(--ink-3)}
+.n3-tl-pd{font-size:10.5px;color:var(--ink-2);font-weight:700;font-variant-numeric:tabular-nums}
+.n3-tl-badge{margin-left:auto;flex:none;font-size:9.5px;font-weight:700;color:var(--ink-3);background:var(--surface);border:1px solid var(--line);border-radius:99px;padding:2px 7px}
+.n3-tl-item.now .n3-tl-badge{color:var(--primary);border-color:#FECACA;background:#fff}
+.n3-tl-item.done .n3-tl-badge{color:var(--ok);border-color:#BBF7D0;background:#F0FDF4}
+.n3-tl-name{font-size:13px;font-weight:800;margin-top:5px;letter-spacing:-.2px;display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;line-height:1.35}
+.n3-tl-dd{font-size:10.5px;font-weight:800;color:var(--accent);flex:none}
+.n3-tl-books{font-size:11px;color:var(--ink-2);margin-top:3px;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
+.n3-tl-bar{display:block;height:5px;border-radius:99px;background:#E5E7EB;margin-top:8px;overflow:hidden}
+.n3-tl-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#F87171);border-radius:99px;transition:width .3s ease}
+.n3-tl-item.done .n3-tl-bar i{background:var(--ok)}
+.n3-tl-meta{display:flex;justify-content:space-between;gap:6px;font-size:9.5px;color:var(--ink-3);margin-top:4px;font-variant-numeric:tabular-nums}
+.n3-tl-day{font-size:10.5px;color:var(--ink-2);margin-top:6px;line-height:1.45;background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:5px 7px}
+.n3-tl-foot{display:flex;justify-content:flex-end;margin-top:7px}
+.n3-tl-foot .mini-btn{min-height:26px;font-size:10.5px;padding:0 9px}
+/* 매일 공부량 체크 */
+.n3-wlabel{font-size:10.5px;color:var(--ink-3);margin:-3px 0 7px;font-variant-numeric:tabular-nums}
+.n3-wk .n3-wk-c{font-size:8.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;line-height:1}
+.n3-wk.sel .n3-wk-c{color:var(--primary);font-weight:700}
+.n3-dhead{display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin:14px 0 2px}
+.n3-dhead b{display:block;font-size:13px;font-weight:800;letter-spacing:-.2px;line-height:1.4}
+.n3-dhead span{display:block;font-size:10.5px;color:var(--ink-3);margin-top:2px;line-height:1.4}
+.n3-dpct{font-size:17px;font-weight:800;letter-spacing:-.5px;flex:none;font-variant-numeric:tabular-nums;line-height:1.2}
+.n3-dpct small{font-size:11px;color:var(--ink-3);font-weight:700}
+.n3-dtasks{display:flex;flex-direction:column;margin-top:5px}
+.n3-dt{display:flex;align-items:flex-start;gap:9px;width:100%;text-align:left;padding:9px 2px;border-top:1px solid var(--surface-2);min-width:0}
+.n3-dt:first-child{border-top:0}
+.n3-dt .box{flex:none;width:19px;height:19px;border-radius:6px;border:1.5px solid #C6C9CF;display:grid;place-items:center;font-size:11px;color:#fff;margin-top:1px;transition:background .15s,border-color .15s}
+.n3-dt.on .box{background:var(--primary);border-color:var(--primary)}
+.n3-dt-t{min-width:0;flex:1}
+.n3-dt-t b{display:block;font-size:12px;font-weight:700;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere}
+.n3-dt-t span{display:block;font-size:10.5px;color:var(--ink-3);margin-top:2px;line-height:1.45;word-break:keep-all;overflow-wrap:anywhere}
+.n3-dt.on .n3-dt-t b{color:var(--ink-3);text-decoration:line-through}
+.n3-dt.opt .n3-dt-t b::after{content:" (선택)";font-size:9.5px;font-weight:600;color:var(--ink-3)}
+.n3-dt:disabled{opacity:.55}
+.n3-dfoot{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:9px}
+.n3-dst{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line)}
+.n3-dst > div{text-align:center;min-width:0}
+.n3-dst b{display:block;font-size:14px;font-weight:800;letter-spacing:-.3px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.n3-dst span{display:block;font-size:9.5px;color:var(--ink-3);margin-top:1px;line-height:1.3}
+.n3-ed-l{display:block;font-size:11px;font-weight:700;color:var(--ink-2);margin:12px 0 5px}
 /* ---------- 🔁 오답 플래시카드 ---------- */
 .fc-cta .btn{margin-top:10px}
 .fc-wrap{display:flex;flex-direction:column;gap:10px}
@@ -779,7 +812,6 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
   .menu-list{grid-template-columns:repeat(3,minmax(0,1fr))}
   .menu-item{display:flex;flex-direction:column}
   .menu-item .btn{margin-top:auto}
-  .n3-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
   .fc-card{min-height:250px}
   .fc-front{font-size:28px}
 }
@@ -1379,7 +1411,7 @@ function defaultState() {
     fridge: { items: [], seedVersion: 0, syncedAt: '' },
     diet: { goals: null, days: {}, seedVersion: 0, syncedAt: '' },
     weight: { profile: null, entries: {}, doses: [], seedVersion: 0, syncedAt: '' },
-    n3: { checks: {} },
+    n3: { checks: {}, days: {}, stageDone: {}, labels: {} },
     streak: 0
   };
 }
@@ -1473,11 +1505,47 @@ function normalizeFridge(raw) {
 }
 function normalizeN3(raw) {
   const r = raw && typeof raw === 'object' ? raw : {};
-  const checks = {};
+  const out = { checks: {}, days: {}, stageDone: {}, labels: {} };
+  /* 예전 단계별 체크(18항목) — 화면에서는 쓰지 않고 그대로 보관만 합니다. */
   if (r.checks && typeof r.checks === 'object') {
-    Object.keys(r.checks).forEach(function (k) { if (r.checks[k]) checks[String(k).slice(0, 40)] = true; });
+    Object.keys(r.checks).forEach(function (k) { if (r.checks[k]) out.checks[String(k).slice(0, 40)] = true; });
   }
-  return { checks: checks };
+  /* 날짜별 매일 공부량 체크 */
+  if (r.days && typeof r.days === 'object') {
+    Object.keys(r.days).forEach(function (k) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+      const d = r.days[k];
+      if (!d || typeof d !== 'object') return;
+      const tasks = {};
+      if (d.tasks && typeof d.tasks === 'object') {
+        Object.keys(d.tasks).forEach(function (t) {
+          if (d.tasks[t] && /^[a-z]{1,8}$/.test(t)) tasks[t] = true;
+        });
+      }
+      out.days[k] = { tasks: tasks };
+    });
+  }
+  /* 단계 완료 표시 */
+  if (r.stageDone && typeof r.stageDone === 'object') {
+    Object.keys(r.stageDone).forEach(function (k) {
+      if (r.stageDone[k] && /^s[1-4]$/.test(k)) out.stageDone[k] = true;
+    });
+  }
+  /* 날짜별 계획 문구 수정 */
+  if (r.labels && typeof r.labels === 'object') {
+    Object.keys(r.labels).forEach(function (k) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+      const lab = r.labels[k];
+      if (!lab || typeof lab !== 'object') return;
+      const m = {};
+      Object.keys(lab).forEach(function (key) {
+        const v = String(lab[key] == null ? '' : lab[key]).trim().slice(0, 60);
+        if (v && /^[a-z]{1,8}$/.test(key)) m[key] = v;
+      });
+      if (Object.keys(m).length) out.labels[k] = m;
+    });
+  }
+  return out;
 }
 let S = defaultState();
 function loadState() {
@@ -2129,7 +2197,7 @@ function todayStudyHTML() {
     '</div>' +
     '</div></div>' +
 
-    n3CardHTML() +
+    n3BlockHTML() +
 
     '<div class="vcols"><div class="vcol">' +
     '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
@@ -5488,189 +5556,358 @@ function onMenuClick(e) {
 
 
 /* ---------------- 🎯 2027.07 JLPT N3 로드맵 ----------------
-   Step 1 N5 1회독 → Step 2 N4 핵심 → Step 3 N3 집중 → 2027.07 시험.
-   체크한 항목은 이 기기에 저장되고 복습 탭의 JSON 백업에도 담깁니다. */
+   두 카드로 나눠 보여줍니다.
+   ① 전체 일정 타임라인 — 단계별 기간·교재·하루 권장량을 한눈에.
+      큰 단계는 하루 체크가 아니라 날짜 경과(%)와 [단계 완료] 표시로 관리합니다.
+   ② 매일 공부량 체크 — 날짜별 체크리스트(평일 3개 · 주말 3개).
+      체크는 이 기기에 저장되고 복습 탭의 JSON 백업에도 함께 담깁니다. */
 const N3_EXAM_DATE = '2027-07-04';   /* 7월 첫째 일요일 · 공식 일정은 접수 전에 확인 */
-const N3_ROADMAP = [
+const N3_STAGES = [
   {
-    id: 's1', step: 'Step 1', title: 'N5 1회독', period: '2026.11~12', from: '2026-11-01', to: '2026-12-31',
-    items: [
-      '가나 46음 + 탁음·요음 읽고 쓰기',
-      'N5 단어·한자 131개 1회독',
-      'N5 문법 15개 정리',
-      '일상·여행 회화 48문장 소리 내어 읽기',
-      '한 줄 일기 20일 이상 쓰기'
+    id: 's1', no: '1단계', name: 'N5 기본 다지기', period: '2026.11~12', from: '2026-11-01', to: '2026-12-31',
+    books: '《한권으로 끝내기 N5》 1회독 + 《보카 N5》',
+    day: '하루 약 1시간 20분 · 보카 15~20단어 + 문법 1단원',
+    tasks: [
+      { key: 'voca', t: '가나·단어 5분 + 《보카 N5》 15~20단어', s: '헷갈리는 가나 5문제 → 보카 15~20개 소리 내어 읽기' },
+      { key: 'gram', t: '《한권으로 끝내기 N5》 문법·예문 1단원 + 문제풀이', s: '예문 소리 내어 읽고 그 단원 문제까지' },
+      { key: 'diary', t: '웹앱 한 줄 일기 & 첨삭', s: '일본어 한 줄 쓰고 [첨삭용으로 복사]로 점검' }
     ]
   },
   {
-    id: 's2', step: 'Step 2', title: 'N4 핵심', period: '2027.01~02', from: '2027-01-01', to: '2027-02-28',
-    items: [
-      'N4 한자 300자 익히기',
-      'N4 문법 80개 정리',
-      'N4 단어 1,500개 중 800개 익히기',
-      '짧은 독해 하루 1지문',
-      '오답노트 주 1회 회독'
+    id: 's2', no: '2단계', name: 'N4 핵심 뼈대', period: '2027.01~02', from: '2027-01-01', to: '2027-02-28',
+    books: 'N4 기본서(12월 말 구매) + 《보카 N4》',
+    day: '하루 약 1시간 30분 · 보카 15~20단어 + 문법 1단원 + 짧은 독해 1지문',
+    tasks: [
+      { key: 'voca', t: '가나·단어 5분 + 《보카 N4》 15~20단어', s: '한자 10자씩 같이 보기' },
+      { key: 'gram', t: 'N4 기본서 문법·예문 1단원 + 문제풀이', s: '문법 3포인트 + 짧은 독해 1지문' },
+      { key: 'diary', t: '웹앱 한 줄 일기 & 첨삭', s: '오늘 배운 문형을 꼭 하나 넣어서' }
     ]
   },
   {
-    id: 's3', step: 'Step 3', title: 'N3 집중', period: '2027.03~06', from: '2027-03-01', to: '2027-06-30',
-    items: [
-      'N3 문법 120개 정리',
-      'N3 단어 2,500개 회독',
-      '독해 지문 하루 2개',
-      '청해 30분 매일 듣기',
-      '모의고사 3회 이상 풀기'
+    id: 's3', no: '3단계', name: 'N3 집중', period: '2027.03~06', from: '2027-03-01', to: '2027-06-30',
+    books: 'N3 교재 + 《보카 N3》 + 기출·모의고사',
+    day: '하루 약 1시간 40분 · 보카 15~20단어(여유 시 40) + 문법 + 독해·청해',
+    tasks: [
+      { key: 'voca', t: '가나·단어 5분 + 《보카 N3》 15~20단어', s: '여유 있으면 30~40개까지 · 틀린 단어 표시' },
+      { key: 'gram', t: 'N3 교재 문법·예문 1단원 + 문제풀이', s: '주 1회는 기출·모의고사 1회분으로 대체' },
+      { key: 'diary', t: '웹앱 한 줄 일기 & 첨삭', s: '배운 문형으로 한 줄 → 첨삭 받고 다시 쓰기' }
     ]
   },
   {
-    id: 's4', step: '시험', title: '2027.07 JLPT N3', period: '2027.07.04(일) 예정', from: '2027-07-01', to: '2027-07-04',
-    items: [
-      '접수 일정 확인하고 접수하기',
-      '수험표·신분증 준비',
-      '시험 전 주 오답 총정리'
+    id: 's4', no: '목표', name: 'JLPT N3 첫 응시', period: '2027.07 첫째 주', from: '2027-07-01', to: '2027-07-04',
+    books: '7.04(일) 예정 · 접수 일정은 공식 사이트에서 확인',
+    day: '시험 주간 · 오답 총정리 + 실전 1회분',
+    tasks: [
+      { key: 'voca', t: '오답노트·문법 총정리 30분', s: '틀린 문제만 다시 보기' },
+      { key: 'gram', t: '모의·기출 1회분 시간 재고 풀기', s: '실전 감각 유지' },
+      { key: 'diary', t: '수험표·신분증·접수 일정 확인', s: '전날까지 준비 완료' }
     ]
   }
 ];
+/* 주말(토·일) 루틴 — 평일 틀린 것 복습 + 한 주 정리 */
+const N3_WEEKEND_TASKS = [
+  { key: 'review', t: '평일 틀린 단어·오답 복습', s: '복습 탭 오답노트·플래시카드로 한 바퀴' },
+  { key: 'week', t: '한 주 정리 · 진도 점검', s: '이번 주 체크를 돌아보고 다음 주 분량 정하기' },
+  { key: 'makeup', t: '밀린 단원·단어 따라잡기', s: '평일에 못 한 분량이 있을 때만', opt: true }
+];
+const N3_WD = ['일요일', '월요일', '화요일', '수요일', '목요일', '금요일', '토요일'];
+const N3_WD_S = ['일', '월', '화', '수', '목', '금', '토'];
+
 function n3State() {
-  if (!S.n3 || typeof S.n3 !== 'object') S.n3 = { checks: {} };
-  if (!S.n3.checks || typeof S.n3.checks !== 'object') S.n3.checks = {};
-  return S.n3;
+  if (!S.n3 || typeof S.n3 !== 'object') S.n3 = { checks: {}, days: {}, stageDone: {}, labels: {} };
+  const s = S.n3;
+  if (!s.checks || typeof s.checks !== 'object') s.checks = {};      /* 예전 단계별 체크(보관만) */
+  if (!s.days || typeof s.days !== 'object') s.days = {};
+  if (!s.stageDone || typeof s.stageDone !== 'object') s.stageDone = {};
+  if (!s.labels || typeof s.labels !== 'object') s.labels = {};
+  return s;
 }
-function n3Key(stepId, i) { return stepId + ':' + i; }
-function n3Done(stepId, i) { return !!n3State().checks[n3Key(stepId, i)]; }
-function n3StepStat(step) {
-  const total = step.items.length;
-  let done = 0;
-  step.items.forEach(function (_, i) { if (n3Done(step.id, i)) done++; });
-  return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
-}
-function n3Stats() {
-  let done = 0, total = 0;
-  N3_ROADMAP.forEach(function (s) { const st = n3StepStat(s); done += st.done; total += st.total; });
-  return { done: done, total: total, pct: total ? Math.round(done / total * 100) : 0 };
+function n3StageById(id) {
+  for (let i = 0; i < N3_STAGES.length; i++) if (N3_STAGES[i].id === id) return N3_STAGES[i];
+  return N3_STAGES[0];
 }
 function n3DDay() {
-  const today = parseDkey(dkey());
-  const exam = parseDkey(N3_EXAM_DATE);
-  return Math.round((exam - today) / 86400000);
+  return Math.round((parseDkey(N3_EXAM_DATE) - parseDkey(dkey())) / 86400000);
 }
-function n3Toggle(key) {
+/* 완료 표시가 없는 첫 단계가 '지금 단계'입니다. */
+function n3Active() {
   const st = n3State();
-  if (st.checks[key]) delete st.checks[key];
-  else st.checks[key] = true;
-  save();
-  if (currentTab === 'studytoday') renderStudyToday();
-  else if (currentTab === 'home') renderHome();
-  const s = n3Stats();
-  toast((st.checks[key] ? '✓ ' : '') + 'N3 로드맵 ' + s.done + ' / ' + s.total + ' (' + s.pct + '%)');
-}
-function n3ActiveStep() {
-  for (let i = 0; i < N3_ROADMAP.length; i++) {
-    const step = N3_ROADMAP[i];
-    const st = n3StepStat(step);
-    if (!(st.total && st.done === st.total)) {
-      const left = Math.round((parseDkey(step.to) - parseDkey(dkey())) / 86400000);
-      return { step: step, stat: st, left: left };
-    }
+  for (let i = 0; i < N3_STAGES.length; i++) {
+    if (!st.stageDone[N3_STAGES[i].id]) return { stage: N3_STAGES[i], idx: i };
   }
-  return null;
+  return { stage: N3_STAGES[N3_STAGES.length - 1], idx: N3_STAGES.length - 1 };
 }
-/* 단계별 오늘 권장 분량 — 평일 퇴근 후 1~2시간 기준 */
-function n3TodayPlan(stepId) {
-  const plans = {
-    s1: { mins: '하루 약 1시간 20분', rows: [
-      ['보카·한자', '30분 · 단어 15~20개 + 한자 5~8자'],
-      ['문법·독해', '20~30분 · 문법 2포인트 + 예문 소리 내어 읽기'],
-      ['리스닝·회화', '20분 · 가나·회화 섀도잉 또는 한 줄 일기']
-    ] },
-    s2: { mins: '하루 약 1시간 30분', rows: [
-      ['보카·한자', '30분 · 단어 25~30개 + 한자 10자'],
-      ['문법·독해', '40분 · 문법 3포인트 + 짧은 독해 1지문'],
-      ['리스닝·회화', '20분 · 청해 섀도잉 또는 한 줄 일기']
-    ] },
-    s3: { mins: '하루 약 1시간 40분', rows: [
-      ['보카·한자', '30분 · 단어 40개 + 한자 15자'],
-      ['문법·독해', '50분 · 문법 3~4포인트 + 독해 2지문'],
-      ['리스닝·회화', '20분 · 청해 30분 듣기·섀도잉']
-    ] },
-    s4: { mins: '시험 주간', rows: [
-      ['오답', '30분 · 오답노트·문법 총정리'],
-      ['실전', '모의·기출 1회분 시간 재고 풀기'],
-      ['준비', '수험표·신분증·접수 일정 확인']
-    ] }
+function n3StageInfo(stage) {
+  const st = n3State();
+  const t0 = parseDkey(stage.from), t1 = parseDkey(stage.to), now = parseDkey(dkey());
+  const totalD = Math.max(1, Math.round((t1 - t0) / 86400000) + 1);
+  const passedD = Math.min(totalD, Math.max(0, Math.round((now - t0) / 86400000) + 1));
+  return {
+    totalD: totalD, passedD: passedD,
+    pct: Math.round(passedD / totalD * 100),
+    left: Math.round((t1 - now) / 86400000),
+    done: !!st.stageDone[stage.id]
   };
-  return plans[stepId] || plans.s1;
 }
-/* 남은 항목과 단계별 남은 기간으로 페이스를 계산해 보여줍니다. */
-function n3PaceHTML() {
-  const s = n3Stats();
-  const dday = n3DDay();
-  const active = n3ActiveStep();
-  const remain = s.total - s.done;
-  const plan = n3TodayPlan(active ? active.step.id : 's4');
-  const rows = plan.rows.map(function (r) {
-    return '<div class="n3-pace-row"><b>' + r[0] + '</b><span>' + r[1] + '</span></div>';
-  }).join('') +
-    '<div class="n3-pace-row wk"><b>주말</b><span>주간 오답 복습 + 모의·기출 1회분 점검</span></div>';
+function n3ToggleStage(id) {
+  const st = n3State();
+  if (st.stageDone[id]) delete st.stageDone[id];
+  else st.stageDone[id] = true;
+  save();
+  n3Refresh();
+  const stage = n3StageById(id);
+  toast(st.stageDone[id] ? '✓ ' + stage.no + ' ' + stage.name + ' 완료 표시했어요' : stage.no + ' 완료 표시를 풀었어요');
+}
 
-  let pace;
-  if (!active) {
-    pace = '모든 단계를 완료했어요 — 시험 전까지 오답 복습과 실전 1회분만 점검하면 돼요';
-  } else {
-    const stRemain = active.stat.total - active.stat.done;
-    if (active.left > 0 && stRemain > 0) {
-      const per = Math.max(1, Math.round(active.left / stRemain));
-      pace = '<b>' + active.step.step + ' ' + active.step.title + '</b> 기준 · 이번 단계 ' + stRemain + '개 남음 · ' + active.left + '일 남음 → 약 ' + per + '일마다 1개';
-    } else if (stRemain > 0) {
-      pace = '<b>' + active.step.step + '</b> 기간이 지쳤어요 — 남은 ' + stRemain + '개부터 마무리해요';
-    } else {
-      pace = '<b>' + active.step.step + '</b> 항목은 모두 끝났어요 — 다음 단계로 넘어가요';
-    }
+/* ---------- 매일 공부량 체크 ---------- */
+let n3Date = '';   /* 선택한 날짜 · 비어 있으면 오늘 */
+function n3Sel() { return n3Date || dkey(); }
+function n3Weekend(k) { const w = parseDkey(k).getDay(); return w === 0 || w === 6; }
+function n3BaseTasks(k) {
+  const stage = n3Active().stage;
+  if (stage.id === 's4') return stage.tasks;            /* 시험 주간은 요일 구분 없이 */
+  return n3Weekend(k) ? N3_WEEKEND_TASKS : stage.tasks;
+}
+function n3DayChecks(k) {
+  const d = n3State().days[k];
+  return (d && d.tasks && typeof d.tasks === 'object') ? d.tasks : {};
+}
+function n3TasksFor(k) {
+  const lb = n3State().labels[k] || {};
+  return n3BaseTasks(k).map(function (t) {
+    const custom = typeof lb[t.key] === 'string' ? lb[t.key].trim() : '';
+    return { key: t.key, t: custom || t.t, s: t.s, opt: !!t.opt };
+  });
+}
+function n3DayStat(k) {
+  const tasks = n3TasksFor(k), c = n3DayChecks(k);
+  let done = 0;
+  tasks.forEach(function (t) { if (c[t.key]) done++; });
+  return { done: done, total: tasks.length, pct: tasks.length ? Math.round(done / tasks.length * 100) : 0 };
+}
+function n3HasDay(k) {
+  const c = n3DayChecks(k);
+  for (const key in c) if (c[key]) return true;
+  return false;
+}
+function n3StudyDays() { return Object.keys(n3State().days).filter(n3HasDay).length; }
+function n3Streak() {
+  let n = 0, guard = 0;
+  const d = new Date();
+  if (!n3HasDay(dkey(d))) d.setDate(d.getDate() - 1);
+  while (n3HasDay(dkey(d)) && guard++ < 3650) { n++; d.setDate(d.getDate() - 1); }
+  return n;
+}
+function n3WeekStats(wsKey) {
+  const today = dkey();
+  let done = 0, total = 0, full = 0, days = 0;
+  for (let i = 0; i < 7; i++) {
+    const k = shiftKey(wsKey, i);
+    if (k > today) break;
+    const st = n3DayStat(k);
+    done += st.done; total += st.total; days++;
+    if (st.total && st.done === st.total) full++;
   }
-  const overall = remain > 0 && dday > 0
-    ? '전체 남은 ' + remain + '개 · 시험까지 ' + dday + '일 → 항목당 약 ' + Math.max(1, Math.round(dday / remain)) + '일'
-    : (remain > 0 ? '시험일이 지났어요 — 남은 ' + remain + '개는 다음 회차로 미뤄요' : '전체 18개 항목 완료');
-
-  return '<div class="n3-pace">' +
-    '<div class="n3-pace-h"><b>⏱ 하루 공부량</b><span>' + plan.mins + '</span></div>' +
-    '<div class="n3-pace-list">' + rows + '</div>' +
-    '<div class="n3-pace-note">' + overall + '<br>' + pace + '</div>' +
-  '</div>';
+  return { done: done, total: total, full: full, days: days, pct: total ? Math.round(done / total * 100) : 0 };
 }
-function n3CardHTML() {
-  const s = n3Stats();
+function n3ToggleTask(k, key) {
+  if (k > dkey()) { toast('아직 오지 않은 날이에요'); return; }
+  const st = n3State();
+  if (!st.days[k] || typeof st.days[k] !== 'object') st.days[k] = { tasks: {} };
+  if (!st.days[k].tasks || typeof st.days[k].tasks !== 'object') st.days[k].tasks = {};
+  const on = !st.days[k].tasks[key];
+  if (on) st.days[k].tasks[key] = true;
+  else delete st.days[k].tasks[key];
+  save();
+  n3Refresh();
+  const s = n3DayStat(k);
+  toast((on ? '✓ ' : '') + s.done + ' / ' + s.total + (s.total && s.done === s.total ? ' · 오늘 공부량 완료!' : ' 체크'));
+}
+function n3SelectDate(k) {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(String(k || ''))) return;
+  n3Date = (k === dkey()) ? '' : k;
+  n3Refresh();
+}
+function n3ShiftWeek(n) {
+  if (!n) { n3Date = ''; n3Refresh(); return; }   /* '이번 주' = 오늘로 */
+  const todayWs = weekStartOf(dkey());
+  const target = shiftKey(weekStartOf(n3Sel()), n * 7);
+  if (target > todayWs) { toast('이번 주까지만 볼 수 있어요'); n3Date = ''; n3Refresh(); return; }
+  n3Date = (target === todayWs) ? '' : target;
+  n3Refresh();
+}
+function n3Refresh() {
+  const road = document.getElementById('n3Road');
+  if (road) road.innerHTML = n3RoadInner();
+  const day = document.getElementById('n3Daily');
+  if (day) day.innerHTML = n3DailyInner();
+}
+/* 이 날만 계획 문구 바꾸기 (비우면 원래 계획으로) */
+function n3OpenEdit() {
+  const k = n3Sel();
+  const base = n3BaseTasks(k);
+  const lb = n3State().labels[k] || {};
+  const dt = parseDkey(k);
+  openSheet(
+    '<div class="quiz-head"><b>계획 문구 수정</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<p class="sheet-date">' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + N3_WD[dt.getDay()] + ' · 이 날만 바뀌어요</p>' +
+    base.map(function (t, i) {
+      const v = (typeof lb[t.key] === 'string' && lb[t.key].trim()) ? lb[t.key] : t.t;
+      return '<label class="n3-ed-l" for="n3ed' + i + '">' + (i + 1) + (t.opt ? ' (선택)' : '') + '</label>' +
+        '<input type="text" class="field" id="n3ed' + i + '" value="' + esc(v) + '" maxlength="60">';
+    }).join('') +
+    '<p class="copy-hint">비워 두면 원래 계획 문구로 돌아가요.</p>' +
+    '<div class="q-foot"><button class="btn" data-n3ereset="1">원래대로</button>' +
+      '<button class="btn btn-primary" data-n3esave="1">저장</button></div>'
+  );
+}
+function n3SaveEdit() {
+  const k = n3Sel();
+  const base = n3BaseTasks(k);
+  const st = n3State();
+  const lb = {};
+  base.forEach(function (t, i) {
+    const el = document.getElementById('n3ed' + i);
+    if (!el) return;
+    const v = String(el.value || '').trim().slice(0, 60);
+    if (v && v !== t.t) lb[t.key] = v;
+  });
+  if (Object.keys(lb).length) st.labels[k] = lb;
+  else delete st.labels[k];
+  save();
+  closeSheet();
+  n3Refresh();
+  toast(Object.keys(lb).length ? '이 날 계획 문구를 저장했어요' : '원래 계획으로 돌아갔어요');
+}
+function n3ResetEdit() {
+  const k = n3Sel();
+  const st = n3State();
+  delete st.labels[k];
+  save();
+  closeSheet();
+  n3Refresh();
+  toast('원래 계획 문구로 돌아갔어요');
+}
+
+/* ---------- ① 전체 일정 타임라인 ---------- */
+function n3WeekStrip(k) {
+  const ws = weekStartOf(k), today = dkey(), sel = n3Sel();
+  let h = '';
+  for (let i = 0; i < 7; i++) {
+    const d = shiftKey(ws, i);
+    const dt = parseDkey(d);
+    const st = n3DayStat(d);
+    const future = d > today;
+    h += '<button class="wk-cell n3-wk' + (d === sel ? ' sel' : '') + (d === today ? ' today' : '') + (future ? ' dim' : '') + '"' +
+      ' data-n3day="' + d + '" aria-label="' + d + ' ' + st.done + '/' + st.total + ' 체크"' + (d === sel ? ' aria-current="date"' : '') + '>' +
+      '<span class="wk-d">' + N3_WD_S[dt.getDay()] + '</span>' +
+      '<span class="wk-n">' + dt.getDate() + '</span>' +
+      '<span class="wk-bar"><i style="width:' + st.pct + '%"></i></span>' +
+      '<span class="n3-wk-c">' + (future ? '–' : st.done + '/' + st.total) + '</span>' +
+    '</button>';
+  }
+  return h;
+}
+function n3RoadInner() {
+  const act = n3Active();
   const dday = n3DDay();
-  const steps = N3_ROADMAP.map(function (step, si) {
-    const st = n3StepStat(step);
-    const complete = st.total && st.done === st.total;
-    const prevDone = si === 0 ? true : (function () {
-      const p = n3StepStat(N3_ROADMAP[si - 1]);
-      return p.total && p.done === p.total;
-    })();
-    const now = !complete && (si === 0 || prevDone);
-    const items = step.items.map(function (label, i) {
-      const on = n3Done(step.id, i);
-      return '<button class="n3-it' + (on ? ' on' : '') + '" data-n3="' + n3Key(step.id, i) + '" aria-pressed="' + on + '">' +
-        '<span class="box">' + (on ? '✓' : '') + '</span><span>' + esc(label) + '</span></button>';
-    }).join('');
-    return '<div class="n3-step' + (now ? ' now' : '') + (complete ? ' done' : '') + '">' +
-      '<div class="n3-head"><span class="st">' + esc(step.step) + '</span><b>' + esc(step.title) + '</b>' +
-        '<span class="pd">' + esc(step.period) + '</span></div>' +
-      '<div class="n3-bar"><i style="width:' + st.pct + '%"></i></div>' +
-      '<div class="n3-items">' + items + '</div>' +
-      '<div class="n3-foot">' + st.done + ' / ' + st.total + ' · ' + st.pct + '%' + (complete ? ' · 완료 ✓' : '') + '</div>' +
+  const ddayTxt = dday > 0 ? 'D-' + dday : dday === 0 ? 'D-DAY' : 'D+' + Math.abs(dday);
+  const cur = n3StageInfo(act.stage);
+  const rows = N3_STAGES.map(function (stage, i) {
+    const si = n3StageInfo(stage);
+    const isNow = !si.done && stage.id === act.stage.id;
+    const exam = stage.id === 's4';
+    const badge = si.done ? '완료' : isNow ? (si.left >= 0 ? '진행 중' : '기간 지남') : (si.left < 0 ? '지남' : '예정');
+    const meta = si.done
+      ? '<span>완료 표시됨</span><span>' + esc(stage.period) + '</span>'
+      : (si.left >= 0
+        ? '<span>기간 ' + si.pct + '% 경과</span><span>' + si.left + '일 남음</span>'
+        : '<span>기간이 지났어요</span><span>' + Math.abs(si.left) + '일 지남</span>');
+    return '<div class="n3-tl-item' + (isNow ? ' now' : '') + (si.done ? ' done' : '') + (exam ? ' exam' : '') + '">' +
+      '<div class="n3-tl-rail"><span class="n3-tl-dot" aria-hidden="true">' + (si.done ? '✓' : exam ? '🎯' : String(i + 1)) + '</span></div>' +
+      '<div class="n3-tl-body">' +
+        '<div class="n3-tl-top"><span class="n3-tl-no">' + esc(stage.no) + '</span>' +
+          '<span class="n3-tl-pd">' + esc(stage.period) + '</span>' +
+          '<span class="n3-tl-badge">' + badge + '</span></div>' +
+        '<div class="n3-tl-name">' + esc(stage.name) + (exam && dday > 0 ? '<b class="n3-tl-dd">' + ddayTxt + '</b>' : '') + '</div>' +
+        '<div class="n3-tl-books">' + esc(stage.books) + '</div>' +
+        '<div class="n3-tl-bar"><i style="width:' + (si.done ? 100 : si.pct) + '%"></i></div>' +
+        '<div class="n3-tl-meta">' + meta + '</div>' +
+        '<div class="n3-tl-day">⏱ ' + esc(stage.day) + '</div>' +
+        '<div class="n3-tl-foot"><button class="mini-btn' + (si.done ? ' on' : '') + '" data-n3stage="' + stage.id + '">' +
+          (si.done ? '✓ 완료 표시됨' : '단계 완료 표시') + '</button></div>' +
+      '</div>' +
     '</div>';
   }).join('');
 
-  return '<div class="card">' +
-    '<div class="card-head"><h3>🎯 2027.07 JLPT N3 로드맵</h3>' +
-      '<span class="n3-dday">' + (dday > 0 ? 'D-' + dday : dday === 0 ? 'D-DAY' : 'D+' + Math.abs(dday)) + '</span></div>' +
-    '<div class="n3-sum"><b>' + s.pct + '%</b><span>전체 진도 ' + s.done + ' / ' + s.total + '</span>' +
-      '<span class="n3-bar wide"><i style="width:' + s.pct + '%\"></i></span></div>' +
-    n3PaceHTML() +
-    '<div class="n3-grid">' + steps + '</div>' +
-    '<p class="menu-eff">체크는 이 기기에 저장돼요. 시험일은 7월 첫째 일요일 기준(예정)이라 <b>접수 전에 공식 일정</b>을 꼭 확인하세요.</p>' +
-  '</div>';
+  return '<div class="card-head"><h3>🎯 2027.07 JLPT N3 로드맵</h3>' +
+      '<span class="n3-dday">' + ddayTxt + '</span></div>' +
+    '<div class="n3-ov">' +
+      '<div class="cur"><b>' + esc(act.stage.no) + '</b><span>지금 단계</span></div>' +
+      '<div><b>' + esc(cur.pct) + '%</b><span>' + esc(act.stage.no) + ' 기간 경과</span></div>' +
+      '<div><b>' + ddayTxt + '</b><span>시험까지</span></div>' +
+    '</div>' +
+    '<div class="n3-tl">' + rows + '</div>' +
+    '<p class="menu-eff">큰 단계는 <b>날짜 경과·완료 표시</b>로 보고, 매일의 분량은 아래 <b>매일 공부량 체크</b>에서 체크해요. 시험일은 7월 첫째 일요일 기준(예정)이라 <b>접수 전에 공식 일정</b>을 꼭 확인하세요.</p>';
+}
+
+/* ---------- ② 매일 공부량 체크 ---------- */
+function n3DailyInner() {
+  const sel = n3Sel(), today = dkey();
+  const stage = n3Active().stage;
+  const st = n3DayStat(sel);
+  const tasks = n3TasksFor(sel);
+  const checks = n3DayChecks(sel);
+  const weekend = n3Weekend(sel) && stage.id !== 's4';
+  const dt = parseDkey(sel);
+  const isToday = sel === today;
+  const future = sel > today;
+  const ws = weekStartOf(sel);
+  const wsD = parseDkey(ws), weD = parseDkey(shiftKey(ws, 6));
+  const wkLabel = (wsD.getMonth() + 1) + '월 ' + wsD.getDate() + '일 ~ ' + (weD.getMonth() + 1) + '월 ' + weD.getDate() + '일';
+  const wkS = n3WeekStats(ws);
+  const rows = tasks.map(function (t) {
+    const on = !!checks[t.key];
+    return '<button class="n3-dt' + (on ? ' on' : '') + (t.opt ? ' opt' : '') + '" data-n3task="' + t.key + '"' +
+      ' aria-pressed="' + (on ? 'true' : 'false') + '"' + (future ? ' disabled' : '') + '>' +
+      '<span class="box" aria-hidden="true">' + (on ? '✓' : '') + '</span>' +
+      '<span class="n3-dt-t"><b>' + esc(t.t) + '</b>' + (t.s ? '<span>' + esc(t.s) + '</span>' : '') + '</span>' +
+    '</button>';
+  }).join('');
+
+  return '<div class="card-head"><h3>📅 매일 공부량 체크</h3>' +
+      '<div class="wk-nav">' +
+        '<button data-n3w="-1" aria-label="지난 주">‹</button>' +
+        '<button data-n3w="0" aria-label="이번 주">이번 주</button>' +
+        '<button data-n3w="1" aria-label="다음 주">›</button>' +
+      '</div></div>' +
+    '<div class="n3-wlabel">' + wkLabel + ' · 이번 주 ' + wkS.done + '/' + wkS.total + ' (' + wkS.pct + '%)</div>' +
+    '<div class="wk-row">' + n3WeekStrip(sel) + '</div>' +
+    '<div class="n3-dhead"><div><b>' + (dt.getMonth() + 1) + '월 ' + dt.getDate() + '일 ' + N3_WD[dt.getDay()] +
+        (isToday ? ' · 오늘' : '') + '</b>' +
+        '<span>' + esc(stage.no) + ' ' + esc(stage.name) + ' 기준 · ' + (weekend ? '주말 루틴' : '평일 루틴') + '</span></div>' +
+      '<div class="n3-dpct">' + st.done + '<small>/' + st.total + '</small></div></div>' +
+    '<div class="n3-dtasks">' + rows + '</div>' +
+    '<div class="progress"><i style="width:' + st.pct + '%"></i></div>' +
+    (future ? '<p class="menu-eff">아직 오지 않은 날이에요. 그날이 되면 체크할 수 있어요.</p>' : '') +
+    '<div class="n3-dfoot">' +
+      '<button class="mini-btn" data-n3edit="1">✎ 계획 문구 수정</button>' +
+      (isToday ? '' : '<button class="mini-btn" data-n3day="' + today + '">오늘로</button>') +
+    '</div>' +
+    '<div class="n3-dst">' +
+      '<div><b>' + wkS.pct + '%</b><span>이번 주 달성률</span></div>' +
+      '<div><b>' + wkS.full + '일</b><span>이번 주 완료</span></div>' +
+      '<div><b>' + n3StudyDays() + '일</b><span>누적 학습일</span></div>' +
+      '<div><b>' + n3Streak() + '일</b><span>연속 학습</span></div>' +
+    '</div>' +
+    '<p class="menu-eff">체크는 이 기기에 저장돼요. 복습 탭의 JSON 백업에도 함께 담깁니다.</p>';
+}
+function n3BlockHTML() {
+  return '<div class="vcols"><div class="vcol">' +
+      '<div class="card" id="n3Road">' + n3RoadInner() + '</div>' +
+    '</div><div class="vcol">' +
+      '<div class="card" id="n3Daily">' + n3DailyInner() + '</div>' +
+    '</div></div>';
 }
 
 /* ---------------- 🔁 오답 집중 플래시카드 ----------------
@@ -5835,8 +6072,15 @@ function runTodayCheck(kind) {
 function onHomeClick(e) {
   const t = e.target;
   if (!t || !t.closest) return;
-  const n3b = t.closest('[data-n3]');
-  if (n3b) { n3Toggle(n3b.dataset.n3); return; }
+  const n3t = t.closest('[data-n3task]');
+  if (n3t) { n3ToggleTask(n3Sel(), n3t.dataset.n3task); return; }
+  const n3d = t.closest('[data-n3day]');
+  if (n3d) { n3SelectDate(n3d.dataset.n3day); return; }
+  const n3w = t.closest('[data-n3w]');
+  if (n3w) { n3ShiftWeek(Number(n3w.dataset.n3w) || 0); return; }
+  const n3sg = t.closest('[data-n3stage]');
+  if (n3sg) { n3ToggleStage(n3sg.dataset.n3stage); return; }
+  if (t.closest('[data-n3edit]')) { n3OpenEdit(); return; }
   if (t.closest('[data-goto-weight]')) { routineSub = 'weight'; switchTab('routine'); return; }
   if (t.closest('[data-hmmenu]')) {
     routineSub = 'diet';
@@ -6131,6 +6375,8 @@ function onSheetClick(e) {
   if (onFridgeSheetClick(e)) return;
   if (onDietSheetClick(e)) return;
   if (onWeightSheetClick(e)) return;
+  if (t.closest('[data-n3esave]')) { n3SaveEdit(); return; }
+  if (t.closest('[data-n3ereset]')) { n3ResetEdit(); return; }
   if (t.closest('[data-rmemosave]')) { saveRoutineMemo(); return; }
   if (t.closest('[data-rmemodel]')) {
     const mk = rMemoDraft ? rMemoDraft.date : routineDate;
