@@ -1,5 +1,5 @@
 {
-  "version": 3,
+  "version": 4,
   "updatedAt": "2026-11-18",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -39,7 +39,8 @@
         "lunch": [
           { "id": "l1", "name": "닭안심살 청양바베큐맛 1팩 100g", "kcal": 100, "carb": 3, "protein": 21, "fat": 0.7 },
           { "id": "l2", "name": "햇반 발아현미밥 130g 1개", "kcal": 200, "carb": 42, "protein": 4, "fat": 1 },
-          { "id": "l3", "name": "돈키호테 간장계란밥소스 1개", "kcal": 30, "carb": 5, "protein": 1.5, "fat": 0, "est": true }
+          { "id": "l3", "name": "돈키호테 간장계란밥소스 1개", "kcal": 30, "carb": 5, "protein": 1.5, "fat": 0, "est": true },
+          { "id": "l4", "name": "조미김(365 광천김) 1봉 3.65g", "kcal": 22, "carb": 1, "protein": 1, "fat": 1.7 }
         ],
         "dinner": [],
         "snack": []
