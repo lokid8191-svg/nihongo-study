@@ -155,6 +155,14 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .seg{display:flex;gap:4px;padding:4px;background:var(--surface);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow)}
 .seg button{flex:1;min-height:38px;border-radius:9px;font-size:13px;font-weight:600;color:var(--ink-2);transition:.15s}
 .seg button.active{background:var(--primary);color:#fff;box-shadow:0 3px 9px rgba(220,38,38,.2)}
+
+/* 공부 탭 상단 서브탭 — 오늘의 학습 / JLPT 로드맵 */
+.seg.study-top{gap:5px;padding:5px}
+.seg.study-top button{min-height:42px;font-size:13.5px;letter-spacing:.1px}
+/* 그 아래 하위 이동(오늘·가나·단어·회화)은 한 단계 가볍게 */
+.seg.seg-sub{background:transparent;border:0;box-shadow:none;padding:0;gap:6px}
+.seg.seg-sub button{min-height:34px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12.5px;color:var(--ink-2);box-shadow:0 1px 2px rgba(31,39,51,.03)}
+.seg.seg-sub button.active{background:var(--primary-soft);border-color:#FECACA;color:var(--accent);box-shadow:none}
 .chips{display:flex;gap:7px;overflow-x:auto;padding:2px 2px 4px;scrollbar-width:none}
 .chips::-webkit-scrollbar{display:none}
 .chip{
@@ -844,6 +852,7 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
     <section class="view" id="view-routine" aria-label="데일리 루틴"></section>
     <section class="view" id="view-fridge" aria-label="냉장고"></section>
     <section class="view" id="view-studytoday" aria-label="오늘의 학습"></section>
+    <section class="view" id="view-n3" aria-label="JLPT 로드맵"></section>
     <section class="view" id="view-kana" aria-label="가나와 쓰기"></section>
     <section class="view" id="view-words" aria-label="단어와 한자"></section>
     <section class="view" id="view-gram" aria-label="문법과 회화"></section>
@@ -2197,8 +2206,6 @@ function todayStudyHTML() {
     '</div>' +
     '</div></div>' +
 
-    n3BlockHTML() +
-
     '<div class="vcols"><div class="vcol">' +
     '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
     '<div class="card tight"><div class="word-list">' + wordRows + '</div></div>' +
@@ -2223,7 +2230,13 @@ function todayStudyHTML() {
 function renderStudyToday() {
   const host = $('#view-studytoday');
   if (!host) return;
-  host.innerHTML = '<div class="view-inner">' + studyNav() + todayStudyHTML() + '</div>';
+  host.innerHTML = '<div class="view-inner">' + studyTopNav() + studyNav() + todayStudyHTML() + '</div>';
+}
+/* ---------------- 공부 › JLPT 로드맵 (오늘의 학습에서 분리한 화면) ---------------- */
+function renderN3() {
+  const host = $('#view-n3');
+  if (!host) return;
+  host.innerHTML = '<div class="view-inner">' + studyTopNav() + n3BlockHTML() + '</div>';
 }
 
 /* ---------------- 오늘: 루틴 ---------------- */
@@ -2296,6 +2309,7 @@ function renderKana() {
 
   host.innerHTML =
     '<div class="view-inner">' +
+      studyTopNav() +
       studyNav() +
       '<div class="seg"><button class="' + (kanaScript === 'hira' ? 'active' : '') + '" data-script="hira">히라가나</button>' +
         '<button class="' + (kanaScript === 'kata' ? 'active' : '') + '" data-script="kata">가타카나</button></div>' +
@@ -2548,6 +2562,7 @@ function renderWords() {
 
   host.innerHTML =
     '<div class="view-inner">' +
+      studyTopNav() +
       studyNav() +
       '<div class="seg"><button class="' + (wState.mode === 'card' ? 'active' : '') + '" data-wmode="card">카드</button>' +
         '<button class="' + (wState.mode === 'quiz' ? 'active' : '') + '" data-wmode="quiz">퀴즈</button></div>' +
@@ -2649,11 +2664,12 @@ function renderGram() {
 
   host.innerHTML =
     '<div class="view-inner">' +
+      studyTopNav() +
       studyNav() +
       '<div class="seg">' +
         '<button class="' + (gTab === 'gram' ? 'active' : '') + '" data-gtab="gram">문법</button>' +
         '<button class="' + (gTab === 'sent' ? 'active' : '') + '" data-gtab="sent">회화</button>' +
-        '<button class="' + (gTab === 'jlpt' ? 'active' : '') + '" data-gtab="jlpt">JLPT</button>' +
+        '<button class="' + (gTab === 'jlpt' ? 'active' : '') + '" data-gtab="jlpt">N5 퀴즈</button>' +
       '</div>' + body +
     '</div>';
 }
@@ -6026,11 +6042,21 @@ function fcAct(act) {
 
 /* ---------------- 탭 ----------------
    (currentTab 은 위에서 선언) */
-const TABS = { home: renderHome, studytoday: renderStudyToday, routine: renderRoutine, fridge: renderFridge, kana: renderKana, words: renderWords, gram: renderGram, review: renderReview };
-const STUDY_TABS = ['studytoday', 'kana', 'words', 'gram'];
+const TABS = { home: renderHome, studytoday: renderStudyToday, n3: renderN3, routine: renderRoutine, fridge: renderFridge, kana: renderKana, words: renderWords, gram: renderGram, review: renderReview };
+const STUDY_TABS = ['studytoday', 'n3', 'kana', 'words', 'gram'];
+/* 공부 탭 맨 위 서브탭: 오늘의 학습(오늘·가나·단어·회화) / JLPT 로드맵 */
+function studyTopNav() {
+  const jlpt = currentTab === 'n3';
+  return '<div class="seg study-top" role="tablist" aria-label="공부 영역">' +
+    '<button role="tab" aria-selected="' + (jlpt ? 'false' : 'true') + '" class="' + (jlpt ? '' : 'active') + '"' +
+      ' data-goto="studytoday">📖 오늘의 학습</button>' +
+    '<button role="tab" aria-selected="' + (jlpt ? 'true' : 'false') + '" class="' + (jlpt ? 'active' : '') + '"' +
+      ' data-goto="n3">🎯 JLPT 로드맵</button>' +
+  '</div>';
+}
 function studyNav() {
-  const items = [['studytoday', '오늘의 학습'], ['kana', '가나'], ['words', '단어'], ['gram', '회화']];
-  return '<div class="seg study-nav">' + items.map(function (it) {
+  const items = [['studytoday', '오늘'], ['kana', '가나'], ['words', '단어'], ['gram', '회화']];
+  return '<div class="seg seg-sub study-nav">' + items.map(function (it) {
     return '<button class="' + (currentTab === it[0] ? 'active' : '') + '" data-goto="' + it[0] + '">' + it[1] + '</button>';
   }).join('') + '</div>';
 }
@@ -6502,6 +6528,7 @@ function init() {
   }, true);
   $('#view-home').addEventListener('click', onHomeClick);
   $('#view-studytoday').addEventListener('click', onHomeClick);
+  $('#view-n3').addEventListener('click', onHomeClick);
   $('#view-routine').addEventListener('click', onRoutineClick);
   $('#view-routine').addEventListener('input', onRoutineInput);
   $('#view-routine').addEventListener('change', onRoutineInput);
@@ -6510,7 +6537,7 @@ function init() {
   document.querySelector('main').addEventListener('click', function (e) {
     const g = e.target.closest ? e.target.closest('[data-goto]') : null;
     if (!g) return;
-    if (currentTab === 'home' || currentTab === 'studytoday') return; /* 홈·오늘의 학습은 자체 핸들러가 처리 */
+    if (currentTab === 'home' || currentTab === 'studytoday' || currentTab === 'n3') return; /* 홈·오늘의 학습·JLPT 로드맵은 자체 핸들러가 처리 */
     switchTab(g.dataset.goto);
   });
   $('#view-kana').addEventListener('click', onKanaClick);
