@@ -1602,13 +1602,38 @@ function markStudy(kind) {
 
 /* ---------------- 음성 ---------------- */
 let jaVoice = null;
+let jaVoiceMale = false;
+let jaVoiceCount = 0;
 const speechOK = (typeof window !== 'undefined') && ('speechSynthesis' in window) && typeof SpeechSynthesisUtterance !== 'undefined';
+/* 남성 일본어 음성 이름 패턴 (기기·엔진마다 이름이 달라 넓게 잡습니다) */
+const MALE_JA_PAT = /(?:keita|ichiro|otoya|naoki|hattori|daichi|kenji|takumi|\bmale\b|\bman\b|men's|男|남성)/i;
 function loadVoices() {
   if (!speechOK) return;
   try {
     const vs = speechSynthesis.getVoices() || [];
-    jaVoice = vs.find(v => /ja[-_]JP/i.test(v.lang || '')) || vs.find(v => String(v.lang || '').toLowerCase().indexOf('ja') === 0) || null;
-  } catch (e) { jaVoice = null; }
+    const ja = vs.filter(v => String((v && v.lang) || '').toLowerCase().indexOf('ja') === 0);
+    jaVoiceCount = ja.length;
+    /* ja-JP를 먼저, 그다음 ja-* 순으로 보고, 그 안에서 남성 음성을 최우선 선택 */
+    const jp = ja.filter(v => /ja[-_]?jp/i.test(String(v.lang || '')));
+    const pool = jp.concat(ja.filter(v => !/ja[-_]?jp/i.test(String(v.lang || ''))));
+    const male = pool.find(v => MALE_JA_PAT.test(String(v.name || '') + ' ' + String(v.voiceURI || '')));
+    jaVoice = male || jp[0] || ja[0] || null;
+    jaVoiceMale = !!male;
+  } catch (e) { jaVoice = null; jaVoiceMale = false; jaVoiceCount = 0; }
+  /* 선택 결과 확인용 (콘솔에서 window.jaVoiceInfo() 로 조회) */
+  try {
+    window.jaVoiceInfo = function () {
+      loadVoices();
+      return {
+        voice: jaVoice ? jaVoice.name : null,
+        lang: jaVoice ? jaVoice.lang : null,
+        male: jaVoiceMale,
+        pitch: jaVoiceMale ? 0.95 : 0.85,
+        jaCount: jaVoiceCount,
+        jaVoices: (speechSynthesis.getVoices() || []).filter(v => String((v && v.lang) || '').toLowerCase().indexOf('ja') === 0).map(v => v.name + ' / ' + v.lang)
+      };
+    };
+  } catch (e) {}
 }
 if (speechOK) {
   loadVoices();
@@ -1618,11 +1643,13 @@ function speak(text, rate) {
   if (!speechOK || !text) { toast('이 브라우저에서는 음성을 재생할 수 없어요'); return; }
   try {
     speechSynthesis.cancel();
+    if (!jaVoice) loadVoices();
     const u = new SpeechSynthesisUtterance(String(text));
     u.lang = 'ja-JP';
     if (jaVoice) u.voice = jaVoice;
     u.rate = rate || Number(S.settings.rate) || 0.9;
-    u.pitch = 1;
+    /* 남성 음성이 잡히면 0.95, 없으면 낮은 톤(0.85)으로 남성에 가깝게 */
+    u.pitch = jaVoiceMale ? 0.95 : 0.85;
     speechSynthesis.speak(u);
   } catch (e) { toast('음성을 재생하지 못했어요'); }
 }
