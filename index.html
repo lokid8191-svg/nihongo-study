@@ -460,6 +460,7 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .fr-row:first-child{border-top:0}
 .fr-check{width:26px;height:26px;border-radius:50%;border:1.8px solid var(--line);background:var(--surface-2);color:#fff;font-size:13px;flex:none;display:grid;place-items:center;margin-top:1px}
 .fr-row.out .fr-check{background:var(--ink-3);border-color:var(--ink-3)}
+.fr-row.always .fr-name{color:var(--ink)}
 .fr-main{flex:1;min-width:0}
 .fr-name{font-size:14px;font-weight:700;line-height:1.4}
 .fr-name em{font-style:normal;font-size:11.5px;font-weight:600;color:var(--primary);margin-left:5px}
@@ -468,6 +469,8 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .fr-badge{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);color:var(--ink-2)}
 .fr-badge.soon{background:#FFFBEB;border-color:#FDE68A;color:#92400E}
 .fr-badge.over{background:#FEF3F2;border-color:#FECACA;color:var(--bad)}
+.fr-badge.always{background:#EEF2FF;border-color:#C7D2FE;color:#3730A3}
+.fr-check.always{background:#EEF2FF;border-color:#C7D2FE;color:#3730A3;font-size:14px;font-weight:800}
 .fr-memo{font-size:11.5px;color:var(--ink-2);margin-top:3px;line-height:1.5}
 .fr-edit{width:34px;height:34px;border-radius:10px;border:1px solid var(--line);background:var(--surface-2);color:var(--ink-2);flex:none;display:grid;place-items:center;font-size:14px}
 .fr-voca{display:flex;flex-wrap:wrap;gap:6px}
@@ -848,7 +851,7 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
       <img class="logo" src="./icon-192.png" alt="바쿠독" width="40" height="40" decoding="async">
       <div>
         <h1>withかっちゃん</h1>
-        <p id="topSub">JLPT N5 · 매일 5분</p>
+        <p id="topSub">일본어 · 식단 관리 · 데일리 루틴</p>
       </div>
     </div>
     <button class="streak-chip" id="streakChip" title="연속 학습일">
@@ -1935,7 +1938,7 @@ function updateStreakChip() {
   if (sub) {
     const day = S.days[dkey()] || {};
     const done = CHECK_ITEMS.filter(c => day[c.key]).length;
-    sub.textContent = done === 3 ? '오늘 루틴 완료 · 내일 또 봐요' : 'JLPT N5 · 매일 5분';
+    sub.textContent = done === 3 ? '오늘 루틴 완료 · 내일 또 봐요' : '일본어 · 식단 관리 · 데일리 루틴';
   }
 }
 /* ---------------- 홈: 하루치 대시보드 ---------------- */
@@ -2010,7 +2013,7 @@ function toggleWorkoutToday(id) {
 function homeBuddyHTML(done, total) {
   const now = new Date();
   const wd = ['일', '월', '화', '수', '목', '금', '토'];
-  const b = buddyLine(done, total);
+  const b = buddyLine(done, total, dkey());
   const label = b.state === 'all' ? '루틴 완료 · 같이 해냈어요'
     : b.state === 'some' ? '같이 하는 중 · ' + done + ' / ' + total
     : '같이 시작해요 · ' + (total ? '0 / ' + total : '');
@@ -3291,22 +3294,133 @@ function openDiaryList() {
 
 /* ---------------- 스터디 메이트 · 爆豪勝己 (바쿠고 카츠키) ---------------- */
 const BAKUGO_LINES = {
+  /* 시간대 */
+  morning: [
+    { jp:'朝だぞ。さっさと顔洗って来い。', read:'あさだぞ。さっさと かお あらって こい。', ko:'아침이야. 얼른 세수하고 와.' },
+    { jp:'おはよう、で済ませるな。今日の分、もう始めろ。', read:'おはよう、で すませるな。きょうの ぶん、もう はじめろ。', ko:'"좋은 아침"으로 끝내지 마. 오늘 몫은 벌써 시작해.' },
+    { jp:'朝飯食ったか？ 食わねぇと力出ねぇぞ。', read:'あさめし くったか？ くわねぇと ちから でねぇぞ。', ko:'아침 먹었어? 안 먹으면 힘 안 나온다고.' },
+    { jp:'寝ぼけてんなよ。今日もやることは決まってんだ。', read:'ねぼけてんなよ。きょうも やることは きまってんだ。', ko:'비몽사몽하지 마. 오늘도 할 일은 정해져 있어.' },
+    { jp:'朝の5分で一日が変わるんだよ。だらけんな。', read:'あさの ごふんで いちにちが かわるんだよ。だらけんな。', ko:'아침 5분이 하루를 바꾼다고. 게을러 터지지 마.' }
+  ],
+  afternoon: [
+    { jp:'昼だ。飯食うならさっさと食え。', read:'ひるだ。めし くうなら さっさと くえ。', ko:'점심이야. 밥 먹을 거면 얼른 먹어.' },
+    { jp:'午後は眠ぇな…って、寝るなよ。', read:'ごごは ねむぇな…って、ねるなよ。', ko:'오후엔 졸리지… 라고, 자지 마.' },
+    { jp:'半分過ぎた。ここからが本番だぞ。', read:'はんぶん すぎた。ここからが ほんばんだぞ。', ko:'절반 지났어. 여기서부터가 진짜야.' },
+    { jp:'休むのも実力のうちだ。だが、休みすぎたら承知しねぇ。', read:'やすむのも じつりょくの うちだ。だが、やすみすぎたら しょうちしねぇ。', ko:'쉬는 것도 실력이야. 그렇다고 너무 쉬면 가만 안 둔다.' }
+  ],
+  evening: [
+    { jp:'夜だぞ。今日の分、終わったんか？', read:'よるだぞ。きょうの ぶん、おわったんか？', ko:'저녁이야. 오늘 몫 끝났어?' },
+    { jp:'帰ってきてからが勝負だろ。', read:'かえってきてからが しょうぶだろ。', ko:'돌아와서부터가 승부라니까.' },
+    { jp:'腹減ってるなら、ちゃんと食え。抜くなよ。', read:'はら へってるなら、ちゃんと くえ。ぬくなよ。', ko:'배고프면 제대로 먹어. 거르지 말고.' },
+    { jp:'今日一日、悪くなかったんじゃねぇか。もう一息だ。', read:'きょう いちにち、わるくなかったんじゃねぇか。もう ひといきだ。', ko:'오늘 하루 나쁘지 않았던 것 같은데. 마지막 한 걸음이야.' }
+  ],
+  night: [
+    { jp:'もう寝ろ。明日も走るんだろ。', read:'もう ねろ。あしたも はしるんだろ。', ko:'이제 자. 내일도 달릴 거잖아.' },
+    { jp:'夜更かしすんな。ダラダラしてる暇はねぇ。', read:'よふかし すんな。だらだら してる ひまは ねぇ。', ko:'밤새지 마. 질질 끌 시간 없어.' },
+    { jp:'今日はちゃんと休め。休むのもトレーニングだ。', read:'きょうは ちゃんと やすめ。やすむのも とれーにんぐだ。', ko:'오늘은 제대로 쉬어. 쉬는 것도 트레이닝이야.' },
+    { jp:'目閉じろ。明日の自分に恥かくなよ。', read:'め とじろ。あしたの じぶんに はずかしくなるなよ。', ko:'눈 감아. 내일의 너한테 부끄러운 짓 하지 말고.' }
+  ],
+  /* 루틴 진행 */
   none: [
     { jp:'おい、まだやってねーのか。さっさと終わらせろ！', read:'おい、まだ やってねーのか。さっさと おわらせろ！', ko:'야, 아직 안 한 거야? 얼른 끝내라고!' },
-    { jp:'だらだらすんじゃねぇ。やるなら今だ。', read:'だらだら すんじゃねぇ。やるなら いまだ。', ko:'질질 끌지 마. 할 거면 지금이야.' }
+    { jp:'だらだらすんじゃねぇ。やるなら今だ。', read:'だらだら すんじゃねぇ。やるなら いまだ。', ko:'질질 끌지 마. 할 거면 지금이야.' },
+    { jp:'はぁ？ まだゼロだって？ 手ぇ動かせ。', read:'はぁ？ まだ ぜろだって？ てぇ うごかせ。', ko:'뭐? 아직 0이라고? 손 움직여.' },
+    { jp:'やらねぇ言い訳を考えるより、一個でいいから終わらせろ。', read:'やらねぇ いいわけを かんがえるより、いっこで いいから おわらせろ。', ko:'안 할 변명 고민하는 것보다, 하나라도 좋으니까 끝내.' }
   ],
   some: [
     { jp:'悪くねぇな。その調子で続けろ。', read:'わるくねぇな。その ちょうしで つづけろ。', ko:'나쁘지 않군. 그 기세로 계속해.' },
     { jp:'お前、やればできんじゃねーか。', read:'おまえ、やれば できんじゃねーか。', ko:'너, 하면 되잖아.' },
-    { jp:'まだ半分だ。…悪くねぇ。残りもやれ。', read:'まだ はんぶんだ。…わるくねぇ。のこりも やれ。', ko:'아직 절반이야. …나쁘지 않아. 남은 것도 해.' }
+    { jp:'まだ半分だ。…悪くねぇ。残りもやれ。', read:'まだ はんぶんだ。…わるくねぇ。のこりも やれ。', ko:'아직 절반이야. …나쁘지 않아. 남은 것도 해.' },
+    { jp:'ちょっとでも進んだなら、ゼロよりゃマシだ。来い。', read:'ちょっとでも すすんだなら、ぜろよりゃ ましだ。こい。', ko:'조금이라도 나아갔으면 0보다 낫지. 와라.' },
+    { jp:'中途半端で止めんなよ。ここまで来たんだろ。', read:'ちゅうとはんぱで やめんなよ。ここまで きたんだろ。', ko:'어중간하게 멈추지 마. 여기까지 왔잖아.' }
   ],
   all: [
     { jp:'よくやったな！…まあ、当然だけどな。', read:'よく やったな！…まあ、とうぜん だけどな。', ko:'잘했어! …뭐, 당연한 거지만.' },
     { jp:'完璧だ。明日も来いよ。', read:'かんぺきだ。あしたも こいよ。', ko:'완벽해. 내일도 와라.' },
-    { jp:'ふん、その程度か。…次も期待してるぜ。', read:'ふん、その ていどか。…つぎも きたい してるぜ。', ko:'흥, 그 정도냐. …다음도 기대하고 있어.' }
+    { jp:'ふん、その程度か。…次も期待してるぜ。', read:'ふん、その ていどか。…つぎも きたい してるぜ。', ko:'흥, 그 정도냐. …다음도 기대하고 있어.' },
+    { jp:'今日の全部終わった。…俺の見込み違いじゃなかったな。', read:'きょうの ぜんぶ おわった。…おれの みこみちがいじゃ なかったな。', ko:'오늘 거 전부 끝났어. …내 예상이 틀리진 않았네.' },
+    { jp:'全部終わったなら、とっとと休め。明日も続けんだろ。', read:'ぜんぶ おわったなら、とっとと やすめ。あしたも つづけんだろ。', ko:'다 끝났으면 얼른 쉬어. 내일도 이어갈 거잖아.' }
+  ],
+  /* 식단 */
+  diet: [
+    { jp:'カロリー計算、ちゃんとやってんのか？ 目分量で誤魔化すな。', read:'からりー けいさん、ちゃんと やってんのか？ め ぶんりょうで ごまかすな。', ko:'칼로리 계산은 제대로 하는 거야? 눈대중으로 넘어가지 마.' },
+    { jp:'タンパク質が足りねぇぞ。肉か豆乳、入れてこい。', read:'たんぱくしつが たりねぇぞ。にくか とうにゅう、いれてこい。', ko:'단백질 모자라. 고기나 두유 챙겨.' },
+    { jp:'腹減ったなら飲め。水だ。飲み物でカロリー取るな。', read:'はら へったなら のめ。みずだ。のみもので からりー とるな。', ko:'배고프면 마셔. 물. 음료로 칼로리 따지지 말고.' },
+    { jp:'食ったもんは全部残せ。嘘ついても体は覚えてるぞ。', read:'くったもんは ぜんぶ のこせ。うそ ついても からだは おぼえてるぞ。', ko:'먹은 건 전부 남겨. 거짓말해도 몸은 기억한다고.' },
+    { jp:'目標まであとちょいだ。ここで投げ出すなよ。', read:'もくひょうまで あとちょいだ。ここで なげだすなよ。', ko:'목표까지 조금 남았어. 여기서 포기하지 마.' }
+  ],
+  /* 운동 */
+  workout: [
+    { jp:'5分でもやったな。ゼロよりよっぽど上等だ。', read:'ごふんでも やったな。ぜろより よっぽど じょうとうだ。', ko:'5분이라도 했구나. 0보다 훨씬 낫다.' },
+    { jp:'体動かしたか。…それでいい、続けろ。', read:'からだ うごかしたか。…それで いい、つづけろ。', ko:'몸 움직였어? …그걸로 됐어, 계속해.' },
+    { jp:'汗かいた顔は悪くねぇ。明日も来い。', read:'あせかいた かおは わるくねぇ。あしたも こい。', ko:'땀 흘린 얼굴은 나쁘지 않아. 내일도 와.' },
+    { jp:'筋トレは裏切らねぇ。お前の方が裏切らないようにな。', read:'きんとれは うらぎらねぇ。おまえの ほうが うらぎらないように な。', ko:'근력운동은 배신하지 않아. 너도 너 자신을 배신하지 마.' }
+  ],
+  /* 일본어 공부 */
+  study: [
+    { jp:'その単語、声に出したか？ 目だけで覚えられるかよ。', read:'その たんご、こえに だしたか？ めだけで おぼえられるかよ。', ko:'그 단어, 소리 내서 읽었어? 눈으로만 외울 수 있겠냐.' },
+    { jp:'ひらがなで止まってんじゃねぇ。続けろ。', read:'ひらがなで とまってんじゃねぇ。つづけろ。', ko:'히라가나에서 멈추지 마. 계속해.' },
+    { jp:'今日の一言、書いたか？ 一つでも書け。', read:'きょうの ひとこと、かいたか？ ひとつでも かけ。', ko:'오늘 한 줄 일기, 썼어? 한 줄이라도 써.' },
+    { jp:'毎日やった奴だけが先に行けんだよ。', read:'まいにち やった やつだけが さきに いけんだよ。', ko:'매일 한 놈만 앞으로 나갈 수 있는 거야.' }
+  ],
+  /* 일반 응원 */
+  cheer: [
+    { jp:'合格したいなら、足りねぇ時間を嘆くんじゃねぇ。今やれ。', read:'ごうかくしたいなら、たりねぇ じかんを なげくんじゃねぇ。いま やれ。', ko:'합격하고 싶으면 부족한 시간을 한탄하지 말고 지금 해.' },
+    { jp:'俺はてめぇの面倒まで見ねぇぞ。…一つだけ言っとく。やれ。', read:'おれは てめぇの めんどうまで みねぇぞ。…ひとつだけ いっとく。やれ。', ko:'내가 네 뒤치다꺼지까지 해주진 않아. …하나만 말해두지. 해.' },
+    { jp:'ふん、今日のてめぇは昨日よりマシか？ それでいい。', read:'ふん、きょうの てめぇは きのうより ましか？ それで いい。', ko:'흥, 오늘의 너는 어제보다 나아? 그거면 됐어.' },
+    { jp:'無理だって決めつけんのは、まだ早ぇぞ。', read:'むりだって きめつけんのは、まだ はえぇぞ。', ko:'무리라고 딱 정하기엔 아직 이르다고.' }
   ]
 };
-let buddyIdx = { none: 0, some: 0, all: 0 };
+/* 지금 상황에 맞는 대사 풀을 골라 무작위로 한 줄. 같은 상태가 이어져도 새로 열거나 [다른 한마디]를 누르면 달라집니다. */
+let buddyPick = { sig: '', line: null, group: '', i: 0, len: 0 };
+let buddyLastJp = '';
+function buddySlotKey(h) {
+  const hour = typeof h === 'number' ? h : new Date().getHours();
+  if (hour >= 5 && hour < 11) return 'morning';
+  if (hour >= 11 && hour < 17) return 'afternoon';
+  if (hour >= 17 && hour < 22) return 'evening';
+  return 'night';
+}
+function buddyContextGroups(done, total, dayKey) {
+  const k = dayKey || dkey();
+  const rd = routineDay(k);
+  const groups = [buddySlotKey(), buddyState(done, total), 'cheer'];
+  /* 운동 완료: 운동 기록 또는 스트레칭 체크 */
+  const woDone = !!(rd && rd.workout) || routineItems().some(function (it) {
+    return /운동|스트레칭|홈트/.test(it.label || '') && !!(rd && rd.checks && rd.checks[it.id]);
+  });
+  if (woDone) groups.push('workout');
+  /* 식단: 오늘 기록이 있고 칼로리·단백질이 목표의 절반을 넘었을 때 */
+  const dt = dietTotals(dietState().days[dkey()]);
+  const dg = dietGoals();
+  if (dt.count && (dt.kcal >= dg.calories * 0.5 || dt.protein >= dg.protein[0] * 0.6)) groups.push('diet');
+  /* 일본어 공부: 한 줄 일기나 가나·단어·문법 항목 체크 */
+  const studyDone = !!diaryFor(k) || routineItems().some(function (it) {
+    return /일본어|가나|단어|문법/.test(it.label || '') && !!(rd && rd.checks && rd.checks[it.id]);
+  });
+  if (studyDone) groups.push('study');
+  return groups.filter(function (g, i) { return BAKUGO_LINES[g] && groups.indexOf(g) === i; });
+}
+function pickBuddyLine(groups) {
+  const g = groups[rand(groups.length)] || 'cheer';
+  const list = BAKUGO_LINES[g] || BAKUGO_LINES.cheer;
+  let line = list[rand(list.length)];
+  /* 같은 대사가 연달아 나오지 않게 한 번만 다시 고릅니다. */
+  if (list.length > 1 && line.jp === buddyLastJp) line = list[(list.indexOf(line) + 1 + rand(list.length - 1)) % list.length];
+  return { group: g, line: line, i: list.indexOf(line), len: list.length };
+}
+function buddyLine(done, total, dayKey) {
+  const s = buddyState(done, total);
+  const k = dayKey || dkey();
+  const groups = buddyContextGroups(done, total, k);
+  const sig = [k, buddySlotKey(), s, groups.join(',')].join('|');
+  if (buddyPick.sig !== sig || !buddyPick.line) {
+    const pick = pickBuddyLine(groups);
+    buddyPick = { sig: sig, line: pick.line, group: pick.group, i: pick.i, len: pick.len };
+    buddyLastJp = pick.line.jp;
+  }
+  return { state: s, line: buddyPick.line, group: buddyPick.group, i: buddyPick.i, len: buddyPick.len, groups: groups };
+}
 /* 바쿠고 이미지 여러 장 · 페이지를 열 때마다 다른 사진으로 시작하고 '다른 한마디'에서도 함께 바뀝니다.
    사진을 더 넣을 때: assets/에 bakugo-59.jpg 같은 이름으로 올리고 이 배열에 한 줄,
    sw.js의 ASSETS에 같은 경로를 한 줄 적으면 바로 로테이션에 들어갑니다. */
@@ -3398,22 +3512,20 @@ function buddyState(done, total) {
   if (!total || done <= 0) return 'none';
   return done >= total ? 'all' : 'some';
 }
-function buddyLine(done, total) {
-  const s = buddyState(done, total);
-  const list = BAKUGO_LINES[s];
-  const i = (buddyIdx[s] || 0) % list.length;
-  return { state: s, line: list[i], i: i, len: list.length };
-}
 function nextBuddy() {
   const k = currentTab === 'routine' ? routineDate : dkey();
-  const s = buddyState(routineDone(k), routineItems().length);
-  buddyIdx[s] = (buddyIdx[s] || 0) + 1;
+  const total = routineItems().length;
+  const done = routineDone(k);
+  const groups = buddyContextGroups(done, total, k);
+  const pick = pickBuddyLine(groups);
+  buddyPick = { sig: [k, buddySlotKey(), buddyState(done, total), groups.join(',')].join('|'), line: pick.line, group: pick.group, i: pick.i, len: pick.len };
+  buddyLastJp = pick.line.jp;
   buddyNextImage();
   renderCurrent();
 }
 function buddyHTML(done, total, opts) {
   const o = opts || {};
-  const b = buddyLine(done, total);
+  const b = buddyLine(done, total, routineDate);
   const label = b.state === 'all' ? '루틴 완료 · 같이 해냈어요'
     : b.state === 'some' ? '같이 하는 중 · ' + done + ' / ' + total
     : '같이 시작해요 · ' + (total ? '0 / ' + total : '');
@@ -3477,7 +3589,7 @@ function workoutHTML(dateKey) {  const w = workoutFor(dateKey);
   const chips = WORKOUT_THEMES.map(function (t) {
     return '<button class="chip' + (workoutTheme === t.k ? ' active' : '') + '" data-wtheme="' + t.k + '">' + t.l + '</button>';
   }).join('');
-  return '<div class="section-title"><h2>오늘의 5~10분 운동</h2><span class="hint">유튜브 추천</span></div>' +
+  return '<div class="section-title"><h2>오늘의 5~10분 운동</h2></div>' +
     '<div class="card">' +
       '<div class="chips">' + chips + '</div>' +
       '<div class="wo-card' + (done ? ' done' : '') + '">' +
@@ -3785,13 +3897,13 @@ function renderRoutine() {
         '</div>' : '') +
       '</div>' +
 
-      '<div class="section-title"><h2>오늘의 무드</h2><span class="hint">노션과 같은 9가지</span></div>' +
+      '<div class="section-title"><h2>오늘의 무드</h2></div>' +
       '<div class="card"><div class="mood-grid">' + moods + '</div></div>' +
       '</div><div class="vcol">' +
 
       workoutHTML(routineDate) +
 
-      '<div class="section-title"><h2>자세한 일기</h2><span class="hint">이 날의 메모</span></div>' +
+      '<div class="section-title"><h2>자세한 일기</h2></div>' +
       '<div class="diary-card">' +
         (memoVal.trim()
           ? '<div class="diary-meta"><span class="badge">' + esc(memoDayLabel) + ' 메모</span>' +
@@ -4080,6 +4192,18 @@ const FRIDGE_VOCA = [
   { jp: '果物', kana: 'くだもの', ko: '과일' }
 ];
 const FRIDGE_SEED_KEY = 'fridge_seed_version';
+/* 상시 구비 품목: 냉동 닭가슴살·닭안심살처럼 늘 있는 재료는 수량을 세지 않습니다.
+   현미크런치·오븐구이·청양바베큐 같은 제품 변형도 같은 상시 품목으로 묶어 봅니다. */
+const FRIDGE_ALWAYS_IDS = { 'frozen-chicken-breast': 1, 'frozen-chicken-tender': 1 };
+/* 예전 목록에 따로 수량 관리되던 상시 품목 변형 id — 동기화할 때 상시 품목으로 합칩니다. */
+const FRIDGE_MERGE_INTO = { 'hyunmi-crunch-chicken': 'frozen-chicken-breast', 'oven-chicken-tender': 'frozen-chicken-tender' };
+function fridgeIsAlways(it) {
+  if (!it) return false;
+  if (it.always) return true;
+  if (FRIDGE_ALWAYS_IDS[it.id]) return true;
+  if (/상시 구비/.test(String(it.memo || ''))) return true;
+  return /현미크런치|오븐구이|청양\s*바베큐/.test(String(it.name || ''));
+}
 let fridgeFilter = 'all';
 let fridgeDraft = null;
 let fridgeDelAsk = false;
@@ -4158,12 +4282,16 @@ function applyFridgeSeed(data) {
       expires: /^\d{4}-\d{2}-\d{2}$/.test(String(raw.expires || '')) ? raw.expires : '',
       memo: String(raw.memo || '').slice(0, 120),
       nutri: normalizeFridgeNutri(raw.nutri),
+      always: !!raw.always || !!FRIDGE_ALWAYS_IDS[id],
       out: false,
       src: 'seed'
     };
     const prev = byId[id];
     if (prev) {
-      if (prev.edited) {
+      if (base.always) {
+        /* 상시 구비 품목은 예전 수량·소진 표시를 이어받지 않고 늘 있는 것으로 맞춥니다. */
+        next.push(Object.assign({}, base, { qty: '', out: false }));
+      } else if (prev.edited) {
         next.push(Object.assign({}, base, { qty: prev.qty, memo: prev.memo, expires: prev.expires || base.expires, edited: true }));
       } else if (prev.out && !raw.out) {
         next.push(Object.assign({}, base, { out: true }));
@@ -4178,6 +4306,8 @@ function applyFridgeSeed(data) {
   fs2.items.forEach(function (it) {
     if (!it || !it.id) return;
     if (seedIds[it.id]) return;
+    /* 현미크런치·오븐구이처럼 상시 품목으로 합쳐진 예전 항목은 수량 관리에서 뺍니다. */
+    if (FRIDGE_MERGE_INTO[it.id]) { removed++; return; }
     if (it.src === 'seed' && !it.edited) { removed++; return; }
     next.push(it);
   });
@@ -4241,13 +4371,17 @@ function syncFridgeNow(force) {  toast(force ? '최신 목록을 확인하는 �
 
 function fridgeRowHTML(it) {
   const p = fridgePlaceInfo(it.place);
+  const always = fridgeIsAlways(it);
   const meta = [];
   meta.push('<span class="fr-badge">' + p.e + ' ' + p.l + '</span>');
-  if (it.qty) meta.push('<span>' + esc(it.qty) + '</span>');
+  if (always) meta.push('<span class="fr-badge always">∞ 상시 구비</span>');
+  else if (it.qty) meta.push('<span>' + esc(it.qty) + '</span>');
   const badge = expiryBadge(it.expires);
   if (badge) meta.push(badge);
-  return '<div class="fr-row' + (it.out ? ' out' : '') + '">' +
-    '<button class="fr-check" data-fout="' + esc(it.id) + '" aria-label="' + (it.out ? '되돌리기' : '다 씀') + '" aria-pressed="' + (it.out ? 'true' : 'false') + '">' + (it.out ? '✓' : '') + '</button>' +
+  return '<div class="fr-row' + (it.out ? ' out' : '') + (always ? ' always' : '') + '">' +
+    (always
+      ? '<span class="fr-check always" aria-label="상시 구비 품목 · 수량 관리 없음" title="상시 구비 품목은 수량을 세지 않아요">∞</span>'
+      : '<button class="fr-check" data-fout="' + esc(it.id) + '" aria-label="' + (it.out ? '되돌리기' : '다 씀') + '" aria-pressed="' + (it.out ? 'true' : 'false') + '">' + (it.out ? '✓' : '') + '</button>') +
     '<div class="fr-main">' +
       '<div class="fr-name">' + esc(it.name) + (it.jp ? '<em>' + esc(it.jp) + (it.kana && it.kana !== it.jp ? ' (' + esc(it.kana) + ')' : '') + '</em>' : '') + '</div>' +
       '<div class="fr-meta">' + meta.join('') + '</div>' +
@@ -4319,7 +4453,8 @@ function renderFridge() {
           '<button class="btn btn-sm" data-fsync="1">🔄 최신 목록 동기화</button>' +
           '<button class="btn btn-sm btn-primary" data-fadd="1">＋ 재료 추가</button>' +
         '</div>' +
-        '<p style="font-size:11px;color:var(--ink-3);margin-top:9px;line-height:1.6">' +
+        '<p style="font-size:11px;color:var(--ink-3);margin-top:9px;line-height:1.6">∞ <b>상시 구비 품목</b>(냉동 닭가슴살·닭안심살 등)은 수량을 세지 않고 늘 있는 것으로 봐요.</p>' +
+        '<p style="font-size:11px;color:var(--ink-3);margin-top:4px;line-height:1.6">' +
           (synced ? '마지막 동기화 · ' + (synced.getMonth() + 1) + '월 ' + synced.getDate() + '일 ' + pad2(synced.getHours()) + ':' + pad2(synced.getMinutes()) + ' (v' + (fs2.seedVersion || 0) + ')' : '채팅에서 넘겨준 목록을 아직 받지 않았어요') +
         '</p>' +
       '</div>' +
@@ -4442,6 +4577,10 @@ function deleteFridgeItem(id) {
 function toggleFridgeOut(id) {
   const it = fridgeState().items.filter(function (x) { return x.id === id; })[0];
   if (!it) return;
+  if (fridgeIsAlways(it) && !it.out) {
+    toast(it.name + ' · 상시 구비 품목이라 소진 표시를 하지 않아요');
+    return;
+  }
   it.out = !it.out;
   save();
   renderFridge();
@@ -5662,7 +5801,7 @@ function menuSuggest() {
     const n = fridgeNutri(it);
     if (!n) return;
     const q = fridgeQtyParts(it.qty);
-    if (q && q.n <= 0) return;
+    if (q && q.n <= 0 && !fridgeIsAlways(it)) return;
     /* 2인분은 알·개처럼 작은 단위만 (계란 2알 등). 팩·봉은 1회분씩 */
     const maxN = (q && (q.unit === '알' || q.unit === '개') && q.n >= 2) ? 2 : 1;
     pool.push(Object.assign({ id: it.id, name: it.name, maxN: maxN, qty: it.qty, group: menuGroupOf(n.role) }, n));
@@ -5783,7 +5922,7 @@ function menuCardHTML() {
         '<button class="btn btn-sm ' + (i === 0 ? 'btn-primary' : '') + '" data-menu-eat="' + i + '">🍽️ 이거 먹었음</button>' +
       '</div>';
     }).join('') + '</div>' +
-    '<div class="menu-eff">누르면 <b>' + esc(mealNowLabel()) + '</b>에 들어가고, 숫자로 관리되는 재료는 수량도 함께 줄어요.' +
+    '<div class="menu-eff">누르면 <b>' + esc(mealNowLabel()) + '</b>에 들어가고, 숫자로 관리되는 재료는 수량도 함께 줄어요. <b>상시 구비 품목</b>은 그대로 둬요.' +
       (hasDay ? '' : ' · 오늘 첫 기록이에요.') + '</div>' +
     '<div class="menu-foot"><span>조합 후보 ' + numComma(ms.combos.length) + '가지</span>' +
       '<button class="mini-btn" data-menu-refresh="1">🔄 다른 조합</button></div>';
@@ -5817,6 +5956,8 @@ function eatMenuCombo(idx) {
     });
     const it = fridgeState().items.filter(function (x) { return x.id === p.id; })[0];
     if (!it) return;
+    /* 상시 구비 품목은 늘 있다고 보고 재고를 줄이거나 품절 처리하지 않습니다. */
+    if (fridgeIsAlways(it)) return;
     const q = fridgeQtyParts(it.qty);
     if (!q) return;
     const next = Math.round((q.n - p.count) * 100) / 100;

@@ -15,7 +15,7 @@
       "nutri": { "label": "그릭요거트", "serving": "1개 100g", "unit": "개", "kcal": 60, "carb": 4, "protein": 10, "fat": 0, "est": true } },
     { "id": "green-onion", "name": "대파", "jp": "長ねぎ", "kana": "ながねぎ", "place": "fridge", "qty": "1단", "expires": "", "memo": "",
       "nutri": { "label": "대파", "serving": "1대 30g", "unit": "단", "kcal": 10, "carb": 2, "protein": 0.5, "fat": 0, "est": true } },
-    { "id": "frozen-chicken-breast", "name": "냉동 닭가슴살", "jp": "鶏むね肉", "kana": "とりむねにく", "place": "freezer", "qty": "2봉", "expires": "", "memo": "수시 보충 품목",
+    { "id": "frozen-chicken-breast", "name": "냉동 닭가슴살", "jp": "鶏むね肉", "kana": "とりむねにく", "place": "freezer", "qty": "2봉", "expires": "", "memo": "상시 구비 품목",
       "nutri": { "label": "냉동 닭가슴살", "serving": "100g", "unit": "봉", "kcal": 110, "carb": 0, "protein": 23, "fat": 1.5, "est": true } },
     { "id": "frozen-shrimp", "name": "냉동새우", "jp": "海老", "kana": "えび", "place": "freezer", "qty": "1봉", "expires": "", "memo": "",
       "nutri": { "label": "냉동새우", "serving": "100g", "unit": "봉", "kcal": 90, "carb": 0.5, "protein": 20, "fat": 1, "est": true } },
