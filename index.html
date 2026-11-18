@@ -345,6 +345,14 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .q-score p{font-size:13px;color:var(--ink-2);margin-top:6px}
 .q-score .emoji{font-size:34px;display:block;margin-bottom:6px}
 
+/* 피클 동기화 가져오기 결과 */
+.sync-res{margin-top:12px;border:1px solid #CBE3D7;background:#F1F8F4;border-radius:12px;padding:10px 12px}
+.sync-res.bad{border-color:#FECACA;background:#FEF3F2}
+.sync-row{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.55;color:var(--ink-2);padding:3px 0}
+.sync-row b{color:var(--ink);font-weight:700;min-width:62px}
+.sync-total{margin-top:6px;padding-top:7px;border-top:1px dashed #CBE3D7;font-size:11.5px;color:var(--ink-3);line-height:1.6}
+.sync-note{font-size:12px;color:var(--ink-3);line-height:1.6;margin:8px 0 0}
+
 /* toast */
 .toast{
   position:fixed;left:50%;bottom:calc(var(--tab-h) + 22px + env(safe-area-inset-bottom));transform:translateX(-50%) translateY(10px);
@@ -2794,13 +2802,15 @@ function renderReview() {
       '<div class="section-title"><h2>학습 기록</h2><span class="hint">이 기기에만 저장</span></div>' +
       '<div class="card">' +
         '<div style="display:flex;flex-direction:column;gap:8px">' +
+          '<button class="btn btn-accent btn-block" data-syncimport="open">📥 피클 동기화 가져오기</button>' +
           '<button class="btn btn-block" data-backup="export">📥 JSON 백업 내려받기</button>' +
           '<button class="btn btn-block" data-backup="import">📤 백업 가져오기</button>' +
           '<button class="btn btn-danger btn-block" data-backup="reset">학습 기록 초기화</button>' +
         '</div>' +
         '<input type="file" id="importFile" accept="application/json,.json" class="hidden">' +
         '<p style="font-size:11.5px;color:var(--ink-3);margin-top:11px;line-height:1.6">' +
-          '백업 파일에는 학습일·즐겨찾기·오답 기록과 <b>루틴·냉장고·식단 기록</b>이 함께 담깁니다. 브라우저 데이터를 지우기 전에 내려받아 두세요.</p>' +
+          '백업 파일에는 학습일·즐겨찾기·오답 기록과 <b>루틴·냉장고·식단 기록</b>이 함께 담깁니다. 브라우저 데이터를 지우기 전에 내려받아 두세요.<br>' +
+          '<b>피클 동기화 가져오기</b>는 일요일에 받은 <b>sync-bundle.json</b>으로 체중·식단·냉장고만 병합합니다. 루틴·일기·N3 체크는 그대로 둡니다.</p>' +
       '</div>' +
       '<p class="foot-note">withかっちゃん · JLPT N5 · 일상회화<br>외부 연결 없이 이 파일만으로 동작합니다.</p>' +
     '</div>';
@@ -2839,6 +2849,186 @@ function importData(file) {
   };
   fr.onerror = function () { toast('파일을 읽지 못했어요'); };
   fr.readAsText(file);
+}
+
+/* ---------------- 피클 동기화 번들 가져오기 ----------------
+   매주 일요일 GitHub를 비우기 전에 받은 sync-bundle.json(파일 또는 붙여넣은 JSON)을
+   이 기기의 체중·식단·냉장고 기록에 병합합니다.
+   루틴·일본어 일기·N3 체크·학습 기록은 그대로 둡니다. */
+const SYNC_BUNDLE_AT = 'sync_bundle_imported_at';
+let syncBundleRead = '';   /* 파일로 고른 원문 (붙여넣기 칸이 비어 있을 때 사용) */
+
+/* 번들에서 해당 종류의 기록을 꺼냅니다. 값이 JSON 문자열이어도 받습니다. */
+function syncBundlePick(c, kind) {
+  const keys = [kind, kind + 'Data', kind + '-data', kind + '_data', kind + 'JSON', kind + 'Json'];
+  for (let i = 0; i < keys.length; i++) {
+    let v = c[keys[i]];
+    if (typeof v === 'string' && v.trim()) {
+      try { v = JSON.parse(v); } catch (e) { continue; }
+    }
+    if (v && typeof v === 'object' && !Array.isArray(v)) return v;
+  }
+  return null;
+}
+/* 번들 키가 없이 data 파일 하나만 온 경우, 키 모양으로 어떤 기록인지 알아봅니다. */
+function syncBundleShape(o) {
+  if (!o || typeof o !== 'object' || Array.isArray(o)) return '';
+  if (Array.isArray(o.items)) return 'fridge';
+  if (o.days && typeof o.days === 'object') return 'diet';
+  if (Array.isArray(o.entries) || Array.isArray(o.doses) || (o.profile && typeof o.profile === 'object')) return 'weight';
+  return '';
+}
+function readSyncBundle(text) {
+  let obj = null;
+  try { obj = JSON.parse(String(text || '').trim()); } catch (e) {
+    return { error: 'JSON을 읽지 못했어요. 파일 내용을 빠짐없이 붙여넣었는지 확인해 주세요.' };
+  }
+  if (typeof obj === 'string') { try { obj = JSON.parse(obj); } catch (e) { obj = null; } }
+  if (!obj || typeof obj !== 'object') return { error: '가져올 내용을 찾지 못했어요.' };
+  const containers = [obj];
+  ['data', 'files', 'bundle', 'payload', 'sync'].forEach(function (k) {
+    if (obj[k] && typeof obj[k] === 'object' && !Array.isArray(obj[k])) containers.push(obj[k]);
+  });
+  const parts = { weight: null, diet: null, fridge: null };
+  containers.forEach(function (c) {
+    ['weight', 'diet', 'fridge'].forEach(function (kind) {
+      if (!parts[kind]) parts[kind] = syncBundlePick(c, kind);
+    });
+  });
+  const shape = syncBundleShape(obj);
+  if (shape && !parts[shape]) parts[shape] = obj;
+  if (!parts.weight && !parts.diet && !parts.fridge) {
+    return { error: 'weight·diet·fridge 중 아무것도 찾지 못했어요. sync-bundle.json인지 확인해 주세요.' };
+  }
+  return { parts: parts };
+}
+function syncBundleCounts() {
+  return {
+    weight: weightEntries().length,
+    diet: Object.keys(dietState().days).length,
+    fridge: fridgeState().items.filter(function (it) { return !it.out; }).length
+  };
+}
+function importSyncBundle(text) {
+  const r = readSyncBundle(text);
+  if (r.error) return r;
+  const p = r.parts;
+  const before = syncBundleCounts();
+  const lines = [];
+  let touched = 0;
+  if (p.weight) {
+    if (seedTemplateEmpty('weight', p.weight)) {
+      lines.push({ k: '⚖️ 체중', t: '빈 파일이라 건너뛰었어요 · 이 기기 기록 그대로' });
+    } else {
+      const res = applyWeightSeed(p.weight);
+      touched++;
+      lines.push({ k: '⚖️ 체중', t: '기록 +' + res.added + '일' +
+        (res.updated ? ' · 수치 갱신 ' + res.updated + '일' : '') +
+        (res.doses ? ' · 주사 +' + res.doses + '회' : '') +
+        (res.profile ? ' · 프로필 갱신' : '') });
+    }
+  }
+  if (p.diet) {
+    if (seedTemplateEmpty('diet', p.diet)) {
+      lines.push({ k: '🥗 식단', t: '빈 파일이라 건너뛰었어요 · 이 기기 기록 그대로' });
+    } else {
+      const changed = applyDietSeed(p.diet);
+      touched++;
+      lines.push({ k: '🥗 식단', t: changed ? '항목 ' + changed + '개 병합' : '이미 최신이에요' });
+    }
+  }
+  if (p.fridge) {
+    if (seedTemplateEmpty('fridge', p.fridge)) {
+      lines.push({ k: '🧊 냉장고', t: '빈 파일이라 건너뛰었어요 · 이 기기 목록 그대로' });
+    } else {
+      const res = applyFridgeSeed(p.fridge);
+      touched++;
+      lines.push({ k: '🧊 냉장고', t: '목록 반영 · 추가 ' + res.added + '개' + (res.removed ? ' · 정리 ' + res.removed + '개' : '') });
+    }
+  }
+  if (!touched) return { error: '가져올 기록이 비어 있어요. (세 파일 모두 빈 템플릿)', lines: lines };
+  save();
+  try { localStorage.setItem(SYNC_BUNDLE_AT, new Date().toISOString()); } catch (e) {}
+  renderCurrent();
+  return { lines: lines, before: before, after: syncBundleCounts() };
+}
+function syncBundleLastText() {
+  let iso = '';
+  try { iso = localStorage.getItem(SYNC_BUNDLE_AT) || ''; } catch (e) { iso = ''; }
+  if (!iso) return '아직 가져온 적이 없어요';
+  const d = new Date(iso);
+  if (isNaN(d.getTime())) return '아직 가져온 적이 없어요';
+  return '마지막 가져오기 · ' + (d.getMonth() + 1) + '월 ' + d.getDate() + '일 ' + pad2(d.getHours()) + ':' + pad2(d.getMinutes());
+}
+function syncResultHTML(r) {
+  const rows = (r.lines || []).map(function (l) {
+    return '<div class="sync-row"><b>' + esc(l.k) + '</b><span>' + esc(l.t) + '</span></div>';
+  }).join('');
+  const total = (r.before && r.after)
+    ? '<div class="sync-total">이 기기 기록 · 체중 ' + r.before.weight + '일 → ' + r.after.weight + '일 · ' +
+      '식단 ' + r.before.diet + '일 → ' + r.after.diet + '일 · 냉장고 ' + r.before.fridge + '개 → ' + r.after.fridge + '개</div>'
+    : '';
+  return '<div class="sync-res' + (r.error ? ' bad' : '') + '">' + rows + total + '</div>';
+}
+function openSyncImportSheet() {
+  syncBundleRead = '';
+  openSheet(
+    '<div class="quiz-head"><b>📥 피클 동기화 가져오기</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<p style="font-size:12.5px;color:var(--ink-2);line-height:1.65">일요일 밤 GitHub를 비우기 전에 받은 <b>sync-bundle.json</b> 파일을 고르거나, 그 JSON을 아래에 붙여넣으세요.<br>' +
+      '<b>체중·식단·냉장고만</b> 이 기기 기록에 병합하고, 루틴·일본어 일기·N3 체크는 그대로 둡니다.</p>' +
+    '<button class="btn btn-block" style="margin-top:10px" data-syncpick="1">📄 파일 고르기</button>' +
+    '<input type="file" id="syncBundleFile" accept="application/json,.json" class="hidden">' +
+    '<label class="field-label" for="syncBundleText">JSON 붙여넣기<span>파일을 골랐다면 비워두세요</span></label>' +
+    '<textarea class="field" id="syncBundleText" style="min-height:120px;font-size:12px" spellcheck="false" placeholder=\'{"weight": {…}, "diet": {…}, "fridge": {…}}\'></textarea>' +
+    '<p class="sync-note" id="syncBundleNote">' + esc(syncBundleLastText()) + '</p>' +
+    '<div id="syncImportResult"></div>' +
+    '<div class="q-foot"><button class="btn btn-primary" data-syncapply="1">가져오기</button></div>'
+  );
+}
+function readSyncBundleFile(file) {
+  if (!file) return;
+  const fr = new FileReader();
+  fr.onload = function () {
+    const text = String(fr.result || '');
+    syncBundleRead = text;
+    const ta = document.getElementById('syncBundleText');
+    if (ta) ta.value = '';
+    const note = document.getElementById('syncBundleNote');
+    const r = readSyncBundle(text);
+    if (note) {
+      note.innerHTML = '📄 ' + esc(file.name) + ' · ' + (r.error ? '⚠️ ' + esc(r.error) : esc(syncBundleDetailText(r.parts)));
+    }
+    const host = document.getElementById('syncImportResult');
+    if (host) host.innerHTML = '';
+  };
+  fr.onerror = function () { toast('파일을 읽지 못했어요'); };
+  fr.readAsText(file);
+}
+/* 파일 안에 뭐가 들었는지 미리 보여줍니다 */
+function syncBundleDetailText(p) {
+  const bits = [];
+  if (p.weight) bits.push('체중 ' + ((Array.isArray(p.weight.entries) ? p.weight.entries.length : 0)) + '일');
+  if (p.diet) bits.push('식단 ' + ((p.diet.days && typeof p.diet.days === 'object') ? Object.keys(p.diet.days).length : 0) + '일');
+  if (p.fridge) bits.push('냉장고 ' + ((Array.isArray(p.fridge.items) ? p.fridge.items.length : 0)) + '개');
+  return bits.length ? bits.join(' · ') + ' · 가져오기를 누르면 병합해요' : '가져올 기록을 찾지 못했어요';
+}
+function applySyncFromSheet() {
+  const ta = document.getElementById('syncBundleText');
+  const text = String((ta && ta.value) || '').trim() || syncBundleRead;
+  const host = document.getElementById('syncImportResult');
+  if (!text) {
+    if (host) host.innerHTML = syncResultHTML({ error: '가져올 내용이 없어요', lines: [] });
+    toast('sync-bundle.json을 고르거나 붙여넣어 주세요');
+    return;
+  }
+  const r = importSyncBundle(text);
+  if (host) host.innerHTML = syncResultHTML(r);
+  if (r.error) { toast(r.error); return; }
+  if (ta) ta.value = '';
+  syncBundleRead = '';
+  const note = document.getElementById('syncBundleNote');
+  if (note) note.textContent = syncBundleLastText();
+  toast('동기화 기록을 가져왔어요');
 }
 
 /* ---------------- 한 줄 일기 ---------------- */
@@ -3836,6 +4026,42 @@ function onRoutineSheetChange(e) {
   toast('이름을 바꿨어요');
 }
 
+/* ---------------- 주간 초기화(seedDisabled) 방어 -------------
+   매주 일요일 밤 GitHub의 weight-data.json·diet-data.json·fridge-data.json이
+   빈 템플릿({"version": N, "seedDisabled": true, ...})으로 비워집니다.
+   그 빈 파일을 받아도 이 기기에 저장된 기록은 한 줄도 지우거나 덮어쓰지 않습니다.
+   대신 버전 카운터만 0으로 되돌려 두어, 그 주에 진짜 기록이 다시 올라오면
+   (버전 번호가 1부터 다시 시작해도) 새 기록으로 받아갑니다. */
+function seedIsBlank(v) {
+  if (v === null || v === undefined) return true;
+  if (Array.isArray(v)) return v.length === 0;
+  if (typeof v === 'object') return Object.keys(v).every(function (k) { return seedIsBlank(v[k]); });
+  return String(v).trim() === '';
+}
+function seedTemplateEmpty(kind, data) {
+  if (!data || typeof data !== 'object' || Array.isArray(data)) return true;
+  if (data.seedDisabled === true || data.reset === true || data.blank === true) return true;
+  if (kind === 'fridge') {
+    return !Array.isArray(data.items) || data.items.filter(function (it) { return it && it.name; }).length === 0;
+  }
+  if (kind === 'diet') {
+    const days = data.days && typeof data.days === 'object' ? Object.keys(data.days) : [];
+    return days.length === 0 && seedIsBlank(data.goals);
+  }
+  if (kind === 'weight') {
+    const entries = Array.isArray(data.entries) ? data.entries.filter(Boolean) : [];
+    const doses = Array.isArray(data.doses) ? data.doses.filter(Boolean) : [];
+    return entries.length === 0 && doses.length === 0 && seedIsBlank(data.profile);
+  }
+  return false;
+}
+/* 주간 초기화를 만났을 때: 기록은 그대로 두고 버전 카운터만 0으로. */
+function seedMarkReset(storeKey, holder) {
+  try { localStorage.setItem(storeKey, '0'); } catch (e) {}
+  if (holder && Number(holder.seedVersion)) { holder.seedVersion = 0; return true; }
+  return false;
+}
+
 /* ---------------- 냉장고 (fridge-data.json 시드 동기화) ----------------
    저장소의 fridge-data.json을 읽어 재료 목록을 맞추고, 앱에서 직접 추가·수정·소진한 것은 이 기기에 남깁니다. */
 const FRIDGE_PLACES = [
@@ -3911,6 +4137,8 @@ function expiryBadge(dateStr) {
 function applyFridgeSeed(data) {
   const fs2 = fridgeState();
   const seed = Array.isArray(data && data.items) ? data.items : [];
+  /* 빈 템플릿(주간 초기화)이면 이 기기 목록을 그대로 둡니다. */
+  if (!seed.filter(function (it) { return it && it.name; }).length) return { added: 0, removed: 0 };
   const byId = {};
   fs2.items.forEach(function (it) { if (it && it.id) byId[it.id] = it; });
   const next = [];
@@ -3964,6 +4192,11 @@ function syncFridgeSeed(force) {
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
       const ver = Number(data && data.version) || 0;
+      /* 주간 초기화 빈 템플릿이면 이 기기 목록을 그대로 두고 버전만 0으로 되돌립니다. */
+      if (seedTemplateEmpty('fridge', data)) {
+        if (seedMarkReset(FRIDGE_SEED_KEY, fridgeState())) save();
+        return { applied: false, empty: true, version: ver };
+      }
       let cur = 0;
       try { cur = Number(localStorage.getItem(FRIDGE_SEED_KEY)) || 0; } catch (e) { cur = 0; }
       const fs2 = fridgeState();
@@ -3991,6 +4224,11 @@ function syncFridgeNow(force) {  toast(force ? '최신 목록을 확인하는 �
   syncFridgeSeed(force).then(function (r) {
     if (!r || r.busy) return;
     if (r.error) { toast('목록을 받지 못했어요 · 오프라인이면 이 기기 기록만 보여요'); return; }
+    if (r.empty) {
+      toast('GitHub은 주간 초기화 상태예요 · 이 기기 목록은 그대로 둡니다');
+      if (currentTab === 'fridge') renderFridge();
+      return;
+    }
     if (r.applied) {
       toast('냉장고 목록을 맞췄어요 · ' + (fridgeState().items.length) + '개');
       if (currentTab === 'fridge') renderFridge();
@@ -4102,7 +4340,7 @@ function renderFridge() {
         ? '<div class="vcols"><div class="vcol">' + goneBlock + '</div><div class="vcol">' + vocaBlock + '</div></div>'
         : vocaBlock) +
 
-      '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.</p>' +
+      '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.<br>GitHub 파일이 주간 초기화로 비어도 이 기기 목록은 지워지지 않아요.</p>' +
     '</div>';
 }
 
@@ -4367,10 +4605,13 @@ function dietMealSum(day, meal) {
 }
 
 /* 채팅으로 넘겨받은 최신 식단(diet-data.json)을 반영.
-   앱에서 고친 날은 그 기록을 살리고, 새로 온 항목만 더하며, 앱에서 지운 항목은 되살리지 않습니다. */
+   날짜는 그대로 두고 항목(id) 단위로 합칩니다. 앱에서 직접 고친·지운 항목은 그대로 두고,
+   같은 id는 GitHub 값이 최신이므로 영양성분을 맞춥니다. GitHub에서 빠진 지난 날짜·항목도 지우지 않습니다. */
 function applyDietSeed(data) {
   const ds = dietState();
-  if (data && data.goals) ds.goals = normalizeDietGoals(data.goals);
+  if (data && data.goals && typeof data.goals === 'object') {
+    ds.goals = normalizeDietGoals(Object.assign({}, ds.goals || {}, data.goals));
+  }
   const seedDays = data && data.days && typeof data.days === 'object' ? data.days : {};
   let changed = 0;
   Object.keys(seedDays).forEach(function (k) {
@@ -4378,14 +4619,21 @@ function applyDietSeed(data) {
     const seed = normalizeDietDay(seedDays[k]);
     const cur = ds.days[k];
     if (!cur) { ds.days[k] = seed; changed++; return; }
-    if (!cur.edited) { ds.days[k] = seed; changed++; return; }
     const del = cur.del || [];
     DIET_MEALS.forEach(function (m) {
-      const have = {};
-      (cur.meals[m.k] || []).forEach(function (it) { have[it.id] = true; });
+      if (!Array.isArray(cur.meals[m.k])) cur.meals[m.k] = [];
+      const at = {};
+      cur.meals[m.k].forEach(function (it, i) { at[it.id] = i; });
       (seed.meals[m.k] || []).forEach(function (it) {
-        if (have[it.id] || del.indexOf(it.id) >= 0) return;
-        cur.meals[m.k].push(it); changed++;
+        if (del.indexOf(it.id) >= 0) return;          /* 앱에서 지운 항목은 되살리지 않음 */
+        const i = at[it.id];
+        if (i === undefined) { cur.meals[m.k].push(it); at[it.id] = cur.meals[m.k].length - 1; changed++; return; }
+        const have = cur.meals[m.k][i];
+        if (have.src === 'user') return;             /* 앱에서 직접 넣고 고친 항목은 그대로 */
+        if (have.name !== it.name || have.kcal !== it.kcal || have.carb !== it.carb ||
+            have.protein !== it.protein || have.fat !== it.fat) {
+          cur.meals[m.k][i] = it; changed++;
+        }
       });
     });
     if (!cur.water && seed.water) { cur.water = seed.water; changed++; }
@@ -4400,6 +4648,11 @@ function syncDietSeed(force) {
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
       const ver = Number(data && data.version) || 0;
+      /* 주간 초기화 빈 템플릿이면 이 기기 식단을 그대로 두고 버전만 0으로 되돌립니다. */
+      if (seedTemplateEmpty('diet', data)) {
+        if (seedMarkReset(DIET_SEED_KEY, dietState())) save();
+        return { applied: false, empty: true, version: ver };
+      }
       let cur = 0;
       try { cur = Number(localStorage.getItem(DIET_SEED_KEY)) || 0; } catch (e) { cur = 0; }
       const ds = dietState();
@@ -4429,6 +4682,12 @@ function syncDietNow(force) {
   syncDietSeed(force).then(function (r) {
     if (!r || r.busy) return;
     if (r.error) { toast('식단을 받지 못했어요 · 오프라인이면 이 기기 기록만 보여요'); return; }
+    if (r.empty) {
+      toast('GitHub은 주간 초기화 상태예요 · 이 기기 식단 기록은 그대로 둡니다');
+      renderRoutine();
+      if (currentTab === 'home') renderHome();
+      return;
+    }
     renderRoutine();
     if (currentTab === 'home') renderHome();
     if (r.applied) {
@@ -4554,7 +4813,7 @@ function dietViewHTML() {
     '<div class="card tight">' + DIET_MEALS.map(function (m) { return dietMealHTML(m.k, day); }).join('') + '</div>' +
     '</div></div>' +
 
-    '<p class="foot-note">식단은 채팅에서 받은 diet-data.json과 이 기기 기록을 함께 씁니다.<br>복습 탭의 JSON 백업에도 함께 담깁니다.</p>' +
+    '<p class="foot-note">식단은 채팅에서 받은 diet-data.json과 이 기기 기록을 함께 씁니다.<br>복습 탭의 JSON 백업에도 함께 담깁니다.<br>GitHub 파일이 주간 초기화로 비어도 이 기기 기록은 지워지지 않아요.</p>' +
   '</div>';
 }
 
@@ -5034,30 +5293,55 @@ function weightViewHTML() {
         ' · 허리둘레는 매주 월요일 측정' + (p.waistNote ? ' (' + esc(p.waistNote) + ')' : '') + '</p>' +
     '</div>' +
 
-    '<p class="foot-note">체중·마운자로 기록은 이 기기와 <b>weight-data.json</b>을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.</p>' +
+    '<p class="foot-note">체중·마운자로 기록은 이 기기와 <b>weight-data.json</b>을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.<br>GitHub 파일이 주간 초기화로 비어도 이 기기 기록은 지워지지 않아요.</p>' +
   '</div>';
 }
 
 /* 채팅으로 넘겨받은 최신 기록(weight-data.json) 반영.
-   앱에서 직접 넣은 날짜 기록은 그대로 두고, 채팅 기록이 새 날짜를 채웁니다. */
+   날짜 단위로 병합합니다. 앱에서 직접 넣은 날짜 기록·주사 기록은 그대로 두고,
+   GitHub에서 빠진 지난주 기록도 이 기기에서는 지우지 않습니다. */
+function mergeWeightProfile(raw) {
+  const cur = weightProfile();
+  const r = raw && typeof raw === 'object' ? raw : {};
+  let changed = false;
+  ['heightCm', 'startWeight', 'goalWeight', 'bmr', 'startWaist', 'latestWaist'].forEach(function (k) {
+    const v = wtNum(r[k]);
+    if (v !== null && v > 0 && cur[k] !== v) { cur[k] = v; changed = true; }
+  });
+  const sd = wtDateStr(r.startDate);
+  if (sd && cur.startDate !== sd) { cur.startDate = sd; changed = true; }
+  if (typeof r.waistNote === 'string' && r.waistNote && cur.waistNote !== r.waistNote) {
+    cur.waistNote = r.waistNote.slice(0, 120); changed = true;
+  }
+  return changed;
+}
 function applyWeightSeed(data) {
-  if (!data || typeof data !== 'object') return { added: 0, updated: 0 };
+  const res = { added: 0, updated: 0, doses: 0, profile: false };
+  if (!data || typeof data !== 'object') return res;
   const ws = weightState();
-  ws.profile = normalizeWeightProfile(data.profile);
-  let added = 0, updated = 0;
+  if (data.profile) res.profile = mergeWeightProfile(data.profile);
   (Array.isArray(data.entries) ? data.entries : []).forEach(function (raw) {
     const e = normalizeWeightEntry(raw);
     if (!e) return;
     const cur = ws.entries[e.date];
-    if (cur && cur.src === 'user' && cur.edited) return;
-    if (!cur) added++;
-    else if (cur.kg !== e.kg) updated++;
+    if (cur && cur.src === 'user') return;   /* 앱에서 넣은 날짜 기록은 그대로 */
+    if (!cur) res.added++;
+    else if (cur.kg !== e.kg || cur.bodyFat !== e.bodyFat || cur.muscle !== e.muscle || cur.waist !== e.waist) res.updated++;
     ws.entries[e.date] = e;
   });
-  const keepUser = ws.doses.filter(function (d) { return d.src === 'user'; });
-  const seedDoses = (Array.isArray(data.doses) ? data.doses : []).map(function (d) { return normalizeWeightDose(Object.assign({ src: 'seed' }, d)); }).filter(Boolean);
-  ws.doses = seedDoses.concat(keepUser).sort(function (a, b) { return a.date < b.date ? -1 : a.date > b.date ? 1 : 0; });
-  return { added: added, updated: updated };
+  /* 주사 기록도 날짜 단위로 합칩니다(앱에서 넣은 기록 우선, 기존 기록은 지우지 않음). */
+  const byDate = {};
+  (ws.doses || []).forEach(function (d) { if (d && d.date) byDate[d.date] = d; });
+  (Array.isArray(data.doses) ? data.doses : []).forEach(function (raw) {
+    const d = normalizeWeightDose(Object.assign({ src: 'seed' }, raw));
+    if (!d) return;
+    const cur = byDate[d.date];
+    if (cur && cur.src === 'user') return;
+    if (!cur) res.doses++;
+    byDate[d.date] = d;
+  });
+  ws.doses = Object.keys(byDate).sort().map(function (k) { return byDate[k]; });
+  return res;
 }
 function syncWeightSeed(force) {
   if (weightSyncing) return Promise.resolve({ busy: true });
@@ -5066,6 +5350,11 @@ function syncWeightSeed(force) {
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
       const ver = Number(data && data.version) || 0;
+      /* 주간 초기화 빈 템플릿이면 이 기기 체중 기록을 그대로 두고 버전만 0으로 되돌립니다. */
+      if (seedTemplateEmpty('weight', data)) {
+        if (seedMarkReset(WEIGHT_SEED_KEY, weightState())) save();
+        return { applied: false, empty: true, version: ver };
+      }
       let cur = 0;
       try { cur = Number(localStorage.getItem(WEIGHT_SEED_KEY)) || 0; } catch (e) { cur = 0; }
       const ws = weightState();
@@ -5093,6 +5382,11 @@ function syncWeightNow(force) {
   toast(force ? '최신 체중 기록을 확인하는 중…' : '체중 기록을 확인하는 중…');
   syncWeightSeed(force).then(function (r) {
     if (r && r.error) { toast('동기화하지 못했어요 · ' + r.error); return; }
+    if (r && r.empty) {
+      toast('GitHub은 주간 초기화 상태예요 · 이 기기 체중 기록은 그대로 둡니다');
+      renderRoutine();
+      return;
+    }
     if (r && r.applied) {
       renderRoutine();
       toast('체중 기록을 받았어요 · 새 기록 ' + r.added + '일');
@@ -6373,6 +6667,8 @@ function onReviewClick(e) {
   if (dw) { openDiary(dw.dataset.diary); return; }
   const dcp = t.closest('[data-dcopykey]');
   if (dcp) { copyDiaryEntry(dcp.dataset.dcopykey, dcp); return; }
+  const si = t.closest('[data-syncimport]');
+  if (si) { openSyncImportSheet(); return; }
   const back = t.closest('[data-backup]');
   if (back) {
     const k = back.dataset.backup;
@@ -6401,6 +6697,12 @@ function onSheetClick(e) {
   if (onFridgeSheetClick(e)) return;
   if (onDietSheetClick(e)) return;
   if (onWeightSheetClick(e)) return;
+  if (t.closest('[data-syncpick]')) {
+    const f = document.getElementById('syncBundleFile');
+    if (f) f.click();
+    return;
+  }
+  if (t.closest('[data-syncapply]')) { applySyncFromSheet(); return; }
   if (t.closest('[data-n3esave]')) { n3SaveEdit(); return; }
   if (t.closest('[data-n3ereset]')) { n3ResetEdit(); return; }
   if (t.closest('[data-rmemosave]')) { saveRoutineMemo(); return; }
@@ -6545,6 +6847,9 @@ function init() {
   $('#view-gram').addEventListener('click', onGramClick);
   $('#view-review').addEventListener('click', onReviewClick);
   $('#sheetPanel').addEventListener('click', onSheetClick);
+  $('#sheetPanel').addEventListener('change', function (e) {
+    if (e.target && e.target.id === 'syncBundleFile') readSyncBundleFile(e.target.files && e.target.files[0]);
+  });
   $('#sheetPanel').addEventListener('change', onRoutineSheetChange);
   $('#sheetBackdrop').addEventListener('click', function () {
     if (Q.active) { Q.active = false; Q.items = []; Q.onDone = null; }
