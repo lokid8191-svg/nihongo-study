@@ -1,5 +1,5 @@
 {
-  "version": 9,
+  "version": 10,
   "updatedAt": "2026-11-18",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -49,7 +49,8 @@
           { "id": "d4", "name": "소금·후추 간", "kcal": 0, "carb": 0, "protein": 0, "fat": 0, "est": true }
         ],
         "snack": [
-          { "id": "s1", "name": "홍시 (작은 거 1개, 약 100g · 추정)", "kcal": 66, "carb": 16.5, "protein": 0.6, "fat": 0.2, "est": true }
+          { "id": "s1", "name": "홍시 (작은 거 1개, 약 100g · 추정)", "kcal": 66, "carb": 16.5, "protein": 0.6, "fat": 0.2, "est": true },
+          { "id": "s2", "name": "세인트피터 커피 누가크래커 3개 (18g · 추정)", "kcal": 86, "carb": 11.4, "protein": 1.4, "fat": 3.9, "est": true }
         ]
       }
     }
