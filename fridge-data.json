@@ -1,5 +1,5 @@
 {
-  "version": 5,
+  "version": 6,
   "updatedAt": "2026-11-18",
   "note": "채팅으로 냉장고 재료를 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 목록을 새로 받아갑니다. nutri는 1회분 기준 영양성분이라 '지금 냉장고로 뭐 먹지?' 추천에 쓰입니다.",
   "items": [
@@ -23,9 +23,9 @@
       "nutri": { "label": "팽이버섯", "serving": "1묶음 100g", "unit": "묶음", "kcal": 35, "carb": 7, "protein": 2.5, "fat": 0.2, "est": true } },
     { "id": "soymilk-blackbean", "name": "매일두유 검은콩 고단백", "jp": "豆乳", "kana": "とうにゅう", "place": "room", "qty": "9팩", "expires": "", "memo": "떨어질 때쯤 네이버 재주문 대상",
       "nutri": { "label": "매일두유 고단백 검은콩", "serving": "1팩 190mL", "unit": "팩", "kcal": 110, "carb": 6, "protein": 12, "fat": 5, "est": false } },
-    { "id": "hatban-sprouted-brown-rice", "name": "햇반 발아현미밥 130g", "jp": "発芽玄米ごはん", "kana": "はつがげんまいごはん", "place": "room", "qty": "3개", "expires": "", "memo": "",
+    { "id": "hatban-sprouted-brown-rice", "name": "햇반 발아현미밥 130g", "jp": "発芽玄米ごはん", "kana": "はつがげんまいごはん", "place": "room", "qty": "4개", "expires": "", "memo": "",
       "nutri": { "label": "햇반 발아현미밥 130g", "serving": "1개 130g", "unit": "개", "kcal": 200, "carb": 42, "protein": 4, "fat": 1, "est": false } },
-    { "id": "donki-egg-rice-sauce", "name": "돈키호테 간장계란밥소스", "jp": "卵かけご飯のたれ", "kana": "たまごかけごはんのたれ", "place": "room", "qty": "4개", "expires": "", "memo": "",
+    { "id": "donki-egg-rice-sauce", "name": "돈키호테 간장계란밥소스", "jp": "卵かけご飯のたれ", "kana": "たまごかけごはんのたれ", "place": "room", "qty": "5개", "expires": "", "memo": "",
       "nutri": { "label": "돈키호테 간장계란밥소스", "serving": "1개", "unit": "개", "kcal": 30, "carb": 5, "protein": 1.5, "fat": 0, "est": true } },
     { "id": "seasoned-gim", "name": "조미김", "jp": "味付け海苔", "kana": "あじつけのり", "place": "room", "qty": "5봉", "expires": "", "memo": "",
       "nutri": { "label": "조미김", "serving": "1봉", "unit": "봉", "kcal": 25, "carb": 1, "protein": 1, "fat": 2, "est": true } }
