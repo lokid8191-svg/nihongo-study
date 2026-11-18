@@ -4628,7 +4628,7 @@ const DIET_MEALS = [
   { k: 'dinner',    l: '저녁', e: '🌙' },
   { k: 'snack',     l: '간식', e: '🍪' }
 ];
-const DIET_GOALS_DEFAULT = { calories: 1250, carbs: [110, 120], protein: [75, 85], fat: [35, 45], waterStepMl: 500 };
+const DIET_GOALS_DEFAULT = { calories: 1200, carbs: [70, 100], protein: [75, 85], fat: [35, 45], waterStepMl: 500 };
 const DIET_SEED_KEY = 'diet_seed_version';
 let dietDate = dkey();
 let routineSub = 'routine';   /* 루틴 탭 안의 서브 화면: routine | diet */
@@ -4637,7 +4637,7 @@ let dietDelAsk = false;
 let dietSyncing = false;
 
 function num1(v) { const n = Number(v); if (!isFinite(n)) return '0'; return String(Math.round(n * 10) / 10); }
-/* 1,250 처럼 세 자리 쉼표 */
+/* 1,200 처럼 세 자리 쉼표 */
 function numComma(v) { return String(Math.round(Number(v) || 0)).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
 /* 받침에 따라 조사를 골라 "초콜릿을" / "샐러드를" 처럼 읽히게 합니다. */
 function josaKo(word, withB, withoutB) {

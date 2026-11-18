@@ -1,10 +1,10 @@
 {
-  "version": 6,
+  "version": 7,
   "updatedAt": "2026-11-18",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
-    "calories": 1250,
-    "carbs": [110, 120],
+    "calories": 1200,
+    "carbs": [70, 100],
     "protein": [75, 85],
     "fat": [35, 45],
     "waterStepMl": 500
