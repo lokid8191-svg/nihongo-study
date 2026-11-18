@@ -1,6 +1,6 @@
 {
-  "version": 1,
-  "updatedAt": "2026-11-17",
+  "version": 2,
+  "updatedAt": "2026-11-18",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
     "calories": 1250,
@@ -28,6 +28,17 @@
           { "id": "s1", "name": "식빵 2장", "kcal": 210, "carb": 40, "protein": 6.5, "fat": 2.5, "est": true },
           { "id": "s2", "name": "디카페인 커피", "kcal": 0, "carb": 0, "protein": 0, "fat": 0 }
         ]
+      }
+    },
+    "2026-11-18": {
+      "water": 0,
+      "meals": {
+        "breakfast": [
+          { "id": "b1", "name": "매일두유 고단백 검은콩 190mL", "kcal": 110, "carb": 6, "protein": 12, "fat": 5 }
+        ],
+        "lunch": [],
+        "dinner": [],
+        "snack": []
       }
     }
   }
