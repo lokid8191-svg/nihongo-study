@@ -885,7 +885,7 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .hm-ds .r span{font-size:10.5px;color:var(--ink-3);margin-left:auto;font-variant-numeric:tabular-nums;flex:none}
 .hm-ds .ds-bar{height:6px;margin-top:7px}
 .hm-ds .g{display:flex;gap:8px;margin-top:6px;font-size:10px;color:var(--ink-3);font-variant-numeric:tabular-nums}
-.n3-auto{display:inline-block;margin-left:5px;font-size:9px;font-weight:700;color:var(--accent);background:var(--primary-soft);border-radius:99px;padding:1px 6px;vertical-align:1px}
+.n3-auto{display:inline-block;margin-top:3px;font-size:9px;font-weight:700;color:var(--accent);background:var(--primary-soft);border-radius:99px;padding:1px 6px;text-decoration:none}
 
 /* ---------- 🔁 오답 플래시카드 ---------- */
 .fc-cta .btn{margin-top:10px}
@@ -7085,7 +7085,7 @@ function n3DailyInner() {
     return '<button class="n3-dt' + (on ? ' on' : '') + (t.opt ? ' opt' : '') + '" data-n3task="' + t.key + '"' +
       ' aria-pressed="' + (on ? 'true' : 'false') + '"' + (future ? ' disabled' : '') + '>' +
       '<span class="box" aria-hidden="true">' + (on ? '✓' : '') + '</span>' +
-      '<span class="n3-dt-t"><b>' + esc(t.t) + (auto ? '<span class="n3-auto">📖 오늘의 학습</span>' : '') + '</b>' + (t.s ? '<span>' + esc(t.s) + '</span>' : '') + '</span>' +
+      '<span class="n3-dt-t"><b>' + esc(t.t) + '</b>' + (auto ? '<span class="n3-auto">📖 오늘의 학습에서 채움</span>' : '') + (t.s ? '<span>' + esc(t.s) + '</span>' : '') + '</span>' +
     '</button>';
   }).join('');
 
