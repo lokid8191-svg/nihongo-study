@@ -1,5 +1,5 @@
 {
-  "version": 11,
+  "version": 12,
   "updatedAt": "2026-11-19",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -59,7 +59,7 @@
       "meals": {
         "breakfast": [],
         "lunch": [
-          { "id": "l1", "name": "냉동양꼬치 200g", "kcal": 440, "carb": 10, "protein": 30, "fat": 30, "est": false },
+          { "id": "l1", "name": "냉동양꼬치 150g (3/4팩)", "kcal": 330, "carb": 7.5, "protein": 22.5, "fat": 22.5, "est": false },
           { "id": "l2", "name": "팽이버섯 150g", "kcal": 55, "carb": 11, "protein": 4, "fat": 0.5, "est": true }
         ],
         "dinner": [],
