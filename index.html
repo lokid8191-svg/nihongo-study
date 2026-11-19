@@ -839,7 +839,7 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .ds-words{display:flex;flex-direction:column}
 .ds-w{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-top:1px solid var(--surface-2);min-width:0}
 .ds-w:first-child{border-top:0;padding-top:2px}
-.ds-wcheck{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid #C6C9CF;background:var(--surface);display:grid;place-items:center;font-size:12px;color:#fff;margin-top:2px;transition:.15s}
+.ds-wcheck{flex:none;width:24px;height:24px;border-radius:7px;border:1.5px solid #C6C9CF;background:var(--surface);display:grid;place-items:center;font-size:12px;color:#fff;margin-top:2px;transition:.15s}
 .ds-w.done .ds-wcheck{background:var(--primary);border-color:var(--primary)}
 .ds-wbody{flex:1;min-width:0}
 .ds-wtop{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
@@ -2629,7 +2629,8 @@ function dailyStudyHTML() {
     return '<div class="ds-w' + (on ? ' done' : '') + '">' +
       '<button class="ds-wcheck" data-dw="' + esc(w.id) + '" aria-pressed="' + on + '" aria-label="' + esc(w.jp) + ' 학습 확인">' + (on ? '✓' : '') + '</button>' +
       '<div class="ds-wbody">' +
-        '<div class="ds-wtop"><span class="ds-wjp">' + rubyHTML(w.jp, w.kana, true) + '</span><span class="ds-wkana">' + esc(w.kana) + '</span></div>' +
+        '<div class="ds-wtop"><span class="ds-wjp">' + rubyHTML(w.jp, w.kana, true) + '</span>' +
+          (w.jp === w.kana ? '<span class="ds-wkana">' + esc(w.kana) + '</span>' : '') + '</div>' +
         '<div class="ds-wko">' + esc(w.ko) + '</div>' +
         '<div class="ds-wex">' + esc(w.ex) + ' <span style="opacity:.85">' + esc(w.exKo) + '</span></div>' +
       '</div>' +
