@@ -1,6 +1,6 @@
 {
-  "version": 12,
-  "updatedAt": "2026-11-18",
+  "version": 13,
+  "updatedAt": "2026-11-19",
   "note": "채팅으로 냉장고 재료를 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 목록을 새로 받아갑니다. nutri는 1회분 기준 영양성분이라 '지금 냉장고로 뭐 먹지?' 추천에 쓰입니다. always: true 인 상시 구비 품목은 수량을 세지 않고, 맞춤 메뉴에서 먹어도 재고가 줄지 않습니다.",
   "items": [
     { "id": "frozen-chicken-breast", "name": "냉동 닭가슴살(현미크런치 등)", "jp": "鶏むね肉", "kana": "とりむねにく", "place": "freezer", "qty": "", "expires": "", "memo": "상시 구비 품목 · 1팩 100g 약 110kcal(현미크런치 129kcal)", "always": true,
@@ -15,7 +15,7 @@
       "nutri": { "label": "냉동양꼬치", "serving": "1꼬치 30g", "unit": "개", "kcal": 75, "carb": 1, "protein": 5.4, "fat": 5.5, "est": true } },
     { "id": "egg", "name": "계란", "jp": "卵", "kana": "たまご", "place": "fridge", "qty": "12알", "expires": "", "memo": "",
       "nutri": { "label": "계란", "serving": "1알 50g", "unit": "알", "kcal": 70, "carb": 0.5, "protein": 6, "fat": 5, "est": false } },
-    { "id": "enoki", "name": "팽이버섯", "jp": "えのき茸", "kana": "えのきだけ", "place": "fridge", "qty": "2묶음", "expires": "", "memo": "",
+    { "id": "enoki", "name": "팽이버섯", "jp": "えのき茸", "kana": "えのきだけ", "place": "fridge", "qty": "1묶음", "expires": "", "memo": "",
       "nutri": { "label": "팽이버섯", "serving": "1묶음 100g", "unit": "묶음", "kcal": 35, "carb": 7, "protein": 2.5, "fat": 0.2, "est": true } },
     { "id": "soymilk-blackbean", "name": "매일두유 검은콩 고단백", "jp": "豆乳", "kana": "とうにゅう", "place": "room", "qty": "9팩", "expires": "", "memo": "떨어질 때쯤 네이버 재주문 대상",
       "nutri": { "label": "매일두유 고단백 검은콩", "serving": "1팩 190mL", "unit": "팩", "kcal": 110, "carb": 6, "protein": 12, "fat": 5, "est": false } },
