@@ -1500,7 +1500,7 @@ function defaultState() {
     v: 1,
     days: {},
     star: { kana: [], word: [], sent: [] },
-    wrong: { kana: {}, word: {}, sent: {}, jlpt: {} },
+    wrong: { kana: {}, word: {}, sent: {}, jlpt: {}, daily: {} },
     stats: { answered: 0, correct: 0, quizzes: 0 },
     settings: { furigana: false, romaji: false, rate: 0.75 },
     diary: {},
@@ -2378,7 +2378,7 @@ function dailyAutoStage() {
 function dailyDayNo(sid) {
   const s = dailyStageMeta(sid);
   const n = Math.floor((parseDkey(dkey()) - parseDkey(s.from)) / 86400000) + 1;
-  if (n < 1) return (dayIndex() % DAILY_STAGES.length * 20) + (dayIndex() % 20) + 1;
+  if (n < 1) return (dayIndex() % 40) + 1;
   return n;
 }
 function dailyDay(create) {
@@ -2419,10 +2419,14 @@ function dailyPickStage(sid) {
   renderStudyToday();
   toast(dailyStageMeta(sid).label + ' 단계 문제로 바꿨어요');
 }
-function dailyRotate(list, count, start) {
+function dailyRotate(list, count, start, stride) {
   const out = [];
   if (!list || !list.length) return out;
-  for (let i = 0; i < count; i++) out.push(list[(start + i) % list.length]);
+  const step = Math.max(1, stride || 1);
+  for (let i = 0; out.length < count && i < count * step + list.length; i++) {
+    const item = list[(start + i * step) % list.length];
+    if (out.indexOf(item) < 0) out.push(item);
+  }
   return out;
 }
 function wrongDailyFor(sid) {
@@ -2464,7 +2468,8 @@ function dailySet() {
   }
   return {
     stage: sid, label: c.label || dailyStageMeta(sid).label, name: c.name || dailyStageMeta(sid).name,
-    n: n, words: dailyRotate(c.words, 15, ((n - 1) * 15) % c.words.length),
+    n: n, /* 하루 15개는 앞에서부터가 아니라 목록 전체를 고르게 훑어 카테고리가 섞이게 뽑습니다. */
+    words: dailyRotate(c.words, 15, ((n - 1) * 15) % c.words.length, Math.max(1, Math.floor(c.words.length / 15))),
     grammar: grammar, quiz: dailyQuestions(c, sid, n)
   };
 }
@@ -2511,9 +2516,11 @@ function startDailyQuiz() {
       const by = dailyBy(set.stage, true);
       by.quizDone = true;
       by.quizOk = Math.max(by.quizOk || 0, ok);
-      save();
       n3AutoFromDaily();
-      if (currentTab === 'studytoday') renderStudyToday(); else if (currentTab === 'home') renderHome();
+      const g = dailyGoalState();
+      if (g && g.all) markStudy('daily');
+      else if (currentTab === 'studytoday') renderStudyToday();
+      else if (currentTab === 'home') renderHome();
       toast('오늘의 ' + set.quiz.length + '문제 완료 · 틀린 문제는 복습 탭에 쌓였어요');
     }
   });
@@ -7298,8 +7305,8 @@ function onHomeClick(e) {
   if (n3t) { n3ToggleTask(n3Sel(), n3t.dataset.n3task); return; }
   const dst = t.closest('[data-dstage]');
   if (dst) { dailyPickStage(dst.dataset.dstage); return; }
-  const dw = t.closest('[data-dw]');
-  if (dw) { toggleDailyWord(dw.dataset.dw); return; }
+  const dwd = t.closest('[data-dw]');
+  if (dwd) { toggleDailyWord(dwd.dataset.dw); return; }
   if (t.closest('[data-dwall]')) { toggleAllDailyWords(); return; }
   const dg = t.closest('[data-dg]');
   if (dg) { toggleDailyGram(dg.dataset.dg); return; }
