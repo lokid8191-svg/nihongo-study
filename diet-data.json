@@ -1,5 +1,5 @@
 {
-  "version": 15,
+  "version": 16,
   "updatedAt": "2026-11-19",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -65,7 +65,10 @@
         "dinner": [
           { "id": "d1", "name": "굽네 오리지널 순살 (다리살, 반 마리 약 250g 추정)", "kcal": 475, "carb": 6.1, "protein": 78.2, "fat": 15.4, "est": true }
         ],
-        "snack": []
+        "snack": [
+          { "id": "s1", "name": "세인트피터 커피 누가크래커 3개", "kcal": 86, "carb": 11.4, "protein": 1.4, "fat": 3.9, "est": true },
+          { "id": "s2", "name": "일리 디카페인 캡슐커피 1잔 (블랙)", "kcal": 2, "carb": 0.3, "protein": 0.1, "fat": 0, "est": true }
+        ]
       }
     }
   }
