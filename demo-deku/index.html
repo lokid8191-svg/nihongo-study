@@ -5153,7 +5153,7 @@ function applyFridgeSeed(data) {
 function syncFridgeSeed(force) {
   if (fridgeSyncing) return Promise.resolve({ busy: true });
   fridgeSyncing = true;
-  const url = './demo-fridge.json?t=' + Date.now();
+  const url = '../demo/demo-fridge.json?t=' + Date.now();
   return fetch(url, { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
@@ -5640,7 +5640,7 @@ function applyDietSeed(data) {
 function syncDietSeed(force) {
   if (dietSyncing) return Promise.resolve({ busy: true });
   dietSyncing = true;
-  const url = './demo-diet.json?t=' + Date.now();
+  const url = '../demo/demo-diet.json?t=' + Date.now();
   return fetch(url, { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
