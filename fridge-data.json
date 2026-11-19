@@ -1,5 +1,5 @@
 {
-  "version": 14,
+  "version": 15,
   "updatedAt": "2026-11-19",
   "note": "채팅으로 냉장고 재료를 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 목록을 새로 받아갑니다. nutri는 1회분 기준 영양성분이라 '지금 냉장고로 뭐 먹지?' 추천에 쓰입니다. always: true 인 상시 구비 품목은 수량을 세지 않고, 맞춤 메뉴에서 먹어도 재고가 줄지 않습니다.",
   "items": [
@@ -13,6 +13,14 @@
       "nutri": { "label": "냉동오징어", "serving": "100g", "unit": "봉", "kcal": 92, "carb": 3, "protein": 18, "fat": 0.8, "est": true } },
     { "id": "frozen-lamb-skewer", "name": "냉동양꼬치", "jp": "ラム串", "kana": "ラムくし", "place": "freezer", "qty": "0팩", "expires": "", "memo": "",
       "nutri": { "label": "냉동양꼬치", "serving": "1꼬치 30g", "unit": "개", "kcal": 75, "carb": 1, "protein": 5.4, "fat": 5.5, "est": true } },
+    { "id": "today-hyeonmi-bulgogi", "name": "오늘은 현미밥 소불고기", "jp": "玄米ごはん プルコギ", "kana": "げんまいごはん ぷるこぎ", "place": "freezer", "qty": "3팩", "expires": "", "memo": "1팩 200g · 380kcal · 당 6g · 나트륨 680mg (라벨 확인)",
+      "nutri": { "label": "오늘은 현미밥 소불고기", "serving": "1팩 200g", "unit": "팩", "kcal": 380, "carb": 62, "protein": 15, "fat": 8, "est": false } },
+    { "id": "today-hyeonmi-gondre", "name": "오늘은 현미밥 곤드레", "jp": "玄米ごはん コンドレ", "kana": "げんまいごはん こんどれ", "place": "freezer", "qty": "3팩", "expires": "", "memo": "1팩 200g · 373kcal · 당 2g · 나트륨 530mg (라벨 확인)",
+      "nutri": { "label": "오늘은 현미밥 곤드레", "serving": "1팩 200g", "unit": "팩", "kcal": 373, "carb": 65, "protein": 8, "fat": 9, "est": false } },
+    { "id": "tongmil-pita-spinach", "name": "통밀당 피타브레드 시금치바질토마토", "jp": "ピタパン ほうれん草バジルトマト", "kana": "ぴたぱん ほうれんそうばじるとまと", "place": "freezer", "qty": "5개", "expires": "", "memo": "1개 120g · 248kcal · 식이섬유 6g · 나트륨 490mg (라벨 확인)",
+      "nutri": { "label": "통밀당 피타 시금치바질토마토", "serving": "1개 120g", "unit": "개", "kcal": 248, "carb": 37, "protein": 10, "fat": 8, "est": false } },
+    { "id": "tongmil-pita-bacon", "name": "통밀당 피타브레드 베이컨대파크림치즈", "jp": "ピタパン ベーコン長ねぎクリームチーズ", "kana": "ぴたぱん べーこんねぎくりーむちーず", "place": "freezer", "qty": "5개", "expires": "", "memo": "1개 120g · 263kcal · 식이섬유 5g · 나트륨 460mg (라벨 확인)",
+      "nutri": { "label": "통밀당 피타 베이컨대파크림치즈", "serving": "1개 120g", "unit": "개", "kcal": 263, "carb": 36, "protein": 12, "fat": 9, "est": false } },
     { "id": "egg", "name": "계란", "jp": "卵", "kana": "たまご", "place": "fridge", "qty": "12알", "expires": "", "memo": "",
       "nutri": { "label": "계란", "serving": "1알 50g", "unit": "알", "kcal": 70, "carb": 0.5, "protein": 6, "fat": 5, "est": false } },
     { "id": "enoki", "name": "팽이버섯", "jp": "えのき茸", "kana": "えのきだけ", "place": "fridge", "qty": "1묶음", "expires": "", "memo": "",
@@ -24,6 +32,8 @@
     { "id": "donki-egg-rice-sauce", "name": "돈키호테 간장계란밥소스", "jp": "卵かけご飯のたれ", "kana": "たまごかけごはんのたれ", "place": "room", "qty": "4개", "expires": "", "memo": "1팩 18g · 76kcal · 나트륨 516.6mg (라벨 확인)",
       "nutri": { "label": "돈키호테 간장계란밥소스", "serving": "1팩 18g", "unit": "개", "kcal": 76, "carb": 3.2, "protein": 0.8, "fat": 6.3, "est": false } },
     { "id": "seasoned-gim", "name": "조미김", "jp": "味付け海苔", "kana": "あじつけのり", "place": "room", "qty": "4봉", "expires": "", "memo": "1봉 3.65g · 22kcal",
-      "nutri": { "label": "조미김(365 광천김)", "serving": "1봉 3.65g", "unit": "봉", "kcal": 22, "carb": 1, "protein": 1, "fat": 1.7, "est": false } }
+      "nutri": { "label": "조미김(365 광천김)", "serving": "1봉 3.65g", "unit": "봉", "kcal": 22, "carb": 1, "protein": 1, "fat": 1.7, "est": false } },
+    { "id": "danbaek-hankki-14grain", "name": "단백한끼 14곡물", "jp": "プロテインシェイク 十四穀物", "kana": "ぷろていんしぇいく じゅうよんこくもつ", "place": "room", "qty": "7개", "expires": "", "memo": "1개 25g · 94kcal · 식이섬유 2g · 나트륨 127mg (라벨 확인) · 물에 타 마시는 단백질 쉐이크",
+      "nutri": { "label": "단백한끼 14곡물", "serving": "1개 25g", "unit": "개", "kcal": 94, "carb": 5, "protein": 17, "fat": 1.1, "est": false } }
   ]
 }
