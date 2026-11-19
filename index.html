@@ -3367,13 +3367,17 @@ function renderWords() {
               ? '틀린 단어만 모아 다시 풀어요. 맞히면 오답노트에서 빠져요. '
               : '뜻 맞추기와 읽기 맞추기를 섞어서 낼 수 있어요. ') +
           '틀린 단어는 복습 탭 오답노트에 자동으로 쌓입니다.</p>' +
-        '<div style="display:flex;flex-direction:column;gap:8px;margin-top:13px">' +
-          '<button class="btn btn-primary btn-block" data-wquiz="mix10"' + (canQuiz ? '' : ' disabled') + '>섞어서 ' + qcount + '문제</button>' +
-          '<button class="btn btn-block" data-wquiz="meaning"' + (canQuiz ? '' : ' disabled') + '>뜻 맞추기 ' + qcount + '문제</button>' +
-          '<button class="btn btn-block" data-wquiz="reading"' + (canQuiz ? '' : ' disabled') + '>읽기 맞추기 ' + qcount + '문제</button>' +
-          (info && info.todayWords.length
-            ? '<button class="btn btn-ghost btn-block" data-wquiz="today">오늘 배운 단어 ' + Math.min(5, info.todayWords.length) + '개로 풀기</button>' : '') +
-        '</div>' +
+        (canQuiz
+          ? '<div style="display:flex;flex-direction:column;gap:8px;margin-top:13px">' +
+              '<button class="btn btn-primary btn-block" data-wquiz="mix10">섞어서 ' + qcount + '문제</button>' +
+              '<button class="btn btn-block" data-wquiz="meaning">뜻 맞추기 ' + qcount + '문제</button>' +
+              '<button class="btn btn-block" data-wquiz="reading">읽기 맞추기 ' + qcount + '문제</button>' +
+              (info && info.todayWords.length
+                ? '<button class="btn btn-ghost btn-block" data-wquiz="today">오늘 배운 단어 ' + Math.min(5, info.todayWords.length) + '개로 풀기</button>' : '') +
+            '</div>'
+          : '<div class="empty">' + (wState.scope === 'wrong'
+              ? '아직 틀린 단어가 없어요.<br>퀴즈를 풀면 틀린 단어가 여기 쌓여요.'
+              : '이 범위에 단어가 없어요.<br>다른 범위나 카테고리를 골라 보세요.') + '</div>') +
       '</div>' +
       '<div class="card tight">' +
         '<div class="card-head" style="margin-bottom:4px"><h3>' + esc(wordScopeName(wState.scope, info)) + ' 단어</h3><span class="sub">' + arr.length + '개</span></div>' +
