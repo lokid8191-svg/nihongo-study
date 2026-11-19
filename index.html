@@ -810,6 +810,83 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .n3-dst b{display:block;font-size:14px;font-weight:800;letter-spacing:-.3px;font-variant-numeric:tabular-nums;white-space:nowrap}
 .n3-dst span{display:block;font-size:9.5px;color:var(--ink-3);margin-top:1px;line-height:1.3}
 .n3-ed-l{display:block;font-size:11px;font-weight:700;color:var(--ink-2);margin:12px 0 5px}
+/* ---------- 📖 오늘의 학습 — N5~N3 매일 맞춤 ---------- */
+.ds-top{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+.ds-stage{min-height:34px;padding:0 14px;border-radius:999px;background:var(--surface);border:1px solid var(--line);font-size:12.5px;font-weight:700;color:var(--ink-2);flex:none;font-variant-numeric:tabular-nums}
+.ds-stage.active{background:var(--primary);border-color:var(--primary);color:#fff;box-shadow:0 3px 9px rgba(220,38,38,.2)}
+.ds-stage small{font-weight:600;font-size:10px;opacity:.72;margin-left:4px}
+.ds-autotag{margin-left:auto;font-size:10.5px;color:var(--ink-3);white-space:nowrap}
+.ds-hero{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);padding:15px 16px}
+.ds-hero-top{display:flex;align-items:baseline;gap:8px}
+.ds-hero-top b{font-size:13.5px;font-weight:800;letter-spacing:-.2px}
+.ds-hero-top span{font-size:10.5px;color:var(--ink-3);min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ds-hero-top em{margin-left:auto;font-style:normal;font-size:21px;font-weight:800;letter-spacing:-.8px;color:var(--primary);font-variant-numeric:tabular-nums;flex:none}
+.ds-hero-top em small{font-size:11px;font-weight:700;color:var(--ink-3)}
+.ds-bar{display:block;height:8px;border-radius:99px;background:#E9EBEF;margin-top:9px;overflow:hidden}
+.ds-bar i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#F87171);transition:width .3s ease}
+.ds-bar i.full{background:var(--ok)}
+.ds-goals{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.ds-goal{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;color:var(--ink-3);background:var(--surface-2);border:1px solid var(--line);border-radius:999px;padding:4px 9px;font-variant-numeric:tabular-nums}
+.ds-goal.on{background:#F0FDF4;border-color:#BBF7D0;color:var(--ok)}
+.ds-goal b{font-weight:800}
+.ds-note{font-size:10.5px;color:var(--ink-3);line-height:1.55;margin-top:9px}
+.ds-note b{color:var(--accent)}
+.ds-sec{display:flex;align-items:center;gap:8px;margin:2px 2px -2px}
+.ds-sec .no{width:19px;height:19px;border-radius:6px;background:var(--primary-soft);color:var(--primary);font-size:10.5px;font-weight:800;display:grid;place-items:center;flex:none}
+.ds-sec h2{font-size:14px;font-weight:800;letter-spacing:-.2px}
+.ds-sec .cnt{margin-left:auto;font-size:11px;color:var(--ink-3);font-weight:700;font-variant-numeric:tabular-nums;flex:none}
+.ds-sec .cnt.done{color:var(--ok)}
+.ds-words{display:flex;flex-direction:column}
+.ds-w{display:flex;align-items:flex-start;gap:9px;padding:10px 0;border-top:1px solid var(--surface-2);min-width:0}
+.ds-w:first-child{border-top:0;padding-top:2px}
+.ds-wcheck{flex:none;width:22px;height:22px;border-radius:7px;border:1.5px solid #C6C9CF;background:var(--surface);display:grid;place-items:center;font-size:12px;color:#fff;margin-top:2px;transition:.15s}
+.ds-w.done .ds-wcheck{background:var(--primary);border-color:var(--primary)}
+.ds-wbody{flex:1;min-width:0}
+.ds-wtop{display:flex;align-items:baseline;gap:7px;flex-wrap:wrap}
+.ds-wjp{font-size:17px;font-weight:700;letter-spacing:.2px;line-height:1.35}
+.ds-wjp ruby rt{font-size:.4em}
+.ds-wkana{font-size:11.5px;color:var(--primary);font-weight:600}
+.ds-wko{font-size:12px;color:var(--ink);font-weight:600;margin-top:1px}
+.ds-wex{font-size:11px;color:var(--ink-3);margin-top:2px;line-height:1.5;word-break:keep-all;overflow-wrap:anywhere}
+.ds-w.done .ds-wjp,.ds-w.done .ds-wko{color:var(--ink-3)}
+.ds-w.done .ds-wcheck{color:#fff}
+.ds-wspeak{flex:none;width:34px;height:34px;border-radius:10px;background:var(--surface-2);border:1px solid var(--line);display:grid;place-items:center;font-size:14px}
+.ds-more{width:100%;min-height:36px;margin-top:4px;border-radius:10px;background:var(--primary-soft);color:var(--accent);font-size:12px;font-weight:700}
+.ds-g{border-top:1px solid var(--surface-2);padding:12px 0 2px;min-width:0}
+.ds-g:first-of-type{border-top:0;padding-top:0}
+.ds-ghead{display:flex;align-items:center;gap:9px}
+.ds-gkey{flex:none;min-width:34px;height:34px;padding:0 7px;border-radius:10px;background:var(--primary-soft);color:var(--primary);font-size:13px;font-weight:800;display:grid;place-items:center}
+.ds-ghead b{display:block;font-size:13px;font-weight:800;line-height:1.35}
+.ds-ghead span{display:block;font-size:10.5px;color:var(--ink-3);margin-top:1px}
+.ds-gsum{font-size:11.5px;color:var(--ink-2);line-height:1.6;margin-top:7px;word-break:keep-all;overflow-wrap:anywhere}
+.ds-gex{background:var(--surface-2);border:1px solid #EEF0F2;border-radius:10px;padding:8px 10px;margin-top:7px}
+.ds-gex .jp{font-size:13.5px;font-weight:600;line-height:1.45;display:flex;align-items:flex-start;gap:6px}
+.ds-gex .jp span{flex:1;min-width:0}
+.ds-gex .jp button{flex:none;font-size:12px;color:var(--ink-3);width:24px;height:24px;border-radius:7px;background:var(--surface);border:1px solid var(--line)}
+.ds-gex .kn{font-size:10.5px;color:var(--primary);margin-top:2px}
+.ds-gex .ko{font-size:11px;color:var(--ink-3);margin-top:1px}
+.ds-gfoot{display:flex;justify-content:flex-end;margin-top:8px}
+.ds-gcheck{min-height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:11.5px;font-weight:700;color:var(--ink-2)}
+.ds-gcheck.on{background:#F0FDF4;border-color:#BBF7D0;color:var(--ok)}
+.ds-quizinfo{font-size:11.5px;color:var(--ink-2);line-height:1.65;margin-top:2px}
+.ds-quizbar{display:flex;align-items:center;gap:9px;margin-top:10px}
+.ds-quizbar .ds-bar{flex:1;margin:0}
+.ds-quizbar b{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;flex:none}
+.ds-quizfoot{display:flex;align-items:center;gap:8px;margin-top:11px}
+.ds-quizfoot .btn{flex:1}
+.ds-score{font-size:10.5px;color:var(--ink-3);margin-top:7px}
+.ds-empty{font-size:12px;color:var(--ink-2);line-height:1.7}
+.ds-load{margin-top:8px;display:flex;gap:8px;align-items:center}
+.ds-load .btn{flex:1}
+/* 홈 대시보드의 오늘의 학습 한 줄 */
+.hm-ds{display:block;width:100%;text-align:left;margin-top:10px;background:var(--surface-2);border:1px solid var(--line);border-radius:11px;padding:9px 11px}
+.hm-ds .r{display:flex;align-items:baseline;gap:6px}
+.hm-ds .r b{font-size:11.5px;font-weight:800}
+.hm-ds .r span{font-size:10.5px;color:var(--ink-3);margin-left:auto;font-variant-numeric:tabular-nums;flex:none}
+.hm-ds .ds-bar{height:6px;margin-top:7px}
+.hm-ds .g{display:flex;gap:8px;margin-top:6px;font-size:10px;color:var(--ink-3);font-variant-numeric:tabular-nums}
+.n3-auto{display:inline-block;margin-left:5px;font-size:9px;font-weight:700;color:var(--accent);background:var(--primary-soft);border-radius:99px;padding:1px 6px;vertical-align:1px}
+
 /* ---------- 🔁 오답 플래시카드 ---------- */
 .fc-cta .btn{margin-top:10px}
 .fc-wrap{display:flex;flex-direction:column;gap:10px}
@@ -1432,6 +1509,7 @@ function defaultState() {
     diet: { goals: null, days: {}, seedVersion: 0, syncedAt: '' },
     weight: { profile: null, entries: {}, doses: [], seedVersion: 0, syncedAt: '' },
     n3: { checks: {}, days: {}, stageDone: {}, labels: {} },
+    daily: { days: {} },
     streak: 0
   };
 }
@@ -1451,17 +1529,62 @@ function normalizeState(raw) {
     diet: normalizeDiet(p.diet),
     weight: normalizeWeight(p.weight),
     n3: normalizeN3(p.n3),
+    daily: normalizeDaily(p.daily),
     streak: Number(p.streak) || 0
   };
   ['kana', 'word', 'sent'].forEach(k => { if (!Array.isArray(s.star[k])) s.star[k] = []; });
-  ['kana', 'word', 'sent', 'jlpt'].forEach(k => {
+  ['kana', 'word', 'sent', 'jlpt', 'daily'].forEach(k => {
     let w = s.wrong[k];
     if (Array.isArray(w)) { const o = {}; w.forEach(id => { o[id] = { n: 1, t: Date.now() }; }); w = o; }
     if (!w || typeof w !== 'object') w = {};
     s.wrong[k] = w;
   });
+  /* 오늘의 학습 오답은 문제 원문을 함께 보관해 복습 탭에서 바로 다시 풀 수 있게 합니다. */
+  Object.keys(s.wrong.daily).forEach(function (id) {
+    const w = s.wrong.daily[id];
+    if (!w || typeof w !== 'object') { delete s.wrong.daily[id]; return; }
+    const keep = { n: Number(w.n) || 1, t: Number(w.t) || 0 };
+    if (typeof w.p === 'string' && w.p) keep.p = w.p.slice(0, 200);
+    if (typeof w.a === 'string' && w.a) keep.a = w.a.slice(0, 80);
+    if (Array.isArray(w.o)) keep.o = w.o.filter(function (x) { return typeof x === 'string' && x; }).slice(0, 4).map(function (x) { return x.slice(0, 80); });
+    if (typeof w.e === 'string' && w.e) keep.e = w.e.slice(0, 400);
+    if (typeof w.k === 'string') keep.k = w.k.slice(0, 10);
+    if (typeof w.s === 'string') keep.s = w.s.slice(0, 3);
+    s.wrong.daily[id] = keep;
+  });
   if (!(Number(s.settings.rate) > 0)) s.settings.rate = 0.75;
   return s;
+}
+/* 오늘의 학습 기록 — 날짜별·단계별 단어/문법 체크와 문제 완료 여부 */
+function normalizeDaily(raw) {
+  const r = raw && typeof raw === 'object' ? raw : {};
+  const out = { days: {} };
+  const keepMap = function (o) {
+    const m = {};
+    if (o && typeof o === 'object') Object.keys(o).forEach(function (id) { if (o[id]) m[String(id).slice(0, 24)] = true; });
+    return m;
+  };
+  if (r.days && typeof r.days === 'object') {
+    Object.keys(r.days).forEach(function (k) {
+      if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
+      const d = r.days[k];
+      if (!d || typeof d !== 'object') return;
+      const day = { stage: /^n[345]$/.test(String(d.stage || '')) ? String(d.stage) : '', by: {} };
+      const by = d.by && typeof d.by === 'object' ? d.by : {};
+      ['n5', 'n4', 'n3'].forEach(function (sid) {
+        const b = by[sid];
+        if (!b || typeof b !== 'object') return;
+        day.by[sid] = {
+          words: keepMap(b.words),
+          gram: keepMap(b.gram),
+          quizDone: !!b.quizDone,
+          quizOk: Math.max(0, Math.min(10, Number(b.quizOk) || 0))
+        };
+      });
+      out.days[k] = day;
+    });
+  }
+  return out;
 }
 /* 루틴 기록은 예전 백업 파일에 없을 수 있으므로 항상 기본값으로 메꿔 둡니다. */
 function normalizeRoutine(raw) {
@@ -1546,7 +1669,13 @@ function normalizeN3(raw) {
           if (d.tasks[t] && /^[a-z]{1,8}$/.test(t)) tasks[t] = true;
         });
       }
-      out.days[k] = { tasks: tasks };
+      const auto = {};
+      if (d.auto && typeof d.auto === 'object') {
+        Object.keys(d.auto).forEach(function (t) {
+          if (d.auto[t] && /^[a-z]{1,8}$/.test(t)) auto[t] = true;
+        });
+      }
+      out.days[k] = { tasks: tasks, auto: auto };
     });
   }
   /* 단계 완료 표시 */
@@ -1768,8 +1897,20 @@ function renderQuiz() {
 function recordWrong(it) {
   const key = it.type;
   if (!key || !S.wrong[key]) return;
-  const cur = S.wrong[key][it.id];
-  S.wrong[key][it.id] = { n: (cur && cur.n ? cur.n : 0) + 1, t: Date.now() };
+  const cur = S.wrong[key][it.id] || {};
+  const rec = { n: (cur.n && cur.n ? cur.n : 0) + 1, t: Date.now() };
+  /* 오늘의 학습 문제는 원문·보기를 함께 저장해 복습 탭에서 바로 다시 풀 수 있게 합니다. */
+  if (it.wrongInfo) {
+    rec.p = String(it.wrongInfo.prompt || '').slice(0, 200);
+    rec.a = String(it.wrongInfo.answer || '').slice(0, 80);
+    rec.o = (it.wrongInfo.options || []).slice(0, 4).map(function (x) { return String(x).slice(0, 80); });
+    rec.e = String(it.wrongInfo.exp || '').slice(0, 400);
+    rec.k = String(it.wrongInfo.kind || '').slice(0, 10);
+    rec.s = String(it.wrongInfo.stage || '').slice(0, 3);
+  } else if (cur.p) {
+    rec.p = cur.p; rec.a = cur.a; rec.o = cur.o; rec.e = cur.e; rec.k = cur.k; rec.s = cur.s;
+  }
+  S.wrong[key][it.id] = rec;
 }
 function answerQuiz(idx) {
   if (!Q.active || Q.answered) return;
@@ -2175,6 +2316,7 @@ function renderHome() {
             ? '<button class="btn btn-copy" data-dcopykey="' + k + '">📋 첨삭 복사</button>'
             : '<button class="btn btn-primary" data-diary="' + k + '">✍️ 일기 쓰기</button>') +
         '</div>' +
+        dailyHomeHTML() +
       '</div>' +
 
       /* 6. 냉장고 알림 */
@@ -2190,89 +2332,381 @@ function renderHome() {
     '</div></div>';
 }
 
-/* ---------------- 공부 · 오늘의 학습 (기존 오늘 탭의 학습 요소) ---------------- */
-function todayStudyHTML() {
-  const day = S.days[dkey()] || {};
-  const done = CHECK_ITEMS.filter(function (c) { return day[c.key]; }).length;
-  const words = todayWords();
-  const sent = todaySentence();
-  const dEntry = diaryFor(dkey());
-  const dCount = Object.keys(S.diary || {}).length;
+/* ---------------- 📖 오늘의 학습 — N5~N3 로드맵 맞춤 ----------------
+   날짜에 맞는 단계(N5→N4→N3)의 단어 15개 · 핵심 문법 2개 · 맞춤 문제 10개를 매일 새로 냅니다.
+   단어·문법·문제를 채우면 🎯 JLPT 로드맵의 오늘 체크가 자동으로 채워집니다. */
+const DAILY_STAGES = [
+  { id: 'n5', label: 'N5', name: 'N5 기본 다지기', from: '2026-11-01', to: '2026-12-31' },
+  { id: 'n4', label: 'N4', name: 'N4 핵심 뼈대', from: '2027-01-01', to: '2027-02-28' },
+  { id: 'n3', label: 'N3', name: 'N3 집중', from: '2027-03-01', to: '2027-07-31' }
+];
+let CURR = null;          /* study-curriculum.json */
+let currFailed = false;
+let currLoading = false;
 
-  const checks = CHECK_ITEMS.map(function (c) {
-    return '<div class="check-row ' + (day[c.key] ? 'done' : '') + '">' +
-      '<div class="check-circle">' + (day[c.key] ? '✓' : '') + '</div>' +
-      '<div class="check-txt"><b>' + c.icon + ' ' + esc(c.label) + '</b><span>' + esc(c.hint) + '</span></div>' +
-      '<button class="btn btn-sm ' + (day[c.key] ? 'btn-ghost' : 'btn-primary') + '" data-check="' + c.key + '">' +
-        (day[c.key] ? '다시' : '시작') + '</button>' +
+function loadCurriculum() {
+  if (CURR || currLoading) return;
+  currLoading = true;
+  fetch('./study-curriculum.json', { cache: 'no-store' })
+    .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+    .then(function (j) {
+      if (!j || !j.stages || !j.stages.n5 || !j.stages.n4 || !j.stages.n3) throw new Error('bad');
+      CURR = j; currFailed = false; currLoading = false;
+      refreshDailyViews();
+    })
+    .catch(function () {
+      currFailed = true; currLoading = false;
+      refreshDailyViews();
+    });
+}
+function refreshDailyViews() {
+  if (currentTab === 'home' || currentTab === 'studytoday') renderCurrent();
+}
+function dailyStageMeta(id) {
+  for (let i = 0; i < DAILY_STAGES.length; i++) if (DAILY_STAGES[i].id === id) return DAILY_STAGES[i];
+  return DAILY_STAGES[0];
+}
+function dailyAutoStage() {
+  const t = dkey();
+  for (let i = 0; i < DAILY_STAGES.length; i++) {
+    const s = DAILY_STAGES[i];
+    if (t >= s.from && t <= s.to) return s.id;
+  }
+  return t < DAILY_STAGES[0].from ? 'n5' : 'n3';
+}
+/* 단계 시작일부터 며칠째인지 — 단계 밖 날짜(미리 풀어보기)는 날짜 순환으로 매일 달라집니다. */
+function dailyDayNo(sid) {
+  const s = dailyStageMeta(sid);
+  const n = Math.floor((parseDkey(dkey()) - parseDkey(s.from)) / 86400000) + 1;
+  if (n < 1) return (dayIndex() % DAILY_STAGES.length * 20) + (dayIndex() % 20) + 1;
+  return n;
+}
+function dailyDay(create) {
+  if (!S.daily || typeof S.daily !== 'object') S.daily = { days: {} };
+  if (!S.daily.days || typeof S.daily.days !== 'object') S.daily.days = {};
+  const k = dkey();
+  let d = S.daily.days[k];
+  if (!d) {
+    if (!create) return null;
+    d = { stage: '', by: {} };
+    S.daily.days[k] = d;
+  }
+  if (!d.by || typeof d.by !== 'object') d.by = {};
+  return d;
+}
+function dailyStage() {
+  const d = dailyDay(false);
+  const st = d && d.stage;
+  return /^n[345]$/.test(String(st || '')) ? st : dailyAutoStage();
+}
+function dailyBy(sid, create) {
+  const d = dailyDay(create);
+  if (!d) return { words: {}, gram: {}, quizDone: false, quizOk: 0 };
+  if (!d.by[sid] || typeof d.by[sid] !== 'object') {
+    if (!create) return { words: {}, gram: {}, quizDone: false, quizOk: 0 };
+    d.by[sid] = { words: {}, gram: {}, quizDone: false, quizOk: 0 };
+  }
+  const b = d.by[sid];
+  if (!b.words || typeof b.words !== 'object') b.words = {};
+  if (!b.gram || typeof b.gram !== 'object') b.gram = {};
+  return b;
+}
+function dailyPickStage(sid) {
+  if (!/^n[345]$/.test(String(sid || ''))) return;
+  const d = dailyDay(true);
+  d.stage = sid;
+  save();
+  renderStudyToday();
+  toast(dailyStageMeta(sid).label + ' 단계 문제로 바꿨어요');
+}
+function dailyRotate(list, count, start) {
+  const out = [];
+  if (!list || !list.length) return out;
+  for (let i = 0; i < count; i++) out.push(list[(start + i) % list.length]);
+  return out;
+}
+function wrongDailyFor(sid) {
+  const map = S.wrong.daily || {};
+  return Object.keys(map).map(function (id) { return Object.assign({ id: id }, map[id]); })
+    .filter(function (x) { return x.s === sid && x.p && Array.isArray(x.o) && x.o.length === 4 && x.o.indexOf(x.a) >= 0; })
+    .sort(function (a, b) { return (b.n || 1) - (a.n || 1) || (b.t || 0) - (a.t || 0); });
+}
+/* 오늘의 10문제: 문자·어휘 5 + 문법·문장완성 5. 주말에는 오답 2문제를 섞습니다. */
+function dailyQuestions(c, sid, n) {
+  const pick = function (kind, count) {
+    const pool = (c.questions || []).filter(function (q) { return q.kind === kind; });
+    if (!pool.length) return [];
+    const start = ((n - 1) * count) % pool.length;
+    return dailyRotate(pool, Math.min(count, pool.length), start);
+  };
+  let list = pick('moji', 2).concat(pick('goi', 3)).concat(pick('bunpo', 3)).concat(pick('bunsho', 2));
+  if (n3Weekend(dkey())) {
+    const rev = wrongDailyFor(sid).slice(0, 2).map(function (w) {
+      return { id: w.id, kind: 'review', sub: '주말 복습 — 지난 오답', prompt: w.p, options: w.o,
+        answer: w.o.indexOf(w.a), exp: w.e || '', review: true };
+    });
+    if (rev.length && list.length >= 10) list = list.slice(0, 10 - rev.length).concat(rev);
+  }
+  return list.slice(0, 10);
+}
+function dailySet() {
+  if (!CURR || !CURR.stages) return null;
+  const sid = dailyStage();
+  const c = CURR.stages[sid];
+  if (!c || !c.words || !c.words.length) return null;
+  const n = dailyDayNo(sid);
+  const gLen = c.grammar.length;
+  const gi = ((n - 1) * 2) % Math.max(1, gLen);
+  const grammar = [];
+  if (gLen) {
+    grammar.push(c.grammar[gi]);
+    if (gLen > 1) grammar.push(c.grammar[(gi + 1) % gLen]);
+  }
+  return {
+    stage: sid, label: c.label || dailyStageMeta(sid).label, name: c.name || dailyStageMeta(sid).name,
+    n: n, words: dailyRotate(c.words, 15, ((n - 1) * 15) % c.words.length),
+    grammar: grammar, quiz: dailyQuestions(c, sid, n)
+  };
+}
+function dailyGoalState() {
+  const set = dailySet();
+  if (!set) return null;
+  const by = dailyBy(set.stage, false);
+  const wDone = set.words.filter(function (w) { return by.words[w.id]; }).length;
+  const gDone = set.grammar.filter(function (g) { return by.gram[g.id]; }).length;
+  const qTotal = set.quiz.length || 10;
+  const qDone = by.quizDone ? qTotal : 0;
+  const pct = Math.round(((wDone / (set.words.length || 15)) + (gDone / (set.grammar.length || 2)) + (qDone / (qTotal || 10))) / 3 * 100);
+  return {
+    set: set, by: by, words: wDone, gram: gDone, quiz: qDone, quizTotal: qTotal,
+    wordsAll: wDone >= set.words.length, gramAll: gDone >= set.grammar.length, quizAll: qDone >= qTotal,
+    pct: Math.max(0, Math.min(100, pct)),
+    all: wDone >= set.words.length && gDone >= set.grammar.length && qDone >= qTotal
+  };
+}
+function dailyQuizItems(set) {
+  return set.quiz.map(function (q) {
+    const paired = q.options.map(function (o, i) { return { o: o, ok: i === q.answer }; });
+    const sh = shuffle(paired);
+    const options = sh.map(function (p) { return esc(p.o); });
+    const answer = sh.findIndex(function (p) { return p.ok; });
+    return {
+      type: 'daily', id: q.id, main: q.prompt, mainHTML: esc(q.prompt), promptClass: 'small',
+      sub: q.sub, options: options, answer: Math.max(0, answer),
+      explain: (q.exp || '') + ' → 정답: <b>' + esc(q.options[q.answer] || '') + '</b>',
+      review: !!q.review,
+      wrongInfo: { prompt: q.prompt, answer: q.options[q.answer] || '', options: q.options, exp: q.exp || '', kind: q.kind, stage: set.stage }
+    };
+  });
+}
+function startDailyQuiz() {
+  const set = dailySet();
+  if (!set) { toast('문제를 아직 불러오지 못했어요'); return; }
+  const byQuizDone = dailyBy(set.stage, false).quizDone;
+  startQuiz({
+    title: '오늘의 맞춤 문제 · ' + set.label + (byQuizDone ? ' (다시 풀기)' : ''),
+    items: dailyQuizItems(set),
+    onDone: function () {
+      const ok = Q.ok;
+      const by = dailyBy(set.stage, true);
+      by.quizDone = true;
+      by.quizOk = Math.max(by.quizOk || 0, ok);
+      save();
+      n3AutoFromDaily();
+      if (currentTab === 'studytoday') renderStudyToday(); else if (currentTab === 'home') renderHome();
+      toast('오늘의 ' + set.quiz.length + '문제 완료 · 틀린 문제는 복습 탭에 쌓였어요');
+    }
+  });
+}
+function toggleDailyWord(id) {
+  const g = dailyGoalState();
+  if (!g) return;
+  const w = g.set.words.filter(function (x) { return x.id === id; })[0];
+  if (!w) return;
+  const by = dailyBy(g.set.stage, true);
+  if (by.words[id]) delete by.words[id]; else by.words[id] = true;
+  save();
+  afterDailyChange();
+}
+function toggleAllDailyWords() {
+  const g = dailyGoalState();
+  if (!g) return;
+  const by = dailyBy(g.set.stage, true);
+  const allOn = g.set.words.every(function (w) { return by.words[w.id]; });
+  g.set.words.forEach(function (w) {
+    if (allOn) delete by.words[w.id]; else by.words[w.id] = true;
+  });
+  save();
+  afterDailyChange();
+  toast(allOn ? '단어 체크를 모두 풀었어요' : '오늘의 단어 15개 확인 완료 ✓');
+}
+function toggleDailyGram(id) {
+  const g = dailyGoalState();
+  if (!g) return;
+  const by = dailyBy(g.set.stage, true);
+  if (by.gram[id]) delete by.gram[id]; else by.gram[id] = true;
+  save();
+  afterDailyChange();
+}
+/* 목표가 하나라도 바뀌면 로드맵 자동 체크·연속 학습일·화면을 함께 갱신합니다. */
+function afterDailyChange() {
+  const g = dailyGoalState();
+  n3AutoFromDaily();
+  if (g && g.all) markStudy('daily');
+  else if (currentTab === 'studytoday') renderStudyToday();
+  else if (currentTab === 'home') renderHome();
+  updateStreakChip();
+}
+function n3SetTaskAuto(k, key, on) {
+  const st = n3State();
+  if (!st.days[k] || typeof st.days[k] !== 'object') st.days[k] = { tasks: {}, auto: {} };
+  const d = st.days[k];
+  if (!d.tasks || typeof d.tasks !== 'object') d.tasks = {};
+  if (!d.auto || typeof d.auto !== 'object') d.auto = {};
+  if (on) { d.tasks[key] = true; d.auto[key] = true; }
+  else if (d.auto[key]) { delete d.tasks[key]; delete d.auto[key]; }
+}
+/* 오늘의 학습 목표 → 로드맵 오늘 체크 자동 채움 (일기는 손대지 않습니다) */
+function n3AutoFromDaily() {
+  const g = dailyGoalState();
+  if (!g) return;
+  const k = dkey();
+  const stage = n3Active().stage;
+  const weekend = n3Weekend(k) && stage.id !== 's4';
+  if (weekend) {
+    if (g.quizAll) n3SetTaskAuto(k, 'review', true);
+  } else {
+    if (g.wordsAll) n3SetTaskAuto(k, 'voca', true);
+    if (g.gramAll && g.quizAll) n3SetTaskAuto(k, 'gram', true);
+  }
+  save();
+}
+function n3TaskAuto(k, key) {
+  const d = n3State().days[k];
+  return !!(d && d.auto && d.auto[key]);
+}
+/* 홈 대시보드의 오늘의 학습 한 줄 */
+function dailyHomeHTML() {
+  const g = dailyGoalState();
+  if (!g) return '';
+  return '<button class="hm-ds" data-goto="studytoday" aria-label="오늘의 학습 열기">' +
+    '<span class="r"><b>📖 오늘의 학습 · ' + esc(g.set.label) + '</b><span>' + g.pct + '%</span></span>' +
+    '<span class="ds-bar"><i class="' + (g.all ? 'full' : '') + '" style="width:' + g.pct + '%"></i></span>' +
+    '<span class="g"><span>단어 ' + g.words + '/15</span><span>문법 ' + g.gram + '/' + g.set.grammar.length + '</span><span>문제 ' + g.quiz + '/' + g.quizTotal + '</span></span>' +
+  '</button>';
+}
+function dailyLoadingHTML() {
+  return '<div class="card">' +
+    '<div class="card-head"><h3>📖 오늘의 학습</h3><span class="sub">N5~N3 맞춤</span></div>' +
+    '<p class="ds-empty">' + (currFailed
+      ? '학습 커리큘럼을 불러오지 못했어요. 잠깐 뒤 다시 시도해 주세요.'
+      : 'N5~N3 커리큘럼을 불러오는 중이에요…') + '</p>' +
+    (currFailed ? '<div class="ds-load"><button class="btn btn-primary" data-dretry="1">다시 불러오기</button></div>' : '') +
     '</div>';
+}
+function dailyStudyHTML() {
+  if (!CURR) { loadCurriculum(); return dailyLoadingHTML(); }
+  const g = dailyGoalState();
+  if (!g) return dailyLoadingHTML();
+  const set = g.set;
+  const auto = dailyAutoStage();
+  const stageChips = DAILY_STAGES.map(function (s) {
+    const on = s.id === set.stage;
+    return '<button class="ds-stage' + (on ? ' active' : '') + '" data-dstage="' + s.id + '" aria-pressed="' + on + '">' +
+      s.label + (s.id === auto ? '<small>지금</small>' : '') + '</button>';
   }).join('');
+  const reviewMix = set.quiz.filter(function (q) { return q.review; }).length;
 
-  const wordRows = words.map(function (w) {
-    return '<div class="word-row">' +
-      '<div class="word-main"><div class="word-jp">' + rubyHTML(w.jp, w.kana, true) + '</div>' +
-        '<div class="word-sub">' + esc(w.kana) + ' · ' + esc(w.romaji) + '</div></div>' +
-      '<div class="word-ko">' + esc(w.ko) + '</div>' +
-      '<button class="icon-btn" data-speak="' + esc(w.kana) + '" aria-label="발음">🔊</button>' +
-    '</div>';
-  }).join('');
-
-  return '<div class="vcols"><div class="vcol">' +
-    '<div class="section-title"><h2>오늘의 학습</h2><span class="hint">오늘 ' + done + ' / 3</span></div>' +
-    '<div class="card">' +
-      '<div class="checklist">' + checks + '</div>' +
-      '<div class="progress"><i style="width:' + (done / 3 * 100) + '%"></i></div>' +
-    '</div>' +
-
-    '<button class="btn btn-accent btn-block" data-routine="1" style="min-height:52px;font-size:14.5px">⚡ 오늘의 5분 추천 루틴 시작</button>' +
-    '</div><div class="vcol">' +
-
-    '<div class="section-title"><h2>오늘의 한 줄 일기</h2>' +
-      '<button class="hint" data-diary-list="1" style="color:var(--primary);font-weight:600">지난 일기 ' + dCount + '편 ›</button></div>' +
-    '<div class="diary-card">' +
-      (dEntry
-        ? '<div class="diary-meta"><span class="badge">' + koreanDate(new Date()) + ' ひとこと</span>' +
-            '<span class="badge grey">' + esc(dEntry.mood || '') + ' ' + esc(dEntry.weather || '') + '</span></div>' +
-          '<div class="diary-text">' + esc(dEntry.text || '') + '</div>' +
-          (dEntry.ko ? '<div class="diary-ko">' + esc(dEntry.ko) + '</div>' : '') +
-          '<div class="ex-actions" style="margin-top:12px">' +
-            '<button class="mini-btn" data-diary-speak="' + dkey() + '">🔊 듣기</button>' +
-            '<button class="mini-btn" data-diary="' + dkey() + '">✎ 수정</button>' +
-            '<button class="mini-btn" data-dcopykey="' + dkey() + '">📋 첨삭용으로 복사</button>' +
-            '<button class="mini-btn" data-diary-list="1">모아보기</button>' +
-          '</div>'
-        : '<p class="diary-empty">오늘 하루를 일본어 한 줄로 남겨보세요.<br>' +
-            '<span class="diary-ex"><b>今日は日本語を勉強しました。</b> 오늘은 일본어를 공부했어요.</span></p>' +
-          '<button class="btn btn-primary btn-block" style="margin-top:13px" data-diary="' + dkey() + '">✏️ 오늘 일기 쓰기</button>'
-      ) +
-    '</div>' +
-    '</div></div>' +
-
-    '<div class="vcols"><div class="vcol">' +
-    '<div class="section-title"><h2>오늘의 단어 5개</h2><button class="hint" data-goto="words" style="color:var(--primary);font-weight:600">전체 보기 ›</button></div>' +
-    '<div class="card tight"><div class="word-list">' + wordRows + '</div></div>' +
-    '</div><div class="vcol">' +
-
-    '<div class="section-title"><h2>오늘의 회화 한 문장</h2><span class="hint">' + esc(sent.scene) + '</span></div>' +
-    '<div class="card">' +
-      '<div class="ex-jp" style="font-size:18px">' + rubyHTML(sent.jp, sent.kana, S.settings.furigana) + '</div>' +
-      '<div class="ex-kana">' + esc(sent.kana) + '</div>' +
-      (S.settings.romaji ? '<div class="ex-romaji">' + esc(sent.romaji) + '</div>' : '') +
-      '<div class="ex-ko">' + esc(sent.ko) + '</div>' +
-      '<div class="ex-actions">' +
-        '<button class="mini-btn" data-speak="' + esc(sent.kana) + '">🔊 듣기</button>' +
-        '<button class="mini-btn" data-speak-slow="' + esc(sent.kana) + '">🐢 느리게</button>' +
-        '<button class="mini-btn" data-sent="' + sent.id + '">카드로 보기</button>' +
+  const wordRows = set.words.map(function (w) {
+    const on = !!g.by.words[w.id];
+    return '<div class="ds-w' + (on ? ' done' : '') + '">' +
+      '<button class="ds-wcheck" data-dw="' + esc(w.id) + '" aria-pressed="' + on + '" aria-label="' + esc(w.jp) + ' 학습 확인">' + (on ? '✓' : '') + '</button>' +
+      '<div class="ds-wbody">' +
+        '<div class="ds-wtop"><span class="ds-wjp">' + rubyHTML(w.jp, w.kana, true) + '</span><span class="ds-wkana">' + esc(w.kana) + '</span></div>' +
+        '<div class="ds-wko">' + esc(w.ko) + '</div>' +
+        '<div class="ds-wex">' + esc(w.ex) + ' <span style="opacity:.85">' + esc(w.exKo) + '</span></div>' +
       '</div>' +
-    '</div>' +
-    '</div></div>' +
+      '<button class="ds-wspeak" data-speak="' + esc(w.kana) + '" aria-label="발음 듣기">🔊</button>' +
+    '</div>';
+  }).join('');
 
-    '<p class="foot-note">학습 기록은 이 기기의 브라우저에만 저장돼요.<br>복습 탭에서 JSON 백업을 내려받을 수 있어요.</p>';
+  const gramCards = set.grammar.map(function (gr) {
+    const on = !!g.by.gram[gr.id];
+    const exs = (gr.ex || []).map(function (e) {
+      return '<div class="ds-gex"><div class="jp"><span>' + esc(e.jp) + '</span>' +
+        '<button data-speak="' + esc(e.kana || e.jp) + '" aria-label="예문 듣기">🔊</button></div>' +
+        '<div class="kn">' + esc(e.kana || '') + '</div><div class="ko">' + esc(e.ko || '') + '</div></div>';
+    }).join('');
+    return '<div class="ds-g">' +
+      '<div class="ds-ghead"><span class="ds-gkey">' + esc(gr.key) + '</span>' +
+        '<div><b>' + esc(gr.title) + '</b><span>' + esc(gr.tag) + '</span></div></div>' +
+      '<p class="ds-gsum">' + esc(gr.sum) + '</p>' + exs +
+      '<div class="ds-gfoot"><button class="ds-gcheck' + (on ? ' on' : '') + '" data-dg="' + esc(gr.id) + '" aria-pressed="' + on + '">' +
+        (on ? '✓ 이해했어요' : '이해했어요') + '</button></div>' +
+    '</div>';
+  }).join('');
+
+  const diaryEntry = diaryFor(dkey());
+  const diaryHTML = '<div class="card">' +
+    '<div class="card-head"><h3>✏️ 오늘의 한 줄 일기</h3>' +
+      '<button class="mini-btn" data-diary-list="1">지난 일기 ' + Object.keys(S.diary || {}).length + '편 ›</button></div>' +
+    (diaryEntry
+      ? '<div class="diary-text">' + esc(diaryEntry.text || '') + '</div>' +
+        (diaryEntry.ko ? '<div class="diary-ko">' + esc(diaryEntry.ko) + '</div>' : '') +
+        '<div class="ex-actions" style="margin-top:10px">' +
+          '<button class="mini-btn" data-diary-speak="' + dkey() + '">🔊 듣기</button>' +
+          '<button class="mini-btn" data-diary="' + dkey() + '">✎ 수정</button>' +
+          '<button class="mini-btn" data-dcopykey="' + dkey() + '">📋 첨삭용 복사</button>' +
+        '</div>'
+      : '<p class="diary-empty">오늘 하루를 일본어 한 줄로 남겨보세요. 일기는 로드맵에서 직접 체크해요.<br>' +
+          '<span class="diary-ex"><b>今日は日本語を勉強しました。</b> 오늘은 일본어를 공부했어요.</span></p>' +
+        '<button class="btn btn-primary btn-block" style="margin-top:11px" data-diary="' + dkey() + '">✏️ 오늘 일기 쓰기</button>') +
+  '</div>';
+
+  return '<div class="ds-top">' + stageChips +
+      '<span class="ds-autotag">' + (set.stage === auto ? '오늘 로드맵 단계' : '자동은 ' + dailyStageMeta(auto).label) + '</span></div>' +
+
+    '<div class="ds-hero">' +
+      '<div class="ds-hero-top"><b>오늘의 목표</b><span>' + esc(set.label + ' · ' + set.name) + '</span>' +
+        '<em>' + g.pct + '<small>%</small></em></div>' +
+      '<span class="ds-bar"><i class="' + (g.all ? 'full' : '') + '" style="width:' + g.pct + '%"></i></span>' +
+      '<div class="ds-goals">' +
+        '<span class="ds-goal' + (g.wordsAll ? ' on' : '') + '">단어 <b>' + g.words + '</b>/' + set.words.length + '</span>' +
+        '<span class="ds-goal' + (g.gramAll ? ' on' : '') + '">문법 <b>' + g.gram + '</b>/' + set.grammar.length + '</span>' +
+        '<span class="ds-goal' + (g.quizAll ? ' on' : '') + '">문제 <b>' + g.quiz + '</b>/' + g.quizTotal + '</span>' +
+      '</div>' +
+      '<p class="ds-note">여기서 목표를 채우면 <b>🎯 JLPT 로드맵</b>의 오늘 체크가 자동으로 채워져요. 일기는 그대로 직접 쓰면 돼요.</p>' +
+    '</div>' +
+
+    '<div class="ds-sec"><span class="no">1</span><h2>오늘의 단어</h2>' +
+      '<span class="cnt' + (g.wordsAll ? ' done' : '') + '">' + g.words + ' / ' + set.words.length + '</span></div>' +
+    '<div class="card tight"><div class="ds-words">' + wordRows + '</div>' +
+      '<button class="ds-more" data-dwall="1">' + (g.wordsAll ? '단어 체크 모두 풀기' : '15개 모두 확인했어요') + '</button>' +
+    '</div>' +
+
+    '<div class="ds-sec"><span class="no">2</span><h2>오늘의 핵심 문법</h2>' +
+      '<span class="cnt' + (g.gramAll ? ' done' : '') + '">' + g.gram + ' / ' + set.grammar.length + '</span></div>' +
+    '<div class="card tight">' + gramCards + '</div>' +
+
+    '<div class="ds-sec"><span class="no">3</span><h2>오늘의 맞춤 문제</h2>' +
+      '<span class="cnt' + (g.quizAll ? ' done' : '') + '">' + g.quiz + ' / ' + g.quizTotal + '</span></div>' +
+    '<div class="card">' +
+      '<div class="ds-quizinfo">문자·어휘 5 + 문법·문장완성 5 · ' + esc(set.label) + ' 단계 ' + set.n + '일차 조합' +
+        (reviewMix ? ' · <b>주말 복습 ' + reviewMix + '문제</b>' : '') + '</div>' +
+      '<div class="ds-quizbar"><span class="ds-bar"><i class="' + (g.quizAll ? 'full' : '') + '" style="width:' + (g.quiz / g.quizTotal * 100) + '%"></i></span>' +
+        '<b>' + g.quiz + '/' + g.quizTotal + '</b></div>' +
+      '<div class="ds-quizfoot"><button class="btn btn-primary" data-dqstart="1">' + (g.by.quizDone ? '다시 풀기' : '10문제 풀기') + '</button></div>' +
+      (g.by.quizDone ? '<p class="ds-score">지난 점수 ' + g.by.quizOk + ' / ' + g.quizTotal + ' · 틀린 문제는 복습 탭 오답노트에 저장됐어요.</p>'
+        : '<p class="ds-score">풀면 바로 채점하고 해설을 보여줘요. 틀린 문제는 복습 탭 오답노트에 자동 저장됩니다.</p>') +
+    '</div>' +
+
+    diaryHTML +
+    '<p class="foot-note">학습 기록과 진도는 이 기기의 브라우저에만 저장돼요.<br>복습 탭에서 JSON 백업을 내려받을 수 있어요.</p>';
 }
 function renderStudyToday() {
   const host = $('#view-studytoday');
   if (!host) return;
-  host.innerHTML = '<div class="view-inner">' + studyTopNav() + studyNav() + todayStudyHTML() + '</div>';
+  host.innerHTML = '<div class="view-inner">' + studyTopNav() + studyNav() + dailyStudyHTML() + '</div>';
 }
 /* ---------------- 공부 › JLPT 로드맵 (오늘의 학습에서 분리한 화면) ---------------- */
 function renderN3() {
@@ -2726,8 +3160,8 @@ function renderReview() {
   if (fc.active) { host.innerHTML = '<div class="view-inner">' + fcViewHTML() + '</div>'; return; }
   const acc = S.stats.answered ? Math.round(S.stats.correct / S.stats.answered * 100) : 0;
   const days = Object.keys(S.days).length;
-  const wKana = wrongItems('kana'), wWord = wrongItems('word'), wSent = wrongItems('sent'), wJlpt = wrongItems('jlpt');
-  const totalWrong = wKana.length + wWord.length + wSent.length + wJlpt.length;
+  const wKana = wrongItems('kana'), wWord = wrongItems('word'), wSent = wrongItems('sent'), wJlpt = wrongItems('jlpt'), wDaily = wrongItems('daily');
+  const totalWrong = wKana.length + wWord.length + wSent.length + wJlpt.length + wDaily.length;
 
   let wrongHTML = '';
   if (!totalWrong) {
@@ -2760,6 +3194,11 @@ function renderReview() {
       return '<div class="word-row"><div class="word-main"><div class="word-jp" style="font-size:14px">' + esc(q.prompt) + '</div>' +
         '<div class="word-sub">정답 ' + esc(q.options[q.answer]) + ' · 오답 ' + x.n + '회</div></div></div>';
     }).join('');
+    const dailyRows = wDaily.map(function (x) {
+      const rec = (S.wrong.daily || {})[x.id] || {};
+      return '<div class="word-row"><div class="word-main"><div class="word-jp" style="font-size:13.5px">' + esc(rec.p || x.id) + '</div>' +
+        '<div class="word-sub">정답 ' + esc(rec.a || '') + ' · 오답 ' + x.n + '회' + (rec.s ? ' · ' + esc(String(rec.s).toUpperCase()) : '') + '</div></div></div>';
+    }).join('');
 
     wrongHTML =
       (wKana.length ? '<div class="section-title"><h2>가나 ' + wKana.length + '</h2>' +
@@ -2773,7 +3212,10 @@ function renderReview() {
         '<div class="card tight"><div class="word-list">' + sentRows + '</div></div>' : '') +
       (wJlpt.length ? '<div class="section-title"><h2>JLPT ' + wJlpt.length + '</h2>' +
         '<button class="hint" style="color:var(--primary);font-weight:600" data-review="jlpt">다시 풀기 ›</button></div>' +
-        '<div class="card tight"><div class="word-list">' + jlptRows + '</div></div>' : '');
+        '<div class="card tight"><div class="word-list">' + jlptRows + '</div></div>' : '') +
+      (wDaily.length ? '<div class="section-title"><h2>오늘의 학습 문제 ' + wDaily.length + '</h2>' +
+        '<button class="hint" style="color:var(--primary);font-weight:600" data-review="daily">다시 풀기 ›</button></div>' +
+        '<div class="card tight"><div class="word-list">' + dailyRows + '</div></div>' : '');
   }
 
   const starKana = S.star.kana.filter(function (c) { return kanaInfo(c); });
@@ -6480,6 +6922,7 @@ function n3ToggleTask(k, key) {
   const on = !st.days[k].tasks[key];
   if (on) st.days[k].tasks[key] = true;
   else delete st.days[k].tasks[key];
+  if (st.days[k].auto && st.days[k].auto[key]) delete st.days[k].auto[key];
   save();
   n3Refresh();
   const s = n3DayStat(k);
@@ -6630,10 +7073,11 @@ function n3DailyInner() {
   const wkS = n3WeekStats(ws);
   const rows = tasks.map(function (t) {
     const on = !!checks[t.key];
+    const auto = n3TaskAuto(sel, t.key);
     return '<button class="n3-dt' + (on ? ' on' : '') + (t.opt ? ' opt' : '') + '" data-n3task="' + t.key + '"' +
       ' aria-pressed="' + (on ? 'true' : 'false') + '"' + (future ? ' disabled' : '') + '>' +
       '<span class="box" aria-hidden="true">' + (on ? '✓' : '') + '</span>' +
-      '<span class="n3-dt-t"><b>' + esc(t.t) + '</b>' + (t.s ? '<span>' + esc(t.s) + '</span>' : '') + '</span>' +
+      '<span class="n3-dt-t"><b>' + esc(t.t) + (auto ? '<span class="n3-auto">📖 오늘의 학습</span>' : '') + '</b>' + (t.s ? '<span>' + esc(t.s) + '</span>' : '') + '</span>' +
     '</button>';
   }).join('');
 
@@ -6662,7 +7106,7 @@ function n3DailyInner() {
       '<div><b>' + n3StudyDays() + '일</b><span>누적 학습일</span></div>' +
       '<div><b>' + n3Streak() + '일</b><span>연속 학습</span></div>' +
     '</div>' +
-    '<p class="menu-eff">체크는 이 기기에 저장돼요. 복습 탭의 JSON 백업에도 함께 담깁니다.</p>';
+    '<p class="menu-eff">📖 오늘의 학습에서 단어·문법·문제를 채우면 <b>① 단어</b>·<b>② 문법/문제</b>가 자동으로 체크돼요. 체크는 이 기기에 저장되고 복습 탭의 JSON 백업에도 함께 담깁니다.</p>';
 }
 function n3BlockHTML() {
   return '<div class="vcols"><div class="vcol">' +
@@ -6696,6 +7140,12 @@ function fcBuildDeck() {
     if (!s) return;
     cards.push({ type: '회화', id: s.id, front: s.jp, frontSub: s.scene || '뜻은?',
       back: s.ko, backSub: s.kana || '', speak: s.kana || s.jp, n: x.n });
+  });
+  wrongItems('daily').forEach(function (x) {
+    const rec = (S.wrong.daily || {})[x.id];
+    if (!rec || !rec.p) return;
+    cards.push({ type: '오늘의 문제', id: x.id, front: rec.p, frontSub: '정답과 해설은?',
+      back: rec.a || '', backSub: rec.e || '', n: x.n });
   });
   wrongItems('jlpt').forEach(function (x) {
     const q = JLPT.filter(function (v) { return v.id === x.id; })[0];
@@ -6846,6 +7296,15 @@ function onHomeClick(e) {
   if (!t || !t.closest) return;
   const n3t = t.closest('[data-n3task]');
   if (n3t) { n3ToggleTask(n3Sel(), n3t.dataset.n3task); return; }
+  const dst = t.closest('[data-dstage]');
+  if (dst) { dailyPickStage(dst.dataset.dstage); return; }
+  const dw = t.closest('[data-dw]');
+  if (dw) { toggleDailyWord(dw.dataset.dw); return; }
+  if (t.closest('[data-dwall]')) { toggleAllDailyWords(); return; }
+  const dg = t.closest('[data-dg]');
+  if (dg) { toggleDailyGram(dg.dataset.dg); return; }
+  if (t.closest('[data-dqstart]')) { startDailyQuiz(); return; }
+  if (t.closest('[data-dretry]')) { currFailed = false; loadCurriculum(); renderStudyToday(); return; }
   const n3d = t.closest('[data-n3day]');
   if (n3d) { n3SelectDate(n3d.dataset.n3day); return; }
   const n3w = t.closest('[data-n3w]');
@@ -7103,6 +7562,20 @@ function onReviewClick(e) {
         });
       }
     }
+    if (kind === 'daily' || kind === 'all') {
+      wrongItems('daily').forEach(function (x) {
+        const rec = (S.wrong.daily || {})[x.id];
+        if (!rec || !rec.p || !Array.isArray(rec.o) || rec.o.length !== 4) return;
+        const ai = rec.o.indexOf(rec.a);
+        if (ai < 0) return;
+        const sh = shuffle(rec.o.map(function (o, i) { return { o: o, ok: i === ai }; }));
+        items.push({ type: 'daily', id: x.id, main: rec.p, mainHTML: esc(rec.p), promptClass: 'small',
+          sub: '오답 다시 풀기', options: sh.map(function (p) { return esc(p.o); }),
+          answer: Math.max(0, sh.findIndex(function (p) { return p.ok; })),
+          explain: (rec.e || '') + ' → 정답: <b>' + esc(rec.a) + '</b>', review: true,
+          wrongInfo: { prompt: rec.p, answer: rec.a, options: rec.o, exp: rec.e || '', kind: rec.k || '', stage: rec.s || '' } });
+      });
+    }
     if (!items.length) { toast('다시 풀 문제가 없어요'); return; }
     startQuiz({ title: '오답 다시 풀기', items: items });
     return;
@@ -7269,6 +7742,7 @@ function init() {
   updateStreak();
   syncDiaryToRoutine();
   save();
+  loadCurriculum();
 
   $('#tabbar').addEventListener('click', function (e) {
     const b = e.target.closest('[data-tab]');
