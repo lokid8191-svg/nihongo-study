@@ -2646,21 +2646,23 @@ function dailyQuestions(c, sid, n) {
     picked.forEach(function (q) { used[q.id] = true; });
     return picked;
   };
+  const newPool = newWQ.concat(newGQ);
+  const revPool = revWQ.concat(revGQ);
   const list = [];
   order.forEach(function (kind) {
-    let picked = take(newWQ, kind, newPlan[kind], 'n');
+    let picked = take(newPool, kind, newPlan[kind], 'n');
     if (picked.length < newPlan[kind]) {
-      picked = picked.concat(take(revWQ, kind, newPlan[kind] - picked.length, 'nr'));
+      picked = picked.concat(take(revPool, kind, newPlan[kind] - picked.length, 'nr'));
     }
     list.push.apply(list, picked);
   });
   order.forEach(function (kind) {
-    const picked = take(revWQ.concat(revGQ), kind, revPlan[kind], 'rv');
+    const picked = take(revPool, kind, revPlan[kind], 'rv');
     list.push.apply(list, picked);
   });
   /* 모자라면 있는 것에서 채워 항상 10문제 */
   if (list.length < 10) {
-    const rest = dailyShuffle(newWQ.filter(function (q) { return !used[q.id]; }), seed + '#fill');
+    const rest = dailyShuffle(newPool.filter(function (q) { return !used[q.id]; }), seed + '#fill');
     for (let i = 0; i < rest.length && list.length < 10; i++) { used[rest[i].id] = true; list.push(rest[i]); }
   }
   list.forEach(function (q) {
