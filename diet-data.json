@@ -1,5 +1,5 @@
 {
-  "version": 13,
+  "version": 14,
   "updatedAt": "2026-11-19",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -62,7 +62,9 @@
           { "id": "l1", "name": "냉동양꼬치 150g (3/4팩)", "kcal": 330, "carb": 7.5, "protein": 22.5, "fat": 22.5, "est": false },
           { "id": "l2", "name": "팽이버섯 약 113g (3/4)", "kcal": 41, "carb": 8.3, "protein": 3, "fat": 0.4, "est": true }
         ],
-        "dinner": [],
+        "dinner": [
+          { "id": "d1", "name": "굽네 오리지널 치킨 (반 마리, 가식부 약 300g 추정)", "kcal": 570, "carb": 7.3, "protein": 93.8, "fat": 18.4, "est": true }
+        ],
         "snack": []
       }
     }
