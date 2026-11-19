@@ -869,6 +869,10 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .ds-gcheck{min-height:30px;padding:0 12px;border-radius:999px;border:1px solid var(--line);background:var(--surface);font-size:11.5px;font-weight:700;color:var(--ink-2)}
 .ds-gcheck.on{background:#F0FDF4;border-color:#BBF7D0;color:var(--ok)}
 .ds-quizinfo{font-size:11.5px;color:var(--ink-2);line-height:1.65;margin-top:2px}
+.ds-scope{margin-top:2px;padding:9px 11px;border-radius:11px;background:var(--primary-soft);border:1px solid #F5DADA;font-size:11px;line-height:1.6;color:var(--ink-2);word-break:keep-all}
+.ds-scope b{color:var(--accent);font-weight:800;font-variant-numeric:tabular-nums}
+.ds-scope span{display:block;margin-top:2px;font-size:10.5px;color:var(--ink-3)}
+.q-src{display:inline-block;margin-top:4px;font-size:10.5px;color:var(--ink-3)}
 .ds-quizbar{display:flex;align-items:center;gap:9px;margin-top:10px}
 .ds-quizbar .ds-bar{flex:1;margin:0}
 .ds-quizbar b{font-size:12px;font-weight:800;font-variant-numeric:tabular-nums;flex:none}
@@ -1569,7 +1573,7 @@ function normalizeDaily(raw) {
       if (!/^\d{4}-\d{2}-\d{2}$/.test(k)) return;
       const d = r.days[k];
       if (!d || typeof d !== 'object') return;
-      const day = { stage: /^n[345]$/.test(String(d.stage || '')) ? String(d.stage) : '', by: {} };
+      const day = { stage: /^n[345]$/.test(String(d.stage || '')) ? String(d.stage) : '', done: !!d.done, by: {} };
       const by = d.by && typeof d.by === 'object' ? d.by : {};
       ['n5', 'n4', 'n3'].forEach(function (sid) {
         const b = by[sid];
@@ -1582,6 +1586,16 @@ function normalizeDaily(raw) {
         };
       });
       out.days[k] = day;
+    });
+  }
+  /* 단계별 오늘 배정된 일차 — 하루 안에서 일차가 바뀌지 않게 기억합니다. */
+  out.assigned = {};
+  if (r.assigned && typeof r.assigned === 'object') {
+    Object.keys(r.assigned).forEach(function (sid) {
+      const a = r.assigned[sid];
+      if (!/^n[345]$/.test(sid) || !a || !/^\d{4}-\d{2}-\d{2}$/.test(String(a.d || ''))) return;
+      const n = Math.max(1, Math.min(10, Number(a.n) || 1));
+      out.assigned[sid] = { d: String(a.d), n: n };
     });
   }
   return out;
@@ -2374,11 +2388,35 @@ function dailyAutoStage() {
   }
   return t < DAILY_STAGES[0].from ? 'n5' : 'n3';
 }
-/* 단계 시작일부터 며칠째인지 — 단계 밖 날짜(미리 풀어보기)는 날짜 순환으로 매일 달라집니다. */
+/* ── 누적 학습량 기준 일차 ─────────────────────────────────────────────
+   달력 날짜가 아니라 '목표를 다 채운 학습일 수 + 1'이 오늘의 일차입니다.
+   그래서 처음 시작한 날은 언제나 1일차이고, 하루 안에서는 일차가 바뀌지 않습니다. */
+function dailyDayCount(sid) {
+  const days = (S.daily && S.daily.days) || {};
+  let n = 0;
+  Object.keys(days).forEach(function (k) {
+    const d = days[k];
+    if (d && d.done && d.stage === sid) n++;
+  });
+  return n;
+}
+function dailyMaxDay(sid) {
+  const c = CURR && CURR.stages && CURR.stages[sid];
+  return (c && c.days && c.days.length) || 10;
+}
 function dailyDayNo(sid) {
-  const s = dailyStageMeta(sid);
-  const n = Math.floor((parseDkey(dkey()) - parseDkey(s.from)) / 86400000) + 1;
-  if (n < 1) return (dayIndex() % 40) + 1;
+  if (!S.daily || typeof S.daily !== 'object') S.daily = { days: {} };
+  if (!S.daily.assigned || typeof S.daily.assigned !== 'object') S.daily.assigned = {};
+  const k = dkey();
+  const cur = S.daily.assigned[sid];
+  if (cur && cur.d === k && cur.n > 0) return cur.n;
+  const done = dailyDayCount(sid);
+  const today = S.daily.days && S.daily.days[k];
+  const todayDone = !!(today && today.done && today.stage === sid);
+  let n = todayDone ? done : done + 1;
+  n = Math.max(1, Math.min(dailyMaxDay(sid), n));
+  S.daily.assigned[sid] = { d: k, n: n };
+  save();
   return n;
 }
 function dailyDay(create) {
@@ -2419,39 +2457,222 @@ function dailyPickStage(sid) {
   renderStudyToday();
   toast(dailyStageMeta(sid).label + ' 단계 문제로 바꿨어요');
 }
-function dailyRotate(list, count, start, stride) {
+/* 오늘 목표를 모두 채운 날 표시 — 다음 날 일차가 하나 올라갑니다. */
+function dailyMarkDone() {
+  const d = dailyDay(true);
+  d.done = true;
+  d.stage = dailyStage();
+  save();
+}
+/* ── 커리큘럼 일차·누적 범위 ──────────────────────────────────────────── */
+function dailyWordMap(c) {
+  if (!c.__wmap) {
+    const m = {};
+    (c.words || []).forEach(function (w) { m[w.id] = w; });
+    c.__wmap = m;
+  }
+  return c.__wmap;
+}
+function dailyGrammarMap(c) {
+  if (!c.__gmap) {
+    const m = {};
+    (c.grammar || []).forEach(function (g) { m[g.id] = g; });
+    c.__gmap = m;
+  }
+  return c.__gmap;
+}
+function dailyDayEntry(c, n) {
+  const ds = (c && c.days) || [];
+  if (!ds.length) return { words: [], grammar: [] };
+  return ds[Math.max(0, Math.min(ds.length - 1, n - 1))];
+}
+/* n일차까지 실제로 배운 단어·문법 (누적) */
+function dailyScope(c, n) {
+  const ds = (c && c.days) || [];
+  const lim = Math.max(0, Math.min(ds.length, n || 0));
+  const words = [], grammar = [], wSeen = {}, gSeen = {};
+  for (let i = 0; i < lim; i++) {
+    (ds[i].words || []).forEach(function (id) { if (id && !wSeen[id]) { wSeen[id] = true; words.push(id); } });
+    (ds[i].grammar || []).forEach(function (id) { if (id && !gSeen[id]) { gSeen[id] = true; grammar.push(id); } });
+  }
+  return { words: words, grammar: grammar, days: lim };
+}
+/* ── 결정적 난수 (같은 날·같은 일차면 같은 문제) ───────────────────── */
+function dailyHash(s) {
+  let h = 2166136261;
+  const t = String(s);
+  for (let i = 0; i < t.length; i++) { h ^= t.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return h >>> 0;
+}
+function dailyRng(seed) {
+  let x = dailyHash(seed) || 1;
+  return function () { x = (Math.imul(x, 1664525) + 1013904223) >>> 0; return x / 4294967296; };
+}
+function dailyShuffle(list, seed) {
+  const a = (list || []).slice();
+  const rnd = dailyRng(seed);
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(rnd() * (i + 1));
+    const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+function dailyPick4(correct, cands, seed) {
+  const seen = {};
+  seen[String(correct)] = true;
   const out = [];
-  if (!list || !list.length) return out;
-  const step = Math.max(1, stride || 1);
-  for (let i = 0; out.length < count && i < count * step + list.length; i++) {
-    const item = list[(start + i * step) % list.length];
-    if (out.indexOf(item) < 0) out.push(item);
+  const pool = dailyShuffle(cands || [], seed);
+  for (let i = 0; i < pool.length && out.length < 3; i++) {
+    const v = pool[i];
+    if (!v || seen[String(v)]) continue;
+    seen[String(v)] = true;
+    out.push(v);
+  }
+  if (out.length < 3) return null;
+  const list = dailyShuffle([correct].concat(out), seed + '#m');
+  return { options: list, answer: list.indexOf(correct) };
+}
+/* 단어 하나 → 읽기·뜻·일본어로 문항 (보기·오답도 배운 범위 안에서만) */
+function dailyWordQuestions(w, pool, seed) {
+  const items = [];
+  if (!w) return items;
+  const near = function (list) {
+    const same = list.filter(function (x) { return x && x.cat && x.cat === w.cat; });
+    const rest = list.filter(function (x) { return !(x && x.cat && x.cat === w.cat); });
+    return dailyShuffle(same, seed + '#c1').concat(dailyShuffle(rest, seed + '#c2'));
+  };
+  const others = function (f) {
+    return near((pool || []).filter(function (x) { return x && x.id !== w.id && f(x); }));
+  };
+  if (w.jp !== w.kana) {
+    const o = dailyPick4(w.kana, others(function (x) { return x.kana && x.kana !== w.kana; }).map(function (x) { return x.kana; }), seed + '#r');
+    if (o) items.push({
+      id: 'w-' + w.id + '-r', kind: 'moji', sub: '문자·어휘 — 한자 읽기',
+      target: { t: 'w', id: w.id }, prompt: '「' + w.jp + '」の読み方は？',
+      options: o.options, answer: o.answer, exp: w.jp + ' = ' + w.kana + ' — ' + w.ko
+    });
+  }
+  const o2 = dailyPick4(w.ko, others(function (x) { return x.ko && x.ko !== w.ko; }).map(function (x) { return x.ko; }), seed + '#k');
+  if (o2) items.push({
+    id: 'w-' + w.id + '-k', kind: 'goi', sub: '어휘 — 뜻 고르기',
+    target: { t: 'w', id: w.id }, prompt: '「' + w.jp + '」の意味は？',
+    options: o2.options, answer: o2.answer, exp: w.jp + '（' + w.kana + '）= ' + w.ko
+  });
+  const o3 = dailyPick4(w.jp, others(function (x) { return x.jp && x.jp !== w.jp; }).map(function (x) { return x.jp; }), seed + '#j');
+  if (o3) items.push({
+    id: 'w-' + w.id + '-j', kind: 'goi', sub: '어휘 — 일본어로 고르기',
+    target: { t: 'w', id: w.id }, prompt: '「' + w.ko + '」は日本語で？',
+    options: o3.options, answer: o3.answer, exp: w.ko + ' = ' + w.jp + '（' + w.kana + '）'
+  });
+  return items;
+}
+function dailyGrammarQuestions(c, ids, seed) {
+  const map = {};
+  (ids || []).forEach(function (id) { if (id) map[id] = true; });
+  return dailyShuffle((c.questions || []).filter(function (q) {
+    return q.target && q.target.t === 'g' && map[q.target.id];
+  }), seed);
+}
+/* 대상(단어·문법)마다 골고루 뽑기 — 같은 단어·문법만 몰리지 않게 */
+function dailySpread(pool, count, seed) {
+  const groups = {}, keys = [];
+  dailyShuffle(pool, seed + '#sp').forEach(function (q) {
+    const k = q.target ? q.target.id : q.id;
+    if (!groups[k]) { groups[k] = []; keys.push(k); }
+    groups[k].push(q);
+  });
+  const out = [];
+  let guard = 0;
+  while (out.length < count && guard++ < 40) {
+    let moved = false;
+    for (let i = 0; i < keys.length && out.length < count; i++) {
+      const g = groups[keys[i]];
+      if (!g || !g.length) continue;
+      out.push(g.shift());
+      moved = true;
+    }
+    if (!moved) break;
   }
   return out;
 }
-function wrongDailyFor(sid) {
-  const map = S.wrong.daily || {};
-  return Object.keys(map).map(function (id) { return Object.assign({ id: id }, map[id]); })
-    .filter(function (x) { return x.s === sid && x.p && Array.isArray(x.o) && x.o.length === 4 && x.o.indexOf(x.a) >= 0; })
-    .sort(function (a, b) { return (b.n || 1) - (a.n || 1) || (b.t || 0) - (a.t || 0); });
-}
-/* 오늘의 10문제: 문자·어휘 5 + 문법·문장완성 5. 주말에는 오답 2문제를 섞습니다. */
+let dailyQuizCache = { key: '', list: null };
+/* 오늘의 10문제 — 1일차는 그 날 배운 단어 15개·문법 2개만,
+   2일차부터는 새로 배운 것 위주 + 이전 누적 범위 복습. */
 function dailyQuestions(c, sid, n) {
-  const pick = function (kind, count) {
-    const pool = (c.questions || []).filter(function (q) { return q.kind === kind; });
-    if (!pool.length) return [];
-    const start = ((n - 1) * count) % pool.length;
-    return dailyRotate(pool, Math.min(count, pool.length), start);
-  };
-  let list = pick('moji', 2).concat(pick('goi', 3)).concat(pick('bunpo', 3)).concat(pick('bunsho', 2));
-  if (n3Weekend(dkey())) {
-    const rev = wrongDailyFor(sid).slice(0, 2).map(function (w) {
-      return { id: w.id, kind: 'review', sub: '주말 복습 — 지난 오답', prompt: w.p, options: w.o,
-        answer: w.o.indexOf(w.a), exp: w.e || '', review: true };
+  const key = sid + '#' + n + '#' + dkey();
+  if (dailyQuizCache.key === key && dailyQuizCache.list) return dailyQuizCache.list;
+  const daySet = dailyDayEntry(c, n);
+  const wmap = dailyWordMap(c);
+  const gmap = dailyGrammarMap(c);
+  const scope = dailyScope(c, n);
+  const prev = dailyScope(c, n - 1);
+  const scopeWords = scope.words.map(function (id) { return wmap[id]; }).filter(Boolean);
+  const prevWords = prev.words.map(function (id) { return wmap[id]; }).filter(Boolean);
+  const seed = key;
+
+  const wDay = {}, gDay = {};
+  ((c && c.days) || []).forEach(function (d) {
+    (d.words || []).forEach(function (id) { if (!wDay[id]) wDay[id] = d.day; });
+    (d.grammar || []).forEach(function (id) { if (!gDay[id]) gDay[id] = d.day; });
+  });
+
+  const newWQ = [];
+  (daySet.words || []).forEach(function (id) {
+    const w = wmap[id];
+    dailyWordQuestions(w, scopeWords, seed + ':' + id).forEach(function (q) { q.day = n; newWQ.push(q); });
+  });
+  const newGQ = dailyGrammarQuestions(c, daySet.grammar, seed + ':g').map(function (q) { q.day = n; return q; });
+
+  const revWQ = [];
+  prevWords.forEach(function (w) {
+    dailyWordQuestions(w, prevWords, seed + 'r:' + w.id).forEach(function (q) {
+      q.review = true; q.day = wDay[w.id] || 0; revWQ.push(q);
     });
-    if (rev.length && list.length >= 10) list = list.slice(0, 10 - rev.length).concat(rev);
+  });
+  const revGQ = dailyGrammarQuestions(c, prev.grammar, seed + 'rg').map(function (q) {
+    const copy = Object.assign({}, q);
+    copy.review = true; copy.day = gDay[q.target.id] || 0;
+    return copy;
+  });
+
+  const newPlan = n <= 1 ? { moji: 2, goi: 3, bunpo: 3, bunsho: 2 } : { moji: 2, goi: 2, bunpo: 2, bunsho: 1 };
+  const revPlan = n <= 1 ? { moji: 0, goi: 0, bunpo: 0, bunsho: 0 } : { moji: 0, goi: 1, bunpo: 1, bunsho: 1 };
+  const order = ['moji', 'goi', 'bunpo', 'bunsho'];
+  const used = {};
+  const take = function (pool, kind, count, tag) {
+    if (count <= 0) return [];
+    const src = pool.filter(function (q) { return q.kind === kind && !used[q.id]; });
+    const picked = dailySpread(src, count, seed + tag + kind);
+    picked.forEach(function (q) { used[q.id] = true; });
+    return picked;
+  };
+  const list = [];
+  order.forEach(function (kind) {
+    let picked = take(newWQ, kind, newPlan[kind], 'n');
+    if (picked.length < newPlan[kind]) {
+      picked = picked.concat(take(revWQ, kind, newPlan[kind] - picked.length, 'nr'));
+    }
+    list.push.apply(list, picked);
+  });
+  order.forEach(function (kind) {
+    const picked = take(revWQ.concat(revGQ), kind, revPlan[kind], 'rv');
+    list.push.apply(list, picked);
+  });
+  /* 모자라면 있는 것에서 채워 항상 10문제 */
+  if (list.length < 10) {
+    const rest = dailyShuffle(newWQ.filter(function (q) { return !used[q.id]; }), seed + '#fill');
+    for (let i = 0; i < rest.length && list.length < 10; i++) { used[rest[i].id] = true; list.push(rest[i]); }
   }
-  return list.slice(0, 10);
+  list.forEach(function (q) {
+    const isW = q.target && q.target.t === 'w';
+    const label = isW
+      ? (wmap[q.target.id] ? wmap[q.target.id].jp : '')
+      : (gmap[q.target.id] ? gmap[q.target.id].key : '');
+    q.srcLabel = (q.review ? '복습 · ' : '') + (q.day ? q.day + '일차 ' : '') + (isW ? '단어 ' : '문법 ') + label;
+  });
+  const out = list.slice(0, 10);
+  dailyQuizCache = { key: key, list: out };
+  return out;
 }
 function dailySet() {
   if (!CURR || !CURR.stages) return null;
@@ -2459,18 +2680,20 @@ function dailySet() {
   const c = CURR.stages[sid];
   if (!c || !c.words || !c.words.length) return null;
   const n = dailyDayNo(sid);
-  const gLen = c.grammar.length;
-  const gi = ((n - 1) * 2) % Math.max(1, gLen);
-  const grammar = [];
-  if (gLen) {
-    grammar.push(c.grammar[gi]);
-    if (gLen > 1) grammar.push(c.grammar[(gi + 1) % gLen]);
-  }
+  const ds = dailyDayEntry(c, n);
+  const wmap = dailyWordMap(c);
+  const gmap = dailyGrammarMap(c);
+  const scope = dailyScope(c, n);
+  const words = (ds.words || []).map(function (id) { return wmap[id]; }).filter(Boolean);
+  const grammar = (ds.grammar || []).map(function (id) { return gmap[id]; }).filter(Boolean);
+  const quiz = dailyQuestions(c, sid, n);
   return {
     stage: sid, label: c.label || dailyStageMeta(sid).label, name: c.name || dailyStageMeta(sid).name,
-    n: n, /* 하루 15개는 앞에서부터가 아니라 목록 전체를 고르게 훑어 카테고리가 섞이게 뽑습니다. */
-    words: dailyRotate(c.words, 15, ((n - 1) * 15) % c.words.length, Math.max(1, Math.floor(c.words.length / 15))),
-    grammar: grammar, quiz: dailyQuestions(c, sid, n)
+    n: n, dayTotal: ((c.days || []).length) || 10, title: ds.title || '',
+    words: words, grammar: grammar,
+    scope: { days: scope.days, words: scope.words.length, grammar: scope.grammar.length },
+    review: quiz.filter(function (q) { return q.review; }).length,
+    quiz: quiz
   };
 }
 function dailyGoalState() {
@@ -2498,7 +2721,9 @@ function dailyQuizItems(set) {
     return {
       type: 'daily', id: q.id, main: q.prompt, mainHTML: esc(q.prompt), promptClass: 'small',
       sub: q.sub, options: options, answer: Math.max(0, answer),
-      explain: (q.exp || '') + ' → 정답: <b>' + esc(q.options[q.answer] || '') + '</b>',
+      explain: (q.exp || '') + ' → 정답: <b>' + esc(q.options[q.answer] || '') + '</b>' +
+        (q.srcLabel ? '<br><span class="q-src">출처: ' + esc(q.srcLabel) + '</span>' : ''),
+      target: q.target || null,
       review: !!q.review,
       wrongInfo: { prompt: q.prompt, answer: q.options[q.answer] || '', options: q.options, exp: q.exp || '', kind: q.kind, stage: set.stage }
     };
@@ -2518,7 +2743,7 @@ function startDailyQuiz() {
       by.quizOk = Math.max(by.quizOk || 0, ok);
       n3AutoFromDaily();
       const g = dailyGoalState();
-      if (g && g.all) markStudy('daily');
+      if (g && g.all) { dailyMarkDone(); markStudy('daily'); }
       else if (currentTab === 'studytoday') renderStudyToday();
       else if (currentTab === 'home') renderHome();
       toast('오늘의 ' + set.quiz.length + '문제 완료 · 틀린 문제는 복습 탭에 쌓였어요');
@@ -2559,7 +2784,7 @@ function toggleDailyGram(id) {
 function afterDailyChange() {
   const g = dailyGoalState();
   n3AutoFromDaily();
-  if (g && g.all) markStudy('daily');
+  if (g && g.all) { dailyMarkDone(); markStudy('daily'); }
   else if (currentTab === 'studytoday') renderStudyToday();
   else if (currentTab === 'home') renderHome();
   updateStreakChip();
@@ -2597,7 +2822,7 @@ function dailyHomeHTML() {
   const g = dailyGoalState();
   if (!g) return '';
   return '<button class="hm-ds" data-goto="studytoday" aria-label="오늘의 학습 열기">' +
-    '<span class="r"><b>📖 오늘의 학습 · ' + esc(g.set.label) + '</b><span>' + g.pct + '%</span></span>' +
+    '<span class="r"><b>📖 오늘의 학습 · ' + esc(g.set.label + ' ' + g.set.n + '일차') + '</b><span>' + g.pct + '%</span></span>' +
     '<span class="ds-bar"><i class="' + (g.all ? 'full' : '') + '" style="width:' + g.pct + '%"></i></span>' +
     '<span class="g"><span>단어 ' + g.words + '/15</span><span>문법 ' + g.gram + '/' + g.set.grammar.length + '</span><span>문제 ' + g.quiz + '/' + g.quizTotal + '</span></span>' +
   '</button>';
@@ -2675,7 +2900,7 @@ function dailyStudyHTML() {
       '<span class="ds-autotag">' + (set.stage === auto ? '오늘 로드맵 단계' : '자동은 ' + dailyStageMeta(auto).label) + '</span></div>' +
 
     '<div class="ds-hero">' +
-      '<div class="ds-hero-top"><b>오늘의 목표</b><span>' + esc(set.label + ' · ' + set.name) + '</span>' +
+      '<div class="ds-hero-top"><b>오늘의 목표</b><span>' + esc(set.label + ' ' + set.n + '일차 · ' + (set.title || set.name)) + '</span>' +
         '<em>' + g.pct + '<small>%</small></em></div>' +
       '<span class="ds-bar"><i class="' + (g.all ? 'full' : '') + '" style="width:' + g.pct + '%"></i></span>' +
       '<div class="ds-goals">' +
@@ -2699,8 +2924,11 @@ function dailyStudyHTML() {
     '<div class="ds-sec"><span class="no">3</span><h2>오늘의 맞춤 문제</h2>' +
       '<span class="cnt' + (g.quizAll ? ' done' : '') + '">' + g.quiz + ' / ' + g.quizTotal + '</span></div>' +
     '<div class="card">' +
-      '<div class="ds-quizinfo">문자·어휘 5 + 문법·문장완성 5 · ' + esc(set.label) + ' 단계 ' + set.n + '일차 조합' +
-        (reviewMix ? ' · <b>주말 복습 ' + reviewMix + '문제</b>' : '') + '</div>' +
+      '<div class="ds-scope">누적 <b>' + set.scope.days + '일차</b> 기준 · 배운 단어 <b>' + set.scope.words +
+        '개</b> · 문법 <b>' + set.scope.grammar + '개</b>에서 출제' +
+        '<span>' + (set.n > 1
+          ? '오늘 새 단어 ' + set.words.length + '개 · 문법 ' + set.grammar.length + '개 위주 + 이전 복습 ' + reviewMix + '문제'
+          : '아직 배우지 않은 단어·문법은 나오지 않아요') + '</span></div>' +
       '<div class="ds-quizbar"><span class="ds-bar"><i class="' + (g.quizAll ? 'full' : '') + '" style="width:' + (g.quiz / g.quizTotal * 100) + '%"></i></span>' +
         '<b>' + g.quiz + '/' + g.quizTotal + '</b></div>' +
       '<div class="ds-quizfoot"><button class="btn btn-primary" data-dqstart="1">' + (g.by.quizDone ? '다시 풀기' : '10문제 풀기') + '</button></div>' +
