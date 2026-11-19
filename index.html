@@ -234,6 +234,7 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .flash-nav{display:flex;align-items:center;gap:8px;margin-top:2px}
 .flash-nav .btn{flex:1}
 .flash-count{font-size:12px;color:var(--ink-3);text-align:center;margin-top:2px}
+.word-scope-note{font-size:11.5px;color:var(--ink-3);line-height:1.6;margin:2px 2px 8px}
 .flash-tools{display:flex;gap:7px;margin-top:10px}
 
 /* ---------- word lists ---------- */
@@ -2033,31 +2034,35 @@ function buildKanaQuestions(n) {
 }
 
 /* ---------------- 문제 생성: 단어 ---------------- */
-function buildWordQuestions(list, count, mode) {
+/* distPool: 보기(오답)를 고를 범위. 누적 학습 범위에서는 같은 범위 단어에서만 고르고,
+   범위가 4개 미만인 극초반에만 전체 단어에서 보충합니다. */
+function buildWordQuestions(list, count, mode, distPool) {
   const pool = (list && list.length ? list : WORDS).slice();
   const picked = shuffle(pool).slice(0, Math.min(count || 10, pool.length));
+  const distractor = function (w, key) {
+    const src = (distPool && distPool.length ? distPool : pool);
+    const out = [];
+    const push = function (x) {
+      if (out.length < 3 && x && x.id !== w.id && x[key] && x[key] !== w[key] && out.indexOf(x[key]) < 0) out.push(x[key]);
+    };
+    shuffle(src).forEach(push);
+    if (out.length < 3) shuffle(WORDS).forEach(push);
+    return out;
+  };
   return picked.map(w => {
     let m = mode === 'mix' || !mode ? (Math.random() < 0.5 ? 'meaning' : 'reading') : mode;
     if (m === 'reading' && w.jp === w.kana) m = 'meaning';
     if (m === 'reading') {
-      const opts = [w.kana];
-      shuffle(WORDS.filter(x => x.id !== w.id && x.kana !== w.kana)).forEach(x => {
-        if (opts.length < 4 && opts.indexOf(x.kana) < 0) opts.push(x.kana);
-      });
-      const options = shuffle(opts);
+      const options = shuffle([w.kana].concat(distractor(w, 'kana')));
       return {
         type: 'word', id: w.id, main: w.jp,
         mainHTML: esc(w.jp), sub: '읽기(후리가나)를 고르세요',
         speak: w.kana, options: options, answer: options.indexOf(w.kana),
-        explain: '<b>' + esc(w.jp) + '</b> = ' + esc(w.kana) + ' (' + esc(w.romaji) + ') · ' + esc(w.ko),
+        explain: '<b>' + esc(w.jp) + '</b> = ' + esc(w.kana) + (w.romaji ? ' (' + esc(w.romaji) + ')' : '') + ' · ' + esc(w.ko),
         optClass: 'ja'
       };
     }
-    const opts = [w.ko];
-    shuffle(WORDS.filter(x => x.id !== w.id && x.ko !== w.ko)).forEach(x => {
-      if (opts.length < 4 && opts.indexOf(x.ko) < 0) opts.push(x.ko);
-    });
-    const options = shuffle(opts);
+    const options = shuffle([w.ko].concat(distractor(w, 'ko')));
     return {
       type: 'word', id: w.id, main: w.jp,
       mainHTML: rubyHTML(w.jp, w.kana, S.settings.furigana), sub: '뜻을 고르세요',
@@ -2375,6 +2380,8 @@ function loadCurriculum() {
 }
 function refreshDailyViews() {
   if (currentTab === 'home' || currentTab === 'studytoday') renderCurrent();
+  else if (currentTab === 'words') renderWords();
+  else if (currentTab === 'review') renderReview();
 }
 function dailyStageMeta(id) {
   for (let i = 0; i < DAILY_STAGES.length; i++) if (DAILY_STAGES[i].id === id) return DAILY_STAGES[i];
@@ -3199,21 +3206,110 @@ function selectKana(ch) {
 }
 
 /* ---------------- 단어·한자 화면 ---------------- */
-const wState = { cat: '전체', mode: 'card', idx: 0, reveal: false, starredOnly: false };
+const wState = { scope: 'cum', cat: '전체', mode: 'card', idx: 0, reveal: false, starredOnly: false };
+
+/* ── 누적 학습 범위 (📖 오늘의 학습과 같은 기준) ─────────────────────
+   일차 = dailyDayNo(단계), 범위 = 그 일차까지 dailyScope로 배운 단어·문법.
+   단어 탭의 카드·퀴즈는 기본값으로 이 누적 범위 안에서만 나옵니다. */
+let currWords = { src: null, list: [], map: {} };
+function curriculumWords() {
+  if (CURR && currWords.src === CURR) return currWords;
+  const list = [], map = {}, romajiOf = {};
+  WORDS.forEach(function (w) { romajiOf[w.jp + '|' + w.kana] = w.romaji || ''; });
+  ['n5', 'n4', 'n3'].forEach(function (sid) {
+    const c = CURR && CURR.stages ? CURR.stages[sid] : null;
+    if (!c || !c.words) return;
+    c.words.forEach(function (w) {
+      if (!w || !w.id || map[w.id]) return;
+      const item = {
+        id: w.id, jp: w.jp, kana: w.kana, ko: w.ko, cat: w.cat || '단어',
+        romaji: romajiOf[w.jp + '|' + w.kana] || '', stage: sid, ex: w.ex || '', exKo: w.exKo || '',
+        fromCurr: true
+      };
+      map[w.id] = item;
+      list.push(item);
+    });
+  });
+  currWords = { src: CURR, list: list, map: map };
+  return currWords;
+}
+function wordById(id) {
+  if (!id) return null;
+  for (let i = 0; i < WORDS.length; i++) if (WORDS[i].id === id) return WORDS[i];
+  return curriculumWords().map[id] || null;
+}
+/* 현재 단계·일차의 누적 범위 (단어·문법) */
+function wordScopeInfo() {
+  if (!CURR || !CURR.stages) return null;
+  const sid = dailyStage();
+  const c = CURR.stages[sid];
+  if (!c || !c.words || !c.words.length) return null;
+  const n = dailyDayNo(sid);
+  const sc = dailyScope(c, n);
+  const cw = curriculumWords();
+  const gmap = dailyGrammarMap(c);
+  const daySet = dailyDayEntry(c, n);
+  return {
+    stage: sid, n: n, label: dailyStageMeta(sid).label,
+    dayTotal: ((c.days || []).length) || 10,
+    words: sc.words.map(function (id) { return cw.map[id]; }).filter(Boolean),
+    todayWords: (daySet.words || []).map(function (id) { return cw.map[id]; }).filter(Boolean),
+    grammar: sc.grammar.map(function (id) { return gmap[id]; }).filter(Boolean)
+  };
+}
+function wordScopeName(scope, info) {
+  if (scope === 'all') return '전체 범위';
+  if (scope === 'wrong') return '오답만';
+  return info ? '누적 ' + info.n + '일차' : '누적 학습';
+}
+function scopeWords(scope) {
+  if (scope === 'all') return WORDS.slice();
+  if (scope === 'wrong') return wrongItems('word').map(function (x) { return wordById(x.id); }).filter(Boolean);
+  const info = wordScopeInfo();
+  return info ? info.words.slice() : WORDS.slice();
+}
 function filteredWords() {
-  let arr = WORDS.slice();
+  let arr = scopeWords(wState.scope);
   if (wState.cat !== '전체') arr = arr.filter(function (w) { return w.cat === wState.cat; });
   if (wState.starredOnly) arr = arr.filter(function (w) { return S.star.word.indexOf(w.id) >= 0; });
   return arr;
 }
+function wordCatsFor(list) {
+  const present = {};
+  list.forEach(function (w) { if (w.cat) present[w.cat] = true; });
+  const out = ['전체'];
+  WORD_CATS.forEach(function (c) { if (c !== '전체' && present[c]) { out.push(c); delete present[c]; } });
+  Object.keys(present).forEach(function (c) { out.push(c); });
+  return out;
+}
 function renderWords() {
   const host = $('#view-words');
+  const info = wordScopeInfo();
+  const base = scopeWords(wState.scope);
+  const cats = wordCatsFor(base);
+  if (cats.indexOf(wState.cat) < 0) wState.cat = '전체';
   const arr = filteredWords();
   if (wState.idx >= arr.length) wState.idx = 0;
   if (wState.idx < 0) wState.idx = 0;
+  const wrongCount = wrongItems('word').length;
 
   const rate = Number(S.settings.rate) === 1 ? '1.0x' : '0.75x';
-  const chips = WORD_CATS.map(function (c) {
+
+  const scopeChips =
+    '<div class="chips wscope" style="flex-wrap:wrap;overflow:visible">' +
+      '<button class="chip ' + (wState.scope === 'cum' ? 'active' : '') + '" data-wscope="cum">누적 학습' +
+        (info ? ' (' + info.n + '일차 · ' + info.words.length + '개)' : ' (준비 중)') + '</button>' +
+      '<button class="chip ' + (wState.scope === 'all' ? 'active' : '') + '" data-wscope="all">전체 범위 (' + WORDS.length + '개)</button>' +
+      '<button class="chip ' + (wState.scope === 'wrong' ? 'active' : '') + '" data-wscope="wrong">오답만 (' + wrongCount + '개)</button>' +
+    '</div>';
+
+  const scopeNote = wState.scope === 'cum'
+    ? '<p class="word-scope-note">📖 오늘의 학습 ' + (info ? info.n + '일차' : '누적 범위') + '까지 배운 ' +
+      (info ? '단어 ' + info.words.length + '개 · 문법 ' + info.grammar.length + '개' : '단어') +
+      ' 범위예요. 카드·퀴즈는 이 단어 안에서만 나와요.</p>'
+    : (wState.scope === 'wrong' && !wrongCount ? '<p class="word-scope-note">아직 틀린 단어가 없어요. 퀴즈를 풀면 여기 쌓여요.</p>' : '');
+
+  const chips = cats.map(function (c) {
     return '<button class="chip ' + (wState.cat === c ? 'active' : '') + '" data-cat="' + esc(c) + '">' + esc(c) + '</button>';
   }).join('');
 
@@ -3229,7 +3325,9 @@ function renderWords() {
   let body = '';
   if (wState.mode === 'card') {
     if (!arr.length) {
-      body = '<div class="card"><div class="empty">이 조건에 맞는 단어가 없어요.<br>★ 즐겨찾기를 해두면 여기 모여요.</div></div>';
+      body = '<div class="card"><div class="empty">' + (wState.scope === 'wrong'
+        ? '아직 오답이 없어요.<br>퀴즈를 풀면 틀린 단어가 여기 모여요.'
+        : '이 조건에 맞는 단어가 없어요.<br>★ 즐겨찾기를 해두면 여기 모여요.') + '</div></div>';
     } else {
       const w = arr[wState.idx];
       const starred = S.star.word.indexOf(w.id) >= 0;
@@ -3240,7 +3338,7 @@ function renderWords() {
             '<button class="mini-btn ' + (starred ? 'on' : '') + '" data-star="' + w.id + '">★</button></div>' +
           '<div class="flash-word">' + rubyHTML(w.jp, w.kana, S.settings.furigana) + '</div>' +
           (showKana ? '<div class="flash-kana">' + esc(w.kana) + '</div>' : '') +
-          (S.settings.romaji ? '<div class="flash-romaji">' + esc(w.romaji) + '</div>' : '') +
+          (S.settings.romaji && w.romaji ? '<div class="flash-romaji">' + esc(w.romaji) + '</div>' : '') +
           '<div class="flash-ko ' + (wState.reveal ? '' : 'hidden') + '">' + esc(w.ko) + '</div>' +
           '<div class="tap-hint">' + (wState.reveal ? '카드를 눌러 접기' : '카드를 누르면 뜻이 보여요') + '</div>' +
         '</div>' +
@@ -3253,23 +3351,32 @@ function renderWords() {
           '<button class="btn" data-wmove="-1">◀ 이전</button>' +
           '<button class="btn btn-primary" data-wmove="1">다음 ▶</button>' +
         '</div>' +
-        '<div class="flash-count">' + (wState.idx + 1) + ' / ' + arr.length + ' · ' + esc(w.cat) + '</div>';
+        '<div class="flash-count">' + (wState.idx + 1) + ' / ' + arr.length + ' · ' + esc(w.cat) +
+          (wState.scope === 'cum' ? ' · 누적 ' + (info ? info.n + '일차' : '범위') : '') + '</div>';
     }
   } else {
+    const qcount = Math.min(10, arr.length);
+    const canQuiz = arr.length > 0;
     body =
       '<div class="card">' +
-        '<div class="card-head"><h3>4지선다 퀴즈</h3><span class="badge">' + esc(wState.cat) + ' · ' + arr.length + '개</span></div>' +
+        '<div class="card-head"><h3>4지선다 퀴즈</h3><span class="badge">' + esc(wordScopeName(wState.scope, info)) + ' · ' + arr.length + '개</span></div>' +
         '<p style="font-size:12.5px;color:var(--ink-2);line-height:1.65">' +
-          '뜻 맞추기와 읽기 맞추기를 섞어서 낼 수 있어요. 틀린 단어는 복습 탭 오답노트에 자동으로 쌓입니다.</p>' +
+          (wState.scope === 'cum'
+            ? '누적 ' + (info ? info.n + '일차' : '학습') + '까지 배운 단어로만 문제와 보기를 만들어요. '
+            : wState.scope === 'wrong'
+              ? '틀린 단어만 모아 다시 풀어요. 맞히면 오답노트에서 빠져요. '
+              : '뜻 맞추기와 읽기 맞추기를 섞어서 낼 수 있어요. ') +
+          '틀린 단어는 복습 탭 오답노트에 자동으로 쌓입니다.</p>' +
         '<div style="display:flex;flex-direction:column;gap:8px;margin-top:13px">' +
-          '<button class="btn btn-primary btn-block" data-wquiz="mix10">섞어서 10문제</button>' +
-          '<button class="btn btn-block" data-wquiz="meaning">뜻 맞추기 10문제</button>' +
-          '<button class="btn btn-block" data-wquiz="reading">읽기 맞추기 10문제</button>' +
-          '<button class="btn btn-ghost btn-block" data-wquiz="today">오늘의 단어 5개로 풀기</button>' +
+          '<button class="btn btn-primary btn-block" data-wquiz="mix10"' + (canQuiz ? '' : ' disabled') + '>섞어서 ' + qcount + '문제</button>' +
+          '<button class="btn btn-block" data-wquiz="meaning"' + (canQuiz ? '' : ' disabled') + '>뜻 맞추기 ' + qcount + '문제</button>' +
+          '<button class="btn btn-block" data-wquiz="reading"' + (canQuiz ? '' : ' disabled') + '>읽기 맞추기 ' + qcount + '문제</button>' +
+          (info && info.todayWords.length
+            ? '<button class="btn btn-ghost btn-block" data-wquiz="today">오늘 배운 단어 ' + Math.min(5, info.todayWords.length) + '개로 풀기</button>' : '') +
         '</div>' +
       '</div>' +
       '<div class="card tight">' +
-        '<div class="card-head" style="margin-bottom:4px"><h3>이 카테고리 단어</h3><span class="sub">' + arr.length + '개</span></div>' +
+        '<div class="card-head" style="margin-bottom:4px"><h3>' + esc(wordScopeName(wState.scope, info)) + ' 단어</h3><span class="sub">' + arr.length + '개</span></div>' +
         '<p style="font-size:11.5px;color:var(--ink-3)">카드 모드에서 한 개씩 넘겨보며 뜻을 확인할 수 있어요.</p>' +
       '</div>';
   }
@@ -3280,6 +3387,8 @@ function renderWords() {
       studyNav() +
       '<div class="seg"><button class="' + (wState.mode === 'card' ? 'active' : '') + '" data-wmode="card">카드</button>' +
         '<button class="' + (wState.mode === 'quiz' ? 'active' : '') + '" data-wmode="quiz">퀴즈</button></div>' +
+      scopeChips +
+      scopeNote +
       '<div class="chips">' + chips + '</div>' +
       toggles +
       body +
@@ -3412,7 +3521,7 @@ function renderReview() {
         '<button class="icon-btn" data-speak="' + esc(x.id) + '">🔊</button></div>';
     }).join('');
     const wordRows = wWord.map(function (x) {
-      const w = WORDS.filter(function (v) { return v.id === x.id; })[0];
+      const w = wordById(x.id);
       if (!w) return '';
       return '<div class="word-row"><div class="word-main"><div class="word-jp">' + esc(w.jp) + '</div>' +
         '<div class="word-sub">' + esc(w.kana) + ' · 오답 ' + x.n + '회</div></div>' +
@@ -3457,7 +3566,7 @@ function renderReview() {
   }
 
   const starKana = S.star.kana.filter(function (c) { return kanaInfo(c); });
-  const starWord = S.star.word.map(function (id) { return WORDS.filter(function (w) { return w.id === id; })[0]; }).filter(Boolean);
+  const starWord = S.star.word.map(function (id) { return wordById(id); }).filter(Boolean);
   const starSent = S.star.sent.map(function (id) { return SENTENCES.filter(function (s) { return s.id === id; })[0]; }).filter(Boolean);
 
   const starHTML =
@@ -3483,6 +3592,9 @@ function renderReview() {
               '<button class="icon-btn starred" data-unstar-sent="' + s.id + '">★</button></div>';
           }).join('') + '</div></div>' : '');
 
+  const scopeInfo = wordScopeInfo();
+  const scopeDeckN = scopeInfo ? scopeInfo.words.length + scopeInfo.grammar.length : 0;
+
   host.innerHTML =
     '<div class="view-inner">' +
       '<div class="stat-grid">' +
@@ -3491,6 +3603,15 @@ function renderReview() {
         '<div class="stat"><b>' + S.stats.answered + '</b><span>푼 문제</span></div>' +
         '<div class="stat"><b>' + acc + '%</b><span>정답률</span></div>' +
       '</div>' +
+      (scopeInfo
+        ? '<div class="section-title"><h2>누적 학습 카드</h2><span class="hint">' + scopeInfo.n + '일차까지</span></div>' +
+          '<div class="card fc-cta">' +
+            '<div class="card-head"><h3>📚 누적 학습 플래시카드</h3><span class="sub">' + scopeDeckN + '장</span></div>' +
+            '<p style="font-size:12px;color:var(--ink-2);line-height:1.6">📖 오늘의 학습 ' + scopeInfo.n + '일차까지 배운 <b>단어 ' +
+              scopeInfo.words.length + '개 · 문법 ' + scopeInfo.grammar.length + '개</b>를 앞면 일본어 → 뒷면 읽기·뜻으로 회독해요.</p>' +
+            '<button class="btn btn-primary btn-block" data-fc="startcum"' + (scopeDeckN ? '' : ' disabled') + '>누적 ' + scopeDeckN + '장 회독 시작</button>' +
+          '</div>'
+        : '') +
       '<div class="section-title"><h2>오답노트</h2><span class="hint">' + totalWrong + '개</span></div>' +
       '<div class="card fc-cta">' +
         '<div class="card-head"><h3>🔁 오답 집중 플래시카드</h3><span class="sub">' + totalWrong + '장</span></div>' +
@@ -7357,7 +7478,7 @@ function n3BlockHTML() {
 /* ---------------- 🔁 오답 집중 플래시카드 ----------------
    틀린 문제만 모아 앞면(일본어) → 뒷면(읽기·뜻·예문)으로 빠르게 회독합니다.
    [다시 볼래요]를 누른 카드는 맨 뒤로 돌아가고, [알겠음]을 누른 카드는 이번 회독에서 빠집니다. */
-let fc = { active: false, deck: [], i: 0, flipped: false, known: 0, again: 0, total: 0, done: false };
+let fc = { active: false, source: 'wrong', title: '', deck: [], i: 0, flipped: false, known: 0, again: 0, total: 0, done: false };
 
 function fcBuildDeck() {
   const cards = [];
@@ -7368,10 +7489,10 @@ function fcBuildDeck() {
       backSub: (isKata(x.id) ? '가타카나' : '히라가나'), speak: x.id, n: x.n });
   });
   wrongItems('word').forEach(function (x) {
-    const w = WORDS.filter(function (v) { return v.id === x.id; })[0];
+    const w = wordById(x.id);
     if (!w) return;
     cards.push({ type: '단어', id: w.id, front: w.jp, frontSub: '읽기와 뜻은?',
-      back: w.ko, backSub: w.kana + ' · ' + w.romaji, speak: w.kana, n: x.n });
+      back: w.ko, backSub: w.kana + (w.romaji ? ' · ' + w.romaji : ''), speak: w.kana, n: x.n });
   });
   wrongItems('sent').forEach(function (x) {
     const s = SENTENCES.filter(function (v) { return v.id === x.id; })[0];
@@ -7394,12 +7515,37 @@ function fcBuildDeck() {
   /* 많이 틀린 카드부터, 같은 횟수면 섞어서 */
   return shuffle(cards).sort(function (a, b) { return (b.n || 1) - (a.n || 1); });
 }
-function startFlashcards() {
-  const deck = fcBuildDeck();
-  if (!deck.length) { toast('오답이 없어요 · 퀴즈를 먼저 풀어 주세요'); return; }
-  fc = { active: true, deck: deck, i: 0, flipped: false, known: 0, again: 0, total: deck.length, done: false };
+function startFlashcards(source) {
+  const src = source === 'cum' ? 'cum' : 'wrong';
+  const deck = src === 'cum' ? fcBuildScopeDeck() : fcBuildDeck();
+  if (!deck.length) {
+    toast(src === 'cum' ? '누적 단어를 아직 불러오지 못했어요' : '오답이 없어요 · 퀴즈를 먼저 풀어 주세요');
+    return;
+  }
+  fc = {
+    active: true, source: src,
+    title: src === 'cum' ? '📚 누적 학습 플래시카드' : '🔁 오답 집중 플래시카드',
+    deck: deck, i: 0, flipped: false, known: 0, again: 0, total: deck.length, done: false
+  };
   renderReview();
   try { window.scrollTo(0, 0); } catch (e) {}
+}
+/* 누적 학습 범위(현재 일차까지 배운 단어·문법)를 그대로 회독하는 카드 */
+function fcBuildScopeDeck() {
+  const info = wordScopeInfo();
+  if (!info) return [];
+  const cards = [];
+  info.words.forEach(function (w) {
+    cards.push({ type: '단어', id: w.id, front: w.jp, frontSub: '읽기와 뜻은?',
+      back: w.ko, backSub: w.kana + (w.romaji ? ' · ' + w.romaji : ''), speak: w.kana, n: 0 });
+  });
+  info.grammar.forEach(function (g) {
+    const ex = (g.ex && g.ex[0]) || null;
+    cards.push({ type: '문법', id: g.id, front: g.key, frontSub: g.title || '이 문법은?',
+      back: g.tag || g.title || '', backSub: ex ? (ex.jp + (ex.ko ? ' — ' + ex.ko : '')) : (g.sum || ''),
+      speak: ex ? ex.jp : '', n: 0 });
+  });
+  return cards;
 }
 function fcViewHTML() {
   const card = fc.deck[fc.i];
@@ -7408,7 +7554,7 @@ function fcViewHTML() {
     const left = Math.max(0, fc.deck.length - fc.i);
     return '<div class="fc-wrap">' +
       '<div class="card">' +
-        '<div class="card-head"><h3>🔁 오답 집중 플래시카드</h3><span class="sub">' + (fc.done ? '한 바퀴 끝' : '진행 중') + '</span></div>' +
+        '<div class="card-head"><h3>' + (fc.title || '🔁 오답 집중 플래시카드') + '</h3><span class="sub">' + (fc.done ? '한 바퀴 끝' : '진행 중') + '</span></div>' +
         '<div class="wt-grid" style="margin-top:0">' +
           '<div class="wt-stat"><b>' + fc.known + '</b><span>알겠음</span></div>' +
           '<div class="wt-stat"><b>' + fc.again + '</b><span>다시 볼래요</span></div>' +
@@ -7416,10 +7562,10 @@ function fcViewHTML() {
           '<div class="wt-stat"><b>' + pct + '%</b><span>이번 회독</span></div>' +
         '</div>' +
         '<p class="menu-eff" style="margin-top:10px">' + (fc.done
-          ? '이번 오답 카드를 모두 봤어요. 틀린 문제는 퀴즈를 풀수록 다시 쌓입니다.'
+          ? (fc.source === 'cum' ? '이번 누적 카드를 모두 봤어요. 틀린 문제는 퀴즈를 풀수록 다시 쌓입니다.' : '이번 오답 카드를 모두 봤어요. 틀린 문제는 퀴즈를 풀수록 다시 쌓입니다.')
           : '카드를 모두 확인했어요.') + '</p>' +
         '<div class="btn-row" style="margin-top:12px">' +
-          '<button class="btn btn-primary" data-fc="start">🔁 다시 시작</button>' +
+          '<button class="btn btn-primary" data-fc="restart">🔁 다시 시작</button>' +
           '<button class="btn" data-fc="stop">복습 화면으로</button>' +
         '</div>' +
       '</div>' +
@@ -7428,12 +7574,12 @@ function fcViewHTML() {
   const isLong = card.front.length > 12;
   return '<div class="fc-wrap">' +
     '<div class="card">' +
-      '<div class="card-head"><h3>🔁 오답 집중 플래시카드</h3>' +
+      '<div class="card-head"><h3>' + (fc.title || '🔁 오답 집중 플래시카드') + '</h3>' +
         '<span class="sub">' + (fc.i + 1) + ' / ' + fc.deck.length + ' · 알겠음 ' + fc.known + '</span></div>' +
       '<div class="n3-bar wide"><i style="width:' + pct + '%\"></i></div>' +
     '</div>' +
     '<button class="fc-card" data-fc="flip" aria-label="카드를 눌러 ' + (fc.flipped ? '앞면' : '뒷면') + ' 보기">' +
-      '<span class="fc-type">' + esc(card.type) + ' · 오답 ' + (card.n || 1) + '회</span>' +
+      '<span class="fc-type">' + esc(card.type) + (card.n ? ' · 오답 ' + card.n + '회' : ' · 카드') + '</span>' +
       (fc.flipped
         ? '<span class="fc-back">' + esc(card.back) + '</span>' +
           (card.backSub ? '<span class="fc-back-sub">' + esc(card.backSub) + '</span>' : '') +
@@ -7451,7 +7597,9 @@ function fcViewHTML() {
   '</div>';
 }
 function fcAct(act) {
-  if (act === 'start') { startFlashcards(); return; }
+  if (act === 'start') { startFlashcards('wrong'); return; }
+  if (act === 'startcum') { startFlashcards('cum'); return; }
+  if (act === 'restart') { startFlashcards(fc.source); return; }
   if (act === 'stop') { fc.active = false; renderReview(); return; }
   const card = fc.deck[fc.i];
   if (!card) { fc.done = true; renderReview(); return; }
@@ -7640,6 +7788,16 @@ function onWordsClick(e) {
   if (mode) { wState.mode = mode.dataset.wmode; wState.reveal = false; renderWords(); return; }
   const cat = t.closest('[data-cat]');
   if (cat) { wState.cat = cat.dataset.cat; wState.idx = 0; wState.reveal = false; renderWords(); return; }
+  const wscope = t.closest('[data-wscope]');
+  if (wscope) {
+    wState.scope = wscope.dataset.wscope;
+    wState.cat = '전체';
+    wState.idx = 0;
+    wState.reveal = false;
+    if (wState.scope === 'wrong' && !wrongItems('word').length) toast('아직 틀린 단어가 없어요 · 퀴즈를 먼저 풀어 주세요');
+    renderWords();
+    return;
+  }
   const wset = t.closest('[data-wset]');
   if (wset) {
     const k = wset.dataset.wset;
@@ -7692,15 +7850,32 @@ function onWordsClick(e) {
   const wq = t.closest('[data-wquiz]');
   if (wq) {
     const arr = filteredWords();
+    const info = wordScopeInfo();
     const k = wq.dataset.wquiz;
-    if (k === 'today') { startQuiz({ title: '오늘의 단어 5개', items: buildWordQuestions(todayWords(), 5, 'mix'), onDone: function () { markStudy('words'); } }); return; }
+    if (k === 'today') {
+      const list = (info && info.todayWords.length ? info.todayWords : todayWords()).slice(0, 5);
+      if (!list.length) { toast('오늘 배운 단어를 아직 불러오지 못했어요'); return; }
+      startQuiz({ title: '오늘 배운 단어 ' + list.length + '개', items: buildWordQuestions(list, 5, 'mix', list), onDone: function () { markStudy('words'); } });
+      return;
+    }
+    if (!arr.length) { toast('이 범위에 단어가 없어요'); return; }
     if (k === 'single') {
       const w = arr[wState.idx];
-      if (w) startQuiz({ title: '이 단어 퀴즈', items: buildWordQuestions([w], 1, 'mix'), onDone: function () { markStudy('words'); } });
+      if (w) {
+        const one = buildWordQuestions([w], 1, 'mix', arr);
+        if (wState.scope === 'wrong') one.forEach(function (it) { it.review = true; });
+        startQuiz({ title: '이 단어 퀴즈', items: one, onDone: function () { markStudy('words'); } });
+      }
       return;
     }
     const mode = k === 'meaning' ? 'meaning' : k === 'reading' ? 'reading' : 'mix';
-    startQuiz({ title: '단어 퀴즈 · ' + (mode === 'mix' ? '섞어서' : mode === 'meaning' ? '뜻' : '읽기'), items: buildWordQuestions(arr, 10, mode), onDone: function () { markStudy('words'); } });
+    const items = buildWordQuestions(arr, 10, mode, arr);
+    if (wState.scope === 'wrong') items.forEach(function (it) { it.review = true; });
+    startQuiz({
+      title: wordScopeName(wState.scope, info) + ' 단어 퀴즈 · ' + (mode === 'mix' ? '섞어서' : mode === 'meaning' ? '뜻' : '읽기'),
+      items: items,
+      onDone: function () { markStudy('words'); }
+    });
     return;
   }
   const slow = t.closest('[data-speak-slow]');
@@ -7781,7 +7956,7 @@ function onReviewClick(e) {
     }
     if (kind === 'word' || kind === 'all') {
       const ids = wrongItems('word').map(function (x) { return x.id; });
-      const list = WORDS.filter(function (w) { return ids.indexOf(w.id) >= 0; });
+      const list = ids.map(function (id) { return wordById(id); }).filter(Boolean);
       items = items.concat(buildWordQuestions(list, list.length, 'mix').map(function (it) { it.review = true; return it; }));
     }
     if (kind === 'sent' || kind === 'all') {
