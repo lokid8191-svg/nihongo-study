@@ -1428,7 +1428,7 @@ function defaultState() {
     settings: { furigana: false, romaji: false, rate: 0.75 },
     diary: {},
     routine: { items: routineDefaultItems(), days: {} },
-    fridge: { items: [], seedVersion: 0, syncedAt: '' },
+    fridge: { items: [], seedVersion: 0, syncedAt: '', deleted: [] },
     diet: { goals: null, days: {}, seedVersion: 0, syncedAt: '' },
     weight: { profile: null, entries: {}, doses: [], seedVersion: 0, syncedAt: '' },
     n3: { checks: {}, days: {}, stageDone: {}, labels: {} },
@@ -1521,7 +1521,11 @@ function normalizeFridge(raw) {
       edited: !!it.edited
     };
   }) : [];
-  return { items: items, seedVersion: Number(f.seedVersion) || 0, syncedAt: typeof f.syncedAt === 'string' ? f.syncedAt : '' };
+  /* 기기에서 지운 품목 id — 원격 fridge-data.json에 다시 들어 있어도 되살리지 않습니다. */
+  const deleted = Array.isArray(f.deleted)
+    ? f.deleted.map(function (x) { return String(x || '').slice(0, 60); }).filter(Boolean).slice(-200)
+    : [];
+  return { items: items, seedVersion: Number(f.seedVersion) || 0, syncedAt: typeof f.syncedAt === 'string' ? f.syncedAt : '', deleted: deleted };
 }
 function normalizeN3(raw) {
   const r = raw && typeof raw === 'object' ? raw : {};
@@ -4448,6 +4452,41 @@ let fridgeDelAsk = false;
 let fridgeDelId = '';
 let fridgeSyncing = false;
 
+/* 수량이 0이 된 품목인지 — '', '0', '0개', '0팩', '0봉', '0묶음', 'out', '다 씀' 등을 0으로 봅니다.
+   상시 구비 품목은 수량을 세지 않으므로 0으로 보지 않습니다. */
+function fridgeIsZeroQty(it) {
+  if (!it || fridgeIsAlways(it)) return false;
+  const s = String(it.qty || '').trim().toLowerCase();
+  if (!s) return false;
+  if (s === 'out' || s === '다 씀' || s === '다씀' || s === '없음' || s === '소진') return true;
+  return /^0(\.0+)?\s*[가-힣a-z]*$/.test(s);
+}
+/* 기기에서 지운 품목은 id로 기억해 두고, 원격 목록이 다시 내려와도 되살리지 않습니다.
+   같은 품목을 다시 넣어야 할 때는 채팅에서 새 id로 넣어 주세요. */
+function fridgeDeletedList() {
+  const fs2 = fridgeState();
+  if (!Array.isArray(fs2.deleted)) fs2.deleted = [];
+  return fs2.deleted;
+}
+function fridgeMarkDeleted(it) {
+  if (!it || !it.id || fridgeIsAlways(it)) return;
+  const list = fridgeDeletedList();
+  const id = String(it.id);
+  if (list.indexOf(id) < 0) list.push(id);
+  if (list.length > 200) list.splice(0, list.length - 200);
+}
+/* 0이 된 품목은 그냥 지웁니다(세온 님 지시, 2026-11-19). */
+function fridgePrune() {
+  const fs2 = fridgeState();
+  const before = fs2.items.length;
+  fs2.items = fs2.items.filter(function (it) {
+    return !(it && (fridgeIsZeroQty(it) || (it.out && !fridgeIsAlways(it))));
+  });
+  const n = before - fs2.items.length;
+  if (n) save();
+  return n;
+}
+
 /* 이미 쓴 한 줄 일기도 루틴의 '일기쓰기' 체크로 맞춰 둔다 */
 function syncDiaryToRoutine() {
   const items = routineItems();
@@ -4465,8 +4504,9 @@ function syncDiaryToRoutine() {
 }
 
 function fridgeState() {
-  if (!S.fridge || typeof S.fridge !== 'object') S.fridge = { items: [], seedVersion: 0, syncedAt: '' };
+  if (!S.fridge || typeof S.fridge !== 'object') S.fridge = { items: [], seedVersion: 0, syncedAt: '', deleted: [] };
   if (!Array.isArray(S.fridge.items)) S.fridge.items = [];
+  if (!Array.isArray(S.fridge.deleted)) S.fridge.deleted = [];
   return S.fridge;
 }
 function fridgeItems() { return fridgeState().items; }
@@ -4503,12 +4543,16 @@ function applyFridgeSeed(data) {
   if (!seed.filter(function (it) { return it && it.name; }).length) return { added: 0, removed: 0 };
   const byId = {};
   fs2.items.forEach(function (it) { if (it && it.id) byId[it.id] = it; });
+  const tomb = {};
+  fridgeDeletedList().forEach(function (id) { tomb[id] = true; });
   const next = [];
   const seedIds = {};
   let added = 0, removed = 0;
   seed.forEach(function (raw) {
     if (!raw || !raw.name) return;
     const id = String(raw.id || ('s-' + String(raw.name).trim()));
+    /* 기기에서 지운 품목, 수량이 0이거나 다 쓴 품목은 원격 목록에 있어도 되살리지 않습니다. */
+    if (!fridgeIsAlways(raw) && (tomb[id] || raw.out === true || fridgeIsZeroQty(raw))) return;
     seedIds[id] = true;
     const base = {
       id: id,
@@ -4547,6 +4591,8 @@ function applyFridgeSeed(data) {
     /* 현미크런치·오븐구이처럼 상시 품목으로 합쳐진 예전 항목은 수량 관리에서 뺍니다. */
     if (FRIDGE_MERGE_INTO[it.id]) { removed++; return; }
     if (it.src === 'seed' && !it.edited) { removed++; return; }
+    /* 기기에서 고쳐 둔 항목이라도 수량이 0이거나 다 쓴 것이면 지웁니다. */
+    if (fridgeIsZeroQty(it) || (it.out && !fridgeIsAlways(it))) { removed++; return; }
     next.push(it);
   });
   fs2.items = next;
@@ -4619,7 +4665,7 @@ function fridgeRowHTML(it) {
   return '<div class="fr-row' + (it.out ? ' out' : '') + (always ? ' always' : '') + '">' +
     (always
       ? '<span class="fr-check always" aria-label="상시 구비 품목 · 수량 관리 없음" title="상시 구비 품목은 수량을 세지 않아요">∞</span>'
-      : '<button class="fr-check" data-fout="' + esc(it.id) + '" aria-label="' + (it.out ? '되돌리기' : '다 씀') + '" aria-pressed="' + (it.out ? 'true' : 'false') + '">' + (it.out ? '✓' : '') + '</button>') +
+      : '<button class="fr-check" data-fout="' + esc(it.id) + '" aria-label="다 쓴 재료로 지우기" title="다 썼으면 눌러서 목록에서 지워요" aria-pressed="false">' + '</button>') +
     '<div class="fr-main">' +
       '<div class="fr-name">' + esc(it.name) + (it.jp ? '<em>' + esc(it.jp) + (it.kana && it.kana !== it.jp ? ' (' + esc(it.kana) + ')' : '') + '</em>' : '') + '</div>' +
       '<div class="fr-meta">' + meta.join('') + '</div>' +
@@ -4632,6 +4678,7 @@ function fridgeRowHTML(it) {
 function renderFridge() {
   const host = $('#view-fridge');
   if (!host) return;
+  fridgePrune();
   const fs2 = fridgeState();
   const all = fs2.items.slice();
   const live = all.filter(function (it) { return !it.out; });
@@ -4713,7 +4760,7 @@ function renderFridge() {
         ? '<div class="vcols"><div class="vcol">' + goneBlock + '</div><div class="vcol">' + vocaBlock + '</div></div>'
         : vocaBlock) +
 
-      '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.<br>GitHub 파일이 주간 초기화로 비어도 이 기기 목록은 지워지지 않아요.</p>' +
+      '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.<br>수량이 0이 된 재료는 목록에서 지우고, 여기서 지운 재료는<br>GitHub 목록에 다시 있어도 되살리지 않아요.</p>' +
     '</div>';
 }
 
@@ -4780,8 +4827,24 @@ function saveFridgeItem() {
       it.expires = exp;
       it.memo = String(fridgeDraft.memo || '').trim().slice(0, 120);
       it.edited = true;
+      /* 수량을 0으로 고쳤으면 그냥 지웁니다. */
+      if (fridgeIsZeroQty(it)) {
+        fridgeMarkDeleted(it);
+        fs2.items = fs2.items.filter(function (x) { return x.id !== it.id; });
+        save();
+        closeSheet();
+        renderFridge();
+        toast(name + ' · 수량이 0이라 목록에서 지웠어요');
+        return;
+      }
     }
   } else {
+    /* 수량이 0인 품목은 넣지 않습니다. */
+    if (fridgeIsZeroQty({ name: name, qty: fridgeDraft.qty, memo: fridgeDraft.memo })) {
+      closeSheet();
+      toast('수량이 0이라 추가하지 않았어요');
+      return;
+    }
     fs2.items.push({
       id: 'u-' + Date.now().toString(36) + '-' + rand(999),
       name: name.slice(0, 40),
@@ -4805,6 +4868,8 @@ function deleteFridgeItem(id) {
   const i = fs2.items.map(function (x) { return x.id; }).indexOf(id);
   if (i < 0) return;
   const name = fs2.items[i].name;
+  /* 지운 품목은 원격 목록이 다시 내려와도 되살아나지 않도록 기기에 기록합니다. */
+  fridgeMarkDeleted(fs2.items[i]);
   fs2.items.splice(i, 1);
   fridgeDelAsk = false;
   save();
@@ -4812,17 +4877,20 @@ function deleteFridgeItem(id) {
   renderFridge();
   toast(name + '을(를) 뺐어요');
 }
+/* 다 씀 = 수량 0 → 목록에서 바로 지웁니다(되살아나지 않게 기록). */
 function toggleFridgeOut(id) {
-  const it = fridgeState().items.filter(function (x) { return x.id === id; })[0];
+  const fs2 = fridgeState();
+  const it = fs2.items.filter(function (x) { return x.id === id; })[0];
   if (!it) return;
-  if (fridgeIsAlways(it) && !it.out) {
+  if (fridgeIsAlways(it)) {
     toast(it.name + ' · 상시 구비 품목이라 소진 표시를 하지 않아요');
     return;
   }
-  it.out = !it.out;
+  fridgeMarkDeleted(it);
+  fs2.items = fs2.items.filter(function (x) { return x.id !== id; });
   save();
   renderFridge();
-  toast(it.out ? it.name + ' · 다 씀으로 표시했어요' : it.name + ' · 다시 보관 중');
+  toast(it.name + ' · 다 씀으로 목록에서 지웠어요');
 }
 
 function onFridgeClick(e) {
@@ -7258,6 +7326,7 @@ function init() {
 
   renderCurrent();
   updateStreakChip();
+  fridgePrune();
   fridgeQuietSync();
   dietQuietSync();
   weightQuietSync();
