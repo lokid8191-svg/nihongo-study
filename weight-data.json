@@ -1,6 +1,6 @@
 {
-  "version": 3,
-  "updatedAt": "2026-11-19",
+  "version": 4,
+  "updatedAt": "2026-11-20",
   "note": "채팅으로 체중·인바디·마운자로 기록을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 새 기록을 받아가고, 앱에서 직접 넣은 기록은 그대로 둡니다.",
   "profile": {
     "heightCm": 158,
@@ -176,6 +176,14 @@
       "fatMass": 41.6,
       "muscle": 23.33,
       "visceral": 19
+    },
+    {
+      "date": "2026-11-20",
+      "kg": 83.84,
+      "bodyFat": 49.0,
+      "fatMass": 41.08,
+      "muscle": 23.39,
+      "visceral": 18
     }
   ]
 }
