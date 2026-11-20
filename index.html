@@ -318,6 +318,7 @@ main{flex:1 0 auto;padding-bottom:calc(var(--tab-h) + 26px + env(safe-area-inset
 .q-main.kr{font-size:20px;letter-spacing:0;line-height:1.45}
 .q-main.small{font-size:26px;letter-spacing:0}
 .q-sub{font-size:12.5px;color:var(--ink-3);margin-top:7px}
+.q-kana{font-size:13px;color:var(--ink-3);margin-top:5px;line-height:1.5;letter-spacing:.4px}
 .q-options{display:flex;flex-direction:column;gap:8px;margin-top:18px}
 .q-opt{
   min-height:52px;padding:10px 14px;border-radius:13px;background:var(--surface);border:1.4px solid var(--line);
@@ -1901,6 +1902,7 @@ function renderQuiz() {
     '<div class="q-progress"><i style="width:' + pct + '%"></i></div>' +
     '<div class="q-body">' +
       '<div class="q-main ' + (it.promptClass || '') + '">' + (it.mainHTML || esc(it.main || '')) + '</div>' +
+      (it.kana ? '<div class="q-kana">' + esc(it.kana) + '</div>' : '') +
       (it.sub ? '<div class="q-sub">' + esc(it.sub) + '</div>' : '') +
       (it.speak ? '<div style="margin-top:10px"><button class="mini-btn" data-speak="' + esc(it.speak) + '">🔊 발음 듣기</button></div>' : '') +
     '</div>' +
@@ -2573,11 +2575,14 @@ function dailyWordQuestions(w, pool, seed) {
   });
   return items;
 }
-function dailyGrammarQuestions(c, ids, seed) {
+/* 문법 문제도 '그 일차까지 배운 어휘로 만들어진 문항'만 냅니다.
+   q.day = 그 문항을 낼 수 있는 최소 일차 (예: を는 목적어 동사가 들어오는 5일차부터). */
+function dailyGrammarQuestions(c, ids, seed, n) {
   const map = {};
   (ids || []).forEach(function (id) { if (id) map[id] = true; });
   return dailyShuffle((c.questions || []).filter(function (q) {
-    return q.target && q.target.t === 'g' && map[q.target.id];
+    if (!q.target || q.target.t !== 'g' || !map[q.target.id]) return false;
+    return !n || !q.day || q.day <= n;
   }), seed);
 }
 /* 대상(단어·문법)마다 골고루 뽑기 — 같은 단어·문법만 몰리지 않게 */
@@ -2628,7 +2633,7 @@ function dailyQuestions(c, sid, n) {
     const w = wmap[id];
     dailyWordQuestions(w, scopeWords, seed + ':' + id).forEach(function (q) { q.day = n; newWQ.push(q); });
   });
-  const newGQ = dailyGrammarQuestions(c, daySet.grammar, seed + ':g').map(function (q) { q.day = n; return q; });
+  const newGQ = dailyGrammarQuestions(c, daySet.grammar, seed + ':g', n).map(function (q) { q.day = n; return q; });
 
   const revWQ = [];
   prevWords.forEach(function (w) {
@@ -2636,9 +2641,9 @@ function dailyQuestions(c, sid, n) {
       q.review = true; q.day = wDay[w.id] || 0; revWQ.push(q);
     });
   });
-  const revGQ = dailyGrammarQuestions(c, prev.grammar, seed + 'rg').map(function (q) {
+  const revGQ = dailyGrammarQuestions(c, prev.grammar, seed + 'rg', n).map(function (q) {
     const copy = Object.assign({}, q);
-    copy.review = true; copy.day = gDay[q.target.id] || 0;
+    copy.review = true; copy.ready = q.day || 0; copy.day = gDay[q.target.id] || 0;
     return copy;
   });
 
@@ -2657,10 +2662,7 @@ function dailyQuestions(c, sid, n) {
   const revPool = revWQ.concat(revGQ);
   const list = [];
   order.forEach(function (kind) {
-    let picked = take(newPool, kind, newPlan[kind], 'n');
-    if (picked.length < newPlan[kind]) {
-      picked = picked.concat(take(revPool, kind, newPlan[kind] - picked.length, 'nr'));
-    }
+    const picked = take(newPool, kind, newPlan[kind], 'n');
     list.push.apply(list, picked);
   });
   order.forEach(function (kind) {
@@ -2729,6 +2731,7 @@ function dailyQuizItems(set) {
     const answer = sh.findIndex(function (p) { return p.ok; });
     return {
       type: 'daily', id: q.id, main: q.prompt, mainHTML: esc(q.prompt), promptClass: 'small',
+      kana: q.kana || '',
       sub: q.sub, options: options, answer: Math.max(0, answer),
       explain: (q.exp || '') + ' → 정답: <b>' + esc(q.options[q.answer] || '') + '</b>' +
         (q.srcLabel ? '<br><span class="q-src">출처: ' + esc(q.srcLabel) + '</span>' : ''),
@@ -2934,7 +2937,7 @@ function dailyStudyHTML() {
       '<span class="cnt' + (g.quizAll ? ' done' : '') + '">' + g.quiz + ' / ' + g.quizTotal + '</span></div>' +
     '<div class="card">' +
       '<div class="ds-scope">누적 <b>' + set.scope.days + '일차</b> 기준 · 배운 단어 <b>' + set.scope.words +
-        '개</b> · 문법 <b>' + set.scope.grammar + '개</b>에서 출제' +
+        '개</b> · 문법 <b>' + set.scope.grammar + '개</b> + 기초 어휘(지시대명사·인사 등)에서만 출제' +
         '<span>' + (set.n > 1
           ? '오늘 새 단어 ' + set.words.length + '개 · 문법 ' + set.grammar.length + '개 위주 + 이전 복습 ' + reviewMix + '문제'
           : '아직 배우지 않은 단어·문법은 나오지 않아요') + '</span></div>' +
