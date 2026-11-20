@@ -3,6 +3,7 @@
 친구에게 보여주려고 만든 **데쿠 테마** 버전입니다. 원래 `demo/index.html`(바쿠고 레드 데모 v29)을 베이스로 테마 색·타이틀·스터디 메이트 대사만 데쿠에 맞게 바꾼 사본입니다. 세온 님이 바쿠고 데모(`/demo/`)를 정리하기로 해서(2026-11-20) 이제 이 폴더가 단독으로 동작하며, 예시 데이터도 이 폴더 안에 있습니다.
 
 - 주소: https://lokid8191-svg.github.io/nihongo-study/demo-deku/
+- PWA: 이 폴더 전용 `manifest.json`(`withデク · 데모`, 시작·범위 `./`, standalone, theme `#16A34A` · background `#FFFFFF`)을 씁니다. 루트 앱의 manifest·서비스 워커는 등록하지 않습니다. 아이콘을 새로 올리면 `manifest.json`의 `icons`와 `index.html`의 `?v=` 값을 함께 올려 주세요.
 - 타이틀: `withデク` (DEMO 배지 유지) · 애플 웹앱 타이틀 `withデク デモ`
 - 저장 키는 `demo-deku-*`로 완전히 분리했습니다(`demo-deku-nihongo-v1`, `demo-deku-fridge_seed_version`, `demo-deku-diet_seed_version`, `demo-deku-weight_seed_version`, `demo-deku-sync_bundle_imported_at`). 루트 앱·바쿠고 데모와 기록이 섞이지 않고, 루트 PWA의 서비스 워커도 등록하지 않습니다.
 - 예시 데이터는 이 폴더의 `seed-weight.json` · `demo-diet.json` · `demo-fridge.json`을 읽고, 학습 단어·문법·문제는 저장소 루트의 `../study-curriculum.json`을 읽습니다. (2026-11-20 바쿠고 데모 `/demo/` 삭제에 맞춰 `demo-diet.json` · `demo-fridge.json`을 이 폴더로 옮기고 경로를 `./` 기준으로 바꿨습니다.)
