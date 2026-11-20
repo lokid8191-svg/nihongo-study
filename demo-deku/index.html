@@ -536,6 +536,12 @@ input[type="text"].field:focus{outline:2px solid #BBF7D0;outline-offset:1px;bord
 .dmac .field{flex:1;min-width:0;text-align:center;padding:0 6px}
 .dcheck{display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--ink-2);margin-top:12px}
 .dcheck input{width:18px;height:18px;accent-color:var(--primary)}
+/* 섭취 목표 수정 */
+.dgoal-foot{display:flex;align-items:center;gap:8px;margin-top:13px;padding-top:11px;border-top:1px solid var(--surface-2);font-size:10.5px;color:var(--ink-3);min-width:0}
+.dgoal-foot .mini-btn{margin-left:auto;min-height:28px;padding:0 10px;font-size:10.5px;flex:none}
+.dgoal-range{display:flex;align-items:center;gap:7px}
+.dgoal-range .field{flex:1;min-width:0;text-align:center;padding:0 8px}
+.dgoal-range span{flex:none;font-size:12.5px;font-weight:600;color:var(--ink-3)}
 .diet-mini{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;cursor:pointer}
 .diet-mini .dmin-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .diet-mini .dmin-t{font-size:13px;font-weight:700}
@@ -720,6 +726,17 @@ input[type="text"].field:focus{outline:2px solid #BBF7D0;outline-offset:1px;bord
 .wt-row .bi{font-size:10px;color:var(--ink-2);background:var(--surface-2);border:1px solid var(--line);border-radius:99px;padding:2px 7px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
 .wt-row .sp{flex:1}
 .wt-row .mini-btn{flex:none;padding:0 9px;height:26px}
+/* 목표까지 진행률 · 목표 수정 */
+.wt-goal{margin-top:11px}
+.wt-goal-bar{height:9px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
+.wt-goal-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#4ADE80);border-radius:99px;transition:width .4s cubic-bezier(.2,.8,.2,1)}
+.wt-goal-bar i.full{background:linear-gradient(90deg,var(--accent),#22C55E)}
+.wt-goal-meta{display:flex;align-items:center;gap:7px;margin-top:6px;font-size:10.5px;color:var(--ink-3);font-variant-numeric:tabular-nums;min-width:0}
+.wt-goal-meta b{color:var(--primary);font-weight:800}
+.wt-goal-meta .sp{flex:1}
+.wt-goal-meta .mini-btn{min-height:27px;padding:0 9px;font-size:10.5px;flex:none}
+.wt-goal-hint{font-size:11.5px;font-weight:600;color:var(--primary);background:var(--primary-soft);border:1px solid #BBF7D0;border-radius:10px;padding:8px 10px;margin-top:12px;line-height:1.5;font-variant-numeric:tabular-nums}
+.wt-goal-reset{display:block;width:100%;margin-top:12px;font-size:11.5px;color:var(--ink-3);text-decoration:underline;text-underline-offset:2px;min-height:30px}
 .hm-weight{display:flex;align-items:center;gap:6px;margin-top:9px;padding-top:9px;border-top:1px solid var(--surface-2);font-size:11.5px;color:var(--ink-2);flex-wrap:wrap;min-width:0}
 .hm-weight b{font-size:13.5px;color:var(--ink)}
 .hm-weight .d{font-weight:700;color:var(--primary)}
@@ -5479,7 +5496,7 @@ function onFridgeSheetClick(e) {
 }
 
 /* ---------------- 식단 기록 (demo-diet.json 시드 동기화) ----------------
-   넘겨준 식단(demo-diet.json)을 목표·하루 기록으로 반영하고,
+   넘겨준 식단(demo-diet.json)의 하루 기록만 반영하고, 섭취 목표는 이 데모의 기본값(1,250 kcal)을 씁니다.
    앱에서 직접 넣고 지운 날짜·항목은 이 기기에 남깁니다. */
 const DIET_MEALS = [
   { k: 'breakfast', l: '아침', e: '🌅' },
@@ -5487,7 +5504,7 @@ const DIET_MEALS = [
   { k: 'dinner',    l: '저녁', e: '🌙' },
   { k: 'snack',     l: '간식', e: '🍪' }
 ];
-const DIET_GOALS_DEFAULT = { calories: 1700, carbs: [190, 220], protein: [80, 100], fat: [50, 65], waterStepMl: 500 };
+const DIET_GOALS_DEFAULT = { calories: 1250, carbs: [130, 150], protein: [65, 80], fat: [35, 45], waterStepMl: 500 };
 const DIET_SEED_KEY = 'demo-deku-diet_seed_version';
 let dietDate = dkey();
 let routineSub = 'routine';   /* 루틴 탭 안의 서브 화면: routine | diet */
@@ -5567,6 +5584,7 @@ function normalizeDiet(raw) {
   }
   return {
     goals: normalizeDietGoals(d.goals),
+    goalsEdited: !!d.goalsEdited,
     days: days,
     seedVersion: Number(d.seedVersion) || 0,
     syncedAt: typeof d.syncedAt === 'string' ? d.syncedAt : ''
@@ -5607,9 +5625,8 @@ function dietMealSum(day, meal) {
    같은 id는 GitHub 값이 최신이므로 영양성분을 맞춥니다. GitHub에서 빠진 지난 날짜·항목도 지우지 않습니다. */
 function applyDietSeed(data) {
   const ds = dietState();
-  if (data && data.goals && typeof data.goals === 'object') {
-    ds.goals = normalizeDietGoals(Object.assign({}, ds.goals || {}, data.goals));
-  }
+  /* 데쿠 데모는 153cm·61kg 감량 기준 섭취 목표(1,250 kcal)를 자기 기본값으로 씁니다.
+     넘겨받은 파일의 goals는 쓰지 않고, 식단 탭에서 직접 고친 목표는 그대로 둡니다. */
   const seedDays = data && data.days && typeof data.days === 'object' ? data.days : {};
   let changed = 0;
   Object.keys(seedDays).forEach(function (k) {
@@ -5794,7 +5811,10 @@ function dietViewHTML() {
       dietRangeRow('🍚 탄수화물', t.carb, g.carbs) +
       dietRangeRow('🍗 단백질', t.protein, g.protein) +
       dietRangeRow('🥑 지방', t.fat, g.fat) +
-    '</div></div>' +
+    '</div>' +
+      '<div class="dgoal-foot"><span>' + (ds.goalsEdited ? '이 기기에서 고친 목표' : '기본 목표 · 153cm·61kg 감량 기준') + '</span>' +
+        '<button class="mini-btn" data-dgoal="1" aria-label="섭취 목표 수정">✎ 목표 수정</button></div>' +
+    '</div>' +
 
     '<div class="section-title"><h2>수분</h2><span class="hint">' + step + 'mL 버튼</span></div>' +
     '<div class="card">' +
@@ -5828,8 +5848,125 @@ function dietShiftWater(dir) {
   renderRoutine();
   toast('물 ' + num1(next) + ' mL');
 }
+/* 섭취 목표(칼로리·탄수·단백·지방) 수정 시트
+   데쿠 데모 기본값은 153cm·61kg 감량 기준(1,250 kcal · 탄 130~150 · 단 65~80 · 지 35~45g)입니다.
+   바꾼 목표는 이 기기에만 저장되고, 넘거받은 파일의 goals가 덮어쓰지 않습니다. */
+let dietGoalDraft = null;
+function openDietGoal() {
+  const g = dietGoals();
+  dietDraft = null;
+  dietGoalDraft = {
+    kcal: String(g.calories),
+    carb: [String(g.carbs[0]), String(g.carbs[1])],
+    protein: [String(g.protein[0]), String(g.protein[1])],
+    fat: [String(g.fat[0]), String(g.fat[1])]
+  };
+  renderDietGoalSheet();
+}
+function syncDietGoalInputs() {
+  if (!dietGoalDraft) return;
+  const g = function (id) { const el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; };
+  dietGoalDraft.kcal = g('dgKcal');
+  [['carb', 'Carb'], ['protein', 'Protein'], ['fat', 'Fat']].forEach(function (p) {
+    if (!document.getElementById('dg' + p[1] + 'Lo')) return;
+    dietGoalDraft[p[0]] = [g('dg' + p[1] + 'Lo'), g('dg' + p[1] + 'Hi')];
+  });
+}
+function dietGoalHintText() {
+  const d = dietGoalDraft || {};
+  const mid = function (k) {
+    const a = Number((d[k] || [])[0]), b = Number((d[k] || [])[1]);
+    if (!isFinite(a) || !isFinite(b) || a <= 0 || b <= 0) return null;
+    return (Math.min(a, b) + Math.max(a, b)) / 2;
+  };
+  const kcal = Number(d.kcal);
+  const c = mid('carb'), p = mid('protein'), f = mid('fat');
+  if (!isFinite(kcal) || kcal <= 0 || c === null || p === null || f === null) {
+    return '범위의 가운데 값으로 탄·단·지 칼로리를 계산해 보여드려요';
+  }
+  const macro = Math.round(c * 4 + p * 4 + f * 9);
+  const diff = macro - Math.round(kcal);
+  return '탄·단·지 합계 ≈ ' + macro + ' kcal · 목표 ' + Math.round(kcal) + ' kcal' +
+    (Math.abs(diff) <= 80 ? ' (잘 맞아요)' : (diff > 0 ? ' (' + diff + ' kcal 많아요)' : ' (' + (-diff) + ' kcal 적어요)'));
+}
+function renderDietGoalSheet() {
+  if (!dietGoalDraft) return;
+  const edited = !!dietState().goalsEdited;
+  const rangeRow = function (key, label) {
+    return '<label class="field-label">' + label + '<span>g · 범위</span></label>' +
+      '<div class="dgoal-range">' +
+        '<input class="field" type="number" id="dg' + key + 'Lo" inputmode="decimal" min="0" step="1" value="' + esc(dietGoalDraft[key.toLowerCase()][0]) + '" placeholder="최소" aria-label="' + label + ' 최소 g">' +
+        '<span>~</span>' +
+        '<input class="field" type="number" id="dg' + key + 'Hi" inputmode="decimal" min="0" step="1" value="' + esc(dietGoalDraft[key.toLowerCase()][1]) + '" placeholder="최대" aria-label="' + label + ' 최대 g">' +
+      '</div>';
+  };
+  openSheet(
+    '<div class="quiz-head"><b>🎯 섭취 목표 수정</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<label class="field-label" for="dgKcal">일일 칼로리<span>kcal · 필수</span></label>' +
+    '<input class="field" type="number" id="dgKcal" inputmode="numeric" min="500" max="5000" step="10" value="' + esc(dietGoalDraft.kcal) + '" placeholder="예: 1250">' +
+    rangeRow('Carb', '🍚 탄수화물') +
+    rangeRow('Protein', '🍗 단백질') +
+    rangeRow('Fat', '🥑 지방') +
+    '<p class="wt-goal-hint" id="dgHint">' + esc(dietGoalHintText()) + '</p>' +
+    (edited ? '<button class="wt-goal-reset" data-dgoalreset="1">기본 목표(1,250 kcal · 탄 130~150 · 단 65~80 · 지 35~45g)로 돌리기</button>' : '') +
+    '<p class="menu-eff">바꽌 목표는 이 기기에만 저장되고, 오늘의 목표 달성률·맞춤 메뉴 추천(남은 칼로리)에 바로 반영돼요.</p>' +
+    '<div class="q-foot"><button class="btn" data-close="1">취소</button>' +
+      '<button class="btn btn-primary" data-dgoalsave="1">저장</button></div>'
+  );
+}
+function dietGoalRange(key) {
+  const arr = dietGoalDraft[key] || [];
+  const a = Number(arr[0]), b = Number(arr[1]);
+  if (String(arr[0] || '').trim() === '' || String(arr[1] || '').trim() === '') return null;
+  if (!isFinite(a) || !isFinite(b) || a <= 0 || b <= 0 || a > 500 || b > 500) return null;
+  return [Math.min(a, b), Math.max(a, b)];
+}
+function saveDietGoal() {
+  if (!dietGoalDraft) return;
+  syncDietGoalInputs();
+  const kcal = Number(dietGoalDraft.kcal);
+  if (String(dietGoalDraft.kcal).trim() === '' || !isFinite(kcal) || kcal < 500 || kcal > 5000) {
+    toast('칼로리 목표를 500~5000 사이 숫자로 적어 주세요'); return;
+  }
+  const carbs = dietGoalRange('carb');
+  const protein = dietGoalRange('protein');
+  const fat = dietGoalRange('fat');
+  if (!carbs || !protein || !fat) { toast('탄수·단백·지방 범위를 g 숫자로 적어 주세요 (0~500)'); return; }
+  const ds = dietState();
+  ds.goals = normalizeDietGoals({
+    calories: Math.round(kcal), carbs: carbs, protein: protein, fat: fat,
+    waterStepMl: ds.goals.waterStepMl
+  });
+  ds.goalsEdited = true;
+  dietGoalDraft = null;
+  save();
+  closeSheet();
+  renderRoutine();
+  const g = dietState().goals;
+  toast('섭취 목표 저장 · ' + numComma(g.calories) + ' kcal · 탄 ' + g.carbs[0] + '~' + g.carbs[1] +
+    ' · 단 ' + g.protein[0] + '~' + g.protein[1] + ' · 지 ' + g.fat[0] + '~' + g.fat[1] + 'g');
+}
+function resetDietGoal() {
+  const ds = dietState();
+  ds.goals = normalizeDietGoals(null);
+  delete ds.goalsEdited;
+  dietGoalDraft = null;
+  save();
+  closeSheet();
+  renderRoutine();
+  toast('섭취 목표를 기본값(1,250 kcal)으로 돌렸어요');
+}
+function onDietGoalInput() {
+  if (!dietGoalDraft) return false;
+  syncDietGoalInputs();
+  const hint = document.getElementById('dgHint');
+  if (hint) hint.textContent = dietGoalHintText();
+  return true;
+}
+
 function openDietItem(meal, id) {
   const ds = dietState();
+  dietGoalDraft = null;
   const day = ds.days[dietDate];
   const arr = (day && day.meals && day.meals[meal]) || [];
   const it = id ? arr.filter(function (x) { return x.id === id; })[0] : null;
@@ -5948,6 +6085,7 @@ function onDietClick(e) {
     return true;
   }
   if (t.closest('[data-dsync]')) { syncDietNow(true); return true; }
+  if (t.closest('[data-dgoal]')) { openDietGoal(); return true; }
   const wt = t.closest('[data-dwater]');
   if (wt) { dietShiftWater(Number(wt.dataset.dwater) >= 0 ? 1 : -1); return true; }
   const ad = t.closest('[data-dadd]');
@@ -5961,9 +6099,12 @@ function onDietClick(e) {
   return false;
 }
 function onDietSheetClick(e) {
-  if (!dietDraft) return false;
+  if (!dietDraft && !dietGoalDraft) return false;
   const t = e.target;
   if (!t || !t.closest) return false;
+  if (t.closest('[data-dgoalsave]')) { saveDietGoal(); return true; }
+  if (t.closest('[data-dgoalreset]')) { resetDietGoal(); return true; }
+  if (!dietDraft) return false;
   if (t.closest('[data-dsave]')) { saveDietItem(); return true; }
   if (t.closest('[data-ddelok]')) { const d = dietDraft; deleteDietItem(d.meal, d.id); return true; }
   if (t.closest('[data-ddel]')) { syncDietInputs(); dietDelAsk = true; renderDietSheet(); return true; }
@@ -5990,15 +6131,16 @@ function dietMiniHTML() {
 }
 
 
-/* ---------------- 체중 · 인바디 (demo-weight.json 시드 동기화) ----------------
-   넘겨받은 체중·인바디 기록(demo-weight.json)을 받아 주간 추세로 보여주고,
+/* ---------------- 체중 · 인바디 (seed-weight.json 시드 동기화) ----------------
+   넘겨받은 체중·인바디 기록(seed-weight.json · 153cm·61kg 예시)을 받아 주간 추세로 보여주고,
    앱에서 직접 넣은 체중·허리둘레 기록은 이 기기에 남깁니다.
    하루 수치가 아니라 주간 평균으로 판단하는 기준을 그대로 따릅니다. */
 const WEIGHT_SEED_KEY = 'demo-deku-weight_seed_version';
 const WEIGHT_DEFAULT_PROFILE = {
-  heightCm: 162, startDate: '2026-09-14', startWeight: 64.5, goalWeight: 58,
-  bmr: 1300, startWaist: 78, latestWaist: 75, waistNote: ''
+  heightCm: 153, startDate: '2026-09-14', startWeight: 61, goalWeight: 52,
+  bmr: 1180, startWaist: 78, latestWaist: 75.5, waistNote: ''
 };
+const WT_PROFILE_FIELDS = ['goalWeight', 'startWeight', 'startDate'];
 let weightSyncing = false;
 let weightDraft = null;
 let weightDelAsk = false;
@@ -6016,6 +6158,11 @@ function normalizeWeightProfile(raw) {
   });
   if (wtDateStr(r.startDate)) p.startDate = wtDateStr(r.startDate);
   if (typeof r.waistNote === 'string') p.waistNote = r.waistNote.slice(0, 120);
+  /* 이 기기에서 직접 고친 항목 — 체중 기록 동기화가 덮어쓰지 않습니다. */
+  if (Array.isArray(r.userFields)) {
+    const keep = r.userFields.filter(function (k) { return WT_PROFILE_FIELDS.indexOf(k) >= 0; });
+    if (keep.length) p.userFields = keep;
+  }
   return p;
 }
 function normalizeWeightEntry(raw) {
@@ -6174,12 +6321,18 @@ function weightSummary() {
   const loss = Math.round((kg - p.startWeight) * 100) / 100;
   const lossPct = p.startWeight ? Math.round(loss / p.startWeight * 1000) / 10 : 0;
   const remain = Math.round((kg - p.goalWeight) * 100) / 100;
+  /* 시작 → 목표 구간에서 지금 어디까지 왔는지(%). 목표를 바꾸면 바로 다시 계산됩니다. */
+  const span = p.startWeight - p.goalWeight;
+  const goalPct = span > 0
+    ? Math.max(0, Math.min(100, Math.round((p.startWeight - kg) / span * 100)))
+    : (kg <= p.goalWeight ? 100 : 0);
   const bmi = (kg && p.heightCm) ? Math.round(kg / Math.pow(p.heightCm / 100, 2) * 10) / 10 : null;
   const weeks = weightWeeks();
   const lastW = weeks.length ? weeks[weeks.length - 1] : null;
   const prevW = weeks.length > 1 ? weeks[weeks.length - 2] : null;
   return {
     profile: p, latest: latest, kg: kg, loss: loss, lossPct: lossPct, remain: remain, bmi: bmi,
+    goalPct: goalPct,
     weeks: weeks, lastW: lastW, prevW: prevW,
     weekDelta: (lastW && prevW) ? Math.round((lastW.avg - prevW.avg) * 100) / 100 : null
   };
@@ -6187,6 +6340,12 @@ function weightSummary() {
 function wtSigned(v, unit) {
   if (v === null || v === undefined || !isFinite(v)) return '—';
   return (v > 0 ? '+' : '') + (Math.round(v * 100) / 100) + (unit || '');
+}
+/* 64.50 → 64.5, 58.00 → 58 처럼 소수점 꼬리를 정리합니다. */
+function wtKgText(v) {
+  const n = wtNum(v);
+  if (n === null) return '—';
+  return String(Math.round(n * 100) / 100);
 }
 function weightLatestInBody() {
   const list = weightEntries().filter(function (e) { return e.bodyFat != null || e.muscle != null; });
@@ -6236,8 +6395,15 @@ function weightViewHTML() {
         (latest ? koreanDate(parseDkey(latest.date)) : '기록 없음') + '</span></div>' +
       '<div class="wt-top"><span class="wt-kg">' + s.kg.toFixed(2) + '<small>kg</small></span>' +
         '<span class="wt-delta' + (s.loss > 0 ? ' up' : '') + '">' + wtSigned(s.loss, 'kg') + '</span></div>' +
-      '<div class="wt-sub">시작 ' + p.startWeight + 'kg (' + p.startDate.slice(5).replace('-', '/') + ') · 목표 ' + p.goalWeight + 'kg' +
+      '<div class="wt-sub">시작 ' + wtKgText(p.startWeight) + 'kg (' + p.startDate.slice(5).replace('-', '/') + ')' +
         (s.bmi ? ' · BMI ' + s.bmi : '') + '</div>' +
+      '<div class="wt-goal">' +
+        '<div class="wt-goal-bar" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="' + s.goalPct + '" aria-label="목표까지 진행률">' +
+          '<i class="' + (s.goalPct >= 100 ? 'full' : '') + '" style="width:' + s.goalPct + '%"></i></div>' +
+        '<div class="wt-goal-meta"><span><b>' + s.goalPct + '%</b> 달성</span>' +
+          '<span>목표 ' + wtKgText(p.goalWeight) + 'kg</span><span class="sp"></span>' +
+          '<button class="mini-btn" data-wgoal="1" aria-label="체중 목표 수정">✎ 목표 수정</button></div>' +
+      '</div>' +
       '<div class="wt-grid">' +
         '<div class="wt-stat"><b>' + wtSigned(s.loss, 'kg') + '</b><span>시작 대비 (' + wtSigned(s.lossPct, '%') + ')</span></div>' +
         '<div class="wt-stat"><b>' + (s.remain > 0 ? s.remain.toFixed(2) + 'kg' : '달성') + '</b><span>목표까지 남은 체중</span></div>' +
@@ -6284,23 +6450,25 @@ function weightViewHTML() {
         ' · 허리둘레는 매주 월요일 측정' + (p.waistNote ? ' (' + esc(p.waistNote) + ')' : '') + '</p>' +
     '</div>' +
 
-    '<p class="foot-note">체중 기록은 이 기기와 <b>demo-weight.json</b>을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.<br>이 기기 기록은 지워지지 않아요.</p>' +
+    '<p class="foot-note">체중 기록은 이 기기와 <b>seed-weight.json</b>(153cm·61kg 예시)을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.<br>이 기기 기록은 지워지지 않아요.</p>' +
   '</div>';
 }
 
-/* 넘겨받은 최신 기록(demo-weight.json) 반영.
+/* 넘겨받은 최신 기록(seed-weight.json) 반영.
    날짜 단위로 병합합니다. 앱에서 직접 넣은 날짜 기록은 그대로 두고,
    GitHub에서 빠진 지난주 기록도 이 기기에서는 지우지 않습니다. */
 function mergeWeightProfile(raw) {
   const cur = weightProfile();
   const r = raw && typeof raw === 'object' ? raw : {};
+  const keep = Array.isArray(cur.userFields) ? cur.userFields : [];
   let changed = false;
   ['heightCm', 'startWeight', 'goalWeight', 'bmr', 'startWaist', 'latestWaist'].forEach(function (k) {
+    if (keep.indexOf(k) >= 0) return;   /* 사용자가 직접 고친 값은 그대로 둡니다 */
     const v = wtNum(r[k]);
     if (v !== null && v > 0 && cur[k] !== v) { cur[k] = v; changed = true; }
   });
   const sd = wtDateStr(r.startDate);
-  if (sd && cur.startDate !== sd) { cur.startDate = sd; changed = true; }
+  if (sd && keep.indexOf('startDate') < 0 && cur.startDate !== sd) { cur.startDate = sd; changed = true; }
   if (typeof r.waistNote === 'string' && r.waistNote && cur.waistNote !== r.waistNote) {
     cur.waistNote = r.waistNote.slice(0, 120); changed = true;
   }
@@ -6336,7 +6504,7 @@ function applyWeightSeed(data) {
 function syncWeightSeed(force) {
   if (weightSyncing) return Promise.resolve({ busy: true });
   weightSyncing = true;
-  return fetch('../demo/demo-weight.json?t=' + Date.now(), { cache: 'no-store' })
+  return fetch('./seed-weight.json?t=' + Date.now(), { cache: 'no-store' })
     .then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
     .then(function (data) {
       const ver = Number(data && data.version) || 0;
@@ -6389,10 +6557,116 @@ function syncWeightNow(force) {
   });
 }
 
+/* 목표 체중·시작 체중 수정 시트
+   목표를 바꾸면 목표까지 남은 kg·진행률(%)이 바로 다시 계산됩니다.
+   이 기기에서 고친 값은 profile.userFields에 표시해 두어 체중 기록 동기화가 덮어쓰지 않습니다. */
+let weightGoalDraft = null;
+function openWeightGoal() {
+  const p = weightProfile();
+  weightDraft = null;
+  weightGoalDraft = {
+    goal: wtKgText(p.goalWeight),
+    start: wtKgText(p.startWeight),
+    date: p.startDate
+  };
+  renderWeightGoalSheet();
+}
+function syncWeightGoalInputs() {
+  if (!weightGoalDraft) return;
+  const g = function (id) { const el = document.getElementById(id); return el ? String(el.value || '') : ''; };
+  if (document.getElementById('gGoal')) weightGoalDraft.goal = g('gGoal');
+  if (document.getElementById('gStart')) weightGoalDraft.start = g('gStart');
+  if (document.getElementById('gStartDate')) weightGoalDraft.date = g('gStartDate') || weightGoalDraft.date;
+}
+function weightGoalHintText() {
+  const d = weightGoalDraft || {};
+  const goal = wtNum(d.goal);
+  const start = wtNum(d.start);
+  const latest = weightLatest();
+  const kg = latest ? latest.kg : start;
+  const bits = [];
+  if (goal !== null && kg !== null) {
+    const remain = Math.round((kg - goal) * 100) / 100;
+    bits.push(remain > 0
+      ? '지금 ' + kg.toFixed(2) + 'kg → ' + wtKgText(goal) + 'kg · ' + remain.toFixed(2) + 'kg 남았어요'
+      : '지금 ' + kg.toFixed(2) + 'kg → 목표에 이미 닿았어요');
+  }
+  if (goal !== null && start !== null && start > goal && kg !== null) {
+    const pct = Math.max(0, Math.min(100, Math.round((start - kg) / (start - goal) * 100)));
+    bits.push('진행률 ' + pct + '%');
+  }
+  return bits.length ? bits.join(' · ') : '목표 체중을 적으면 남은 kg을 계산해 드려요';
+}
+function renderWeightGoalSheet() {
+  if (!weightGoalDraft) return;
+  const p = weightProfile();
+  const edited = Array.isArray(p.userFields) && p.userFields.indexOf('goalWeight') >= 0;
+  openSheet(
+    '<div class="quiz-head"><b>🎯 체중 목표 수정</b><button class="mini-btn" data-close="1">닫기</button></div>' +
+    '<label class="field-label" for="gGoal">목표 체중<span>kg · 필수</span></label>' +
+    '<input class="field" type="number" id="gGoal" inputmode="decimal" min="20" max="300" step="0.1" value="' + esc(weightGoalDraft.goal) + '" placeholder="예: 58">' +
+    '<label class="field-label" for="gStart">시작 체중<span>kg · 진행률 기준</span></label>' +
+    '<input class="field" type="number" id="gStart" inputmode="decimal" min="20" max="300" step="0.01" value="' + esc(weightGoalDraft.start) + '" placeholder="예: 64.5">' +
+    '<label class="field-label" for="gStartDate">시작일<span>선택</span></label>' +
+    '<input class="field" type="date" id="gStartDate" value="' + esc(weightGoalDraft.date) + '">' +
+    '<p class="wt-goal-hint" id="gHint">' + esc(weightGoalHintText()) + '</p>' +
+    (edited ? '<button class="wt-goal-reset" data-wgoalreset="1">기본 목표(' + wtKgText(WEIGHT_DEFAULT_PROFILE.goalWeight) + 'kg)로 되돌리기</button>' : '') +
+    '<p class="menu-eff">목표를 바꾸면 목표까지 남은 체중과 진행률이 바로 다시 계산돼요. 이 기기에만 저장되고, 체중 기록 동기화에도 덮어쓰지 않아요.</p>' +
+    '<div class="q-foot"><button class="btn" data-close="1">취소</button>' +
+      '<button class="btn btn-primary" data-wgoalsave="1">저장</button></div>'
+  );
+}
+function saveWeightGoal() {
+  if (!weightGoalDraft) return;
+  syncWeightGoalInputs();
+  const goal = wtNum(weightGoalDraft.goal);
+  if (goal === null || goal < 20 || goal > 300) { toast('목표 체중을 숫자로 적어 주세요 (20~300kg)'); return; }
+  const cur = weightProfile();
+  const start = wtNum(weightGoalDraft.start);
+  const startKg = start !== null ? start : cur.startWeight;
+  if (startKg < 20 || startKg > 300) { toast('시작 체중을 숫자로 적어 주세요 (20~300kg)'); return; }
+  if (goal >= startKg) { toast('목표 체중은 시작 체중(' + wtKgText(startKg) + 'kg)보다 낮게 정해 주세요'); return; }
+  const ws = weightState();
+  ws.profile.goalWeight = Math.round(goal * 10) / 10;
+  ws.profile.startWeight = Math.round(startKg * 100) / 100;
+  const sd = wtDateStr(weightGoalDraft.date);
+  if (sd) ws.profile.startDate = sd;
+  const keep = Array.isArray(ws.profile.userFields) ? ws.profile.userFields.slice() : [];
+  ['goalWeight', 'startWeight', 'startDate'].forEach(function (k) { if (keep.indexOf(k) < 0) keep.push(k); });
+  ws.profile.userFields = keep;
+  weightGoalDraft = null;
+  save();
+  closeSheet();
+  renderRoutine();
+  const s = weightSummary();
+  toast('목표 ' + wtKgText(s.profile.goalWeight) + 'kg · ' +
+    (s.remain > 0 ? s.remain.toFixed(2) + 'kg 남음' : '달성') + ' (' + s.goalPct + '%)');
+}
+function resetWeightGoal() {
+  const ws = weightState();
+  ws.profile.goalWeight = WEIGHT_DEFAULT_PROFILE.goalWeight;
+  ws.profile.userFields = (Array.isArray(ws.profile.userFields) ? ws.profile.userFields : [])
+    .filter(function (k) { return k !== 'goalWeight'; });
+  if (!ws.profile.userFields.length) delete ws.profile.userFields;
+  weightGoalDraft = null;
+  save();
+  closeSheet();
+  renderRoutine();
+  toast('목표를 기본 ' + wtKgText(WEIGHT_DEFAULT_PROFILE.goalWeight) + 'kg으로 되돌렸어요');
+}
+function onWeightGoalInput() {
+  if (!weightGoalDraft) return false;
+  syncWeightGoalInputs();
+  const hint = document.getElementById('gHint');
+  if (hint) hint.textContent = weightGoalHintText();
+  return true;
+}
+
 /* 기록 추가/수정 시트 */
 function openWeightEntry(date) {
   const k = date || dkey();
   const e = weightState().entries[k];
+  weightGoalDraft = null;
   weightDraft = {
     date: k,
     kg: e ? String(e.kg) : '',
@@ -6493,6 +6767,7 @@ function onWeightClick(e) {
   const we = t.closest('[data-wedit]');
   if (we) { openWeightEntry(we.dataset.wedit); return true; }
   if (t.closest('[data-wsync]')) { syncWeightNow(true); return true; }
+  if (t.closest('[data-wgoal]')) { openWeightGoal(); return true; }
   const wd = t.closest('[data-wdel]');
   if (wd) { openWeightEntry(wd.dataset.wdel); weightDelAsk = true; renderWeightSheet(); return true; }
   const sp = t.closest('[data-speak]');
@@ -6500,9 +6775,12 @@ function onWeightClick(e) {
   return false;
 }
 function onWeightSheetClick(e) {
-  if (!weightDraft) return false;
+  if (!weightDraft && !weightGoalDraft) return false;
   const t = e.target;
   if (!t || !t.closest) return false;
+  if (t.closest('[data-wgoalsave]')) { saveWeightGoal(); return true; }
+  if (t.closest('[data-wgoalreset]')) { resetWeightGoal(); return true; }
+  if (!weightDraft) return false;
   if (t.closest('[data-wsave]')) { saveWeightEntry(); return true; }
   if (t.closest('[data-wdelok]')) { const d = weightDraft; deleteWeightEntry(d.date); return true; }
   if (t.closest('[data-wdel]')) { syncWeightInputs(); weightDelAsk = true; renderWeightSheet(); return true; }
@@ -7932,6 +8210,11 @@ function init() {
     if (e.target && e.target.id === 'syncBundleFile') readSyncBundleFile(e.target.files && e.target.files[0]);
   });
   $('#sheetPanel').addEventListener('change', onRoutineSheetChange);
+  $('#sheetPanel').addEventListener('input', function (e) {
+    if (!e.target || !e.target.id) return;
+    if (e.target.id === 'gGoal' || e.target.id === 'gStart') { onWeightGoalInput(); return; }
+    if (/^dg/.test(e.target.id)) onDietGoalInput();
+  });
   $('#sheetBackdrop').addEventListener('click', function () {
     if (Q.active) { Q.active = false; Q.items = []; Q.onDone = null; }
     closeSheet();
