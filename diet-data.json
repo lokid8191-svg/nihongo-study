@@ -1,5 +1,5 @@
 {
-  "version": 18,
+  "version": 19,
   "updatedAt": "2026-11-20",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -78,7 +78,12 @@
         "lunch": [
           { "id": "l1", "name": "굽네 오리지널 순살 (다리살, 1/4마리 약 125g 추정)", "kcal": 238, "carb": 3.1, "protein": 39.1, "fat": 7.7, "est": true }
         ],
-        "dinner": [],
+        "dinner": [
+          { "id": "d1", "name": "와규 모둠 구이 약 150g", "kcal": 480, "carb": 0.5, "protein": 26, "fat": 41.6, "est": true },
+          { "id": "d2", "name": "순두부찌개 두부 두 숟가락 (약 50g + 국물 소량)", "kcal": 40, "carb": 1.5, "protein": 3.3, "fat": 2.3, "est": true },
+          { "id": "d3", "name": "육회 한 젓가락 (약 20g)", "kcal": 35, "carb": 0.3, "protein": 3.4, "fat": 2.2, "est": true },
+          { "id": "d4", "name": "교자만두 3개 (약 90g)", "kcal": 200, "carb": 24.5, "protein": 7.3, "fat": 8.1, "est": true }
+        ],
         "snack": []
       }
     }
