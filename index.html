@@ -506,13 +506,15 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .dgo-v{font-size:14px;font-weight:800;color:var(--ink);letter-spacing:-.2px}
 .dgo-v small{font-size:10.5px;font-weight:600;color:var(--ink-3);margin-left:4px;letter-spacing:0}
 .dgo-bar{position:relative;height:9px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
-.dgo-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,var(--primary),#F87171);border-radius:99px;transition:width .3s ease}
-.dgo-fill.over{background:linear-gradient(90deg,#F59E0B,#B45309)}
-.dgo-zone{position:absolute;top:0;bottom:0;background:rgba(220,38,38,.12);border-left:1.5px dashed rgba(220,38,38,.45);border-right:1.5px dashed rgba(220,38,38,.45)}
+/* 섭취 목표 3색 규칙: 정상 범위=초록, 부족=주황, 초과=빨강 (바·상태 문구 공통) */
+.dgo-fill{position:absolute;left:0;top:0;bottom:0;background:linear-gradient(90deg,#15803D,#22C55E);border-radius:99px;transition:width .3s ease}
+.dgo-fill.short{background:linear-gradient(90deg,#F59E0B,#EA580C)}
+.dgo-fill.over{background:linear-gradient(90deg,#DC2626,#991B1B)}
+.dgo-zone{position:absolute;top:0;bottom:0;background:rgba(21,128,61,.12);border-left:1.5px dashed rgba(21,128,61,.45);border-right:1.5px dashed rgba(21,128,61,.45)}
 .dgo-state{font-size:10.5px;font-weight:700;color:var(--ink-3)}
 .dgo-state.ok{color:var(--ok)}
 .dgo-state.over{color:var(--bad)}
-.dgo-state.short{color:var(--warn)}
+.dgo-state.short{color:#C2410C}
 .dwater{display:flex;align-items:center;gap:7px}
 .dwater .dw-v{font-size:20px;font-weight:800;letter-spacing:-.6px}
 .dwater .dw-v small{font-size:11px;font-weight:600;color:var(--ink-3);margin-left:3px;letter-spacing:0}
@@ -541,8 +543,9 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .diet-mini .dmin-t{font-size:13px;font-weight:700}
 .diet-mini .dmin-v{font-size:15px;font-weight:800;color:var(--primary);letter-spacing:-.3px}
 .diet-mini .dmin-bar{height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden}
-.diet-mini .dmin-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--primary),#F87171);border-radius:99px}
-.diet-mini .dmin-bar i.over{background:linear-gradient(90deg,#F59E0B,#B45309)}
+.diet-mini .dmin-bar i{display:block;height:100%;background:linear-gradient(90deg,#15803D,#22C55E);border-radius:99px}
+.diet-mini .dmin-bar i.short{background:linear-gradient(90deg,#F59E0B,#EA580C)}
+.diet-mini .dmin-bar i.over{background:linear-gradient(90deg,#DC2626,#991B1B)}
 .diet-mini .dmin-s{font-size:11.5px;color:var(--ink-3);line-height:1.5}
 
 /* ---------- 홈: 하루치 대시보드 ---------- */
@@ -584,9 +587,10 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .hm-g-t b{flex:none;font-size:11.5px;font-weight:800;color:var(--ink);letter-spacing:-.2px;white-space:nowrap}
 .hm-g-t b small{font-size:10px;font-weight:700;color:var(--ink-3);margin-left:2px;letter-spacing:0}
 .hm-track{position:relative;height:6px;border-radius:99px;background:var(--surface-2);border:1px solid var(--line);overflow:hidden;margin-top:3px}
-.hm-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,var(--primary),#F87171)}
-.hm-track i.over{background:linear-gradient(90deg,#F59E0B,#B45309)}
-.hm-zone{position:absolute;top:0;bottom:0;background:rgba(220,38,38,.1);border-left:1px solid rgba(220,38,38,.28);border-right:1px solid rgba(220,38,38,.28)}
+.hm-track i{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#15803D,#22C55E)}
+.hm-track i.short{background:linear-gradient(90deg,#F59E0B,#EA580C)}
+.hm-track i.over{background:linear-gradient(90deg,#DC2626,#991B1B)}
+.hm-zone{position:absolute;top:0;bottom:0;background:rgba(21,128,61,.1);border-left:1px solid rgba(21,128,61,.28);border-right:1px solid rgba(21,128,61,.28)}
 .hm-water{display:flex;align-items:center;gap:5px;margin-top:6px;padding-top:6px;border-top:1px dashed var(--line);font-size:12px}
 .hm-water b{font-size:13px;font-weight:800;letter-spacing:-.2px}
 .hm-water small{font-size:10.5px;color:var(--ink-3);font-weight:700}
@@ -2148,7 +2152,7 @@ function hmGaugeHTML(label, valueHTML, fill, opts) {
   const w = Math.max(0, Math.min(100, Math.round(fill * 10) / 10));
   return '<div class="hm-g">' +
     '<div class="hm-g-t"><span>' + label + '</span><b>' + valueHTML + '</b>' +
-      '<span class="hm-track"><i class="' + (o.over ? 'over' : '') + '" style="width:' + w + '%"></i>' +
+      '<span class="hm-track"><i class="' + (o.state || '') + '" style="width:' + w + '%"></i>' +
         (o.zone ? '<span class="hm-zone" style="left:' + o.zone[0] + '%;width:' + Math.max(0, o.zone[1] - o.zone[0]) + '%"></span>' : '') +
       '</span></div></div>';
 }
@@ -2309,10 +2313,11 @@ function renderHome() {
           '<button class="link" data-goto-diet="1">식단 기록 ›</button></div>' +
         '<div class="hm-gauges">' +
           hmGaugeHTML('🔥 칼로리', num1(dt.kcal) + '<small> / ' + numComma(g.calories) + ' kcal</small>',
-            dt.kcal / kcalMax * 100, { over: dt.kcal > g.calories }) +
+            dt.kcal / kcalMax * 100,
+            { state: dietKcalState(dt.kcal, g.calories), zone: [dietKcalFloor(g.calories) / kcalMax * 100, g.calories / kcalMax * 100] }) +
           hmGaugeHTML('🍗 단백질', num1(dt.protein) + '<small> / ' + g.protein[0] + '~' + g.protein[1] + 'g</small>',
             dt.protein / proMax * 100,
-            { over: dt.protein > g.protein[1], zone: [g.protein[0] / proMax * 100, g.protein[1] / proMax * 100] }) +
+            { state: dietRangeState(dt.protein, g.protein), zone: [g.protein[0] / proMax * 100, g.protein[1] / proMax * 100] }) +
         '</div>' +
         '<div class="hm-water">💧 <b>' + num1(water) + '</b><small>mL</small><span class="sp"></span>' +
           '<button class="btn btn-sm btn-primary" data-hwater="1">+' + step + 'mL</button></div>' +
@@ -6010,33 +6015,49 @@ function routineSubNav() {
   '</div>';
 }
 
+/* 섭취 목표 상태 판정 — 정상 범위=초록(ok), 부족=주황(short), 초과=빨강(over)
+   범위 항목(탄·단·지): range[0] 미만 부족, range[1] 초과 초과, 그 사이 정상
+   칼로리: 목표의 85%(기존 적정 하한) 이상 ~ 목표 이하 정상, 목표 초과 초과, 그 아래 부족 */
+function dietKcalFloor(goal) { return Math.round(goal * 0.85 * 10) / 10; }
+function dietKcalState(value, goal) {
+  return value > goal ? 'over' : (value < dietKcalFloor(goal) ? 'short' : 'ok');
+}
+function dietRangeState(value, range) {
+  return value > range[1] ? 'over' : (value < range[0] ? 'short' : 'ok');
+}
 function dietKcalRow(value, goal) {
   const max = Math.max(goal * 1.2, value * 1.05, 1);
   const fill = Math.min(100, value / max * 100);
   const left = Math.round((goal - value) * 10) / 10;
-  const st = left < 0
-    ? { t: '목표보다 ' + num1(-left) + ' kcal 많아요', c: 'over' }
-    : { t: '남은 ' + num1(left) + ' kcal', c: left === 0 ? 'ok' : (left < goal * 0.15 ? 'ok' : '') };
+  const floor = dietKcalFloor(goal);
+  const c = dietKcalState(value, goal);
+  const st = c === 'over'
+    ? { t: '목표보다 ' + num1(value - goal) + ' kcal 많아요', c: c }
+    : c === 'short'
+      ? { t: '목표보다 ' + num1(left) + ' kcal 적어요', c: c }
+      : { t: left <= 0 ? '목표 달성' : '남은 ' + num1(left) + ' kcal · 적정 구간', c: c };
   return '<div class="dgo-row">' +
     '<div class="dgo-top"><span class="dgo-k">🔥 칼로리</span>' +
       '<span class="dgo-v">' + num1(value) + '<small> / ' + goal + ' kcal</small></span></div>' +
-    '<div class="dgo-bar"><span class="dgo-fill' + (value > goal ? ' over' : '') + '" style="width:' + fill + '%"></span></div>' +
+    '<div class="dgo-bar"><span class="dgo-fill ' + c + '" style="width:' + fill + '%"></span>' +
+      '<span class="dgo-zone" style="left:' + (floor / max * 100) + '%;width:' + ((goal - floor) / max * 100) + '%"></span></div>' +
     '<div class="dgo-state ' + st.c + '">' + st.t + '</div>' +
   '</div>';
 }
-function dietRangeRow(label, value, range, cls) {
+function dietRangeRow(label, value, range) {
   const max = Math.max(range[1] * 1.25, value * 1.05, 1);
   const fill = Math.min(100, value / max * 100);
   const z0 = range[0] / max * 100, z1 = range[1] / max * 100;
-  const st = value > range[1]
-    ? { t: '목표 ' + range[1] + 'g보다 ' + num1(value - range[1]) + 'g 많아요', c: 'over' }
-    : value < range[0]
-      ? { t: num1(range[0] - value) + 'g 더 필요', c: 'short' }
-      : { t: '목표 범위 안', c: 'ok' };
+  const c = dietRangeState(value, range);
+  const st = c === 'over'
+    ? { t: '목표 ' + range[1] + 'g보다 ' + num1(value - range[1]) + 'g 많아요', c: c }
+    : c === 'short'
+      ? { t: num1(range[0] - value) + 'g 더 필요', c: c }
+      : { t: '목표 범위 안', c: c };
   return '<div class="dgo-row">' +
     '<div class="dgo-top"><span class="dgo-k">' + label + '</span>' +
       '<span class="dgo-v">' + num1(value) + 'g<small> / ' + range[0] + '~' + range[1] + 'g</small></span></div>' +
-    '<div class="dgo-bar"><span class="dgo-fill' + (cls ? ' ' + cls : '') + (value > range[1] ? ' over' : '') + '" style="width:' + fill + '%"></span>' +
+    '<div class="dgo-bar"><span class="dgo-fill ' + c + '" style="width:' + fill + '%"></span>' +
       '<span class="dgo-zone" style="left:' + z0 + '%;width:' + (z1 - z0) + '%"></span></div>' +
     '<div class="dgo-state ' + st.c + '">' + st.t + '</div>' +
   '</div>';
@@ -6287,7 +6308,7 @@ function dietMiniHTML() {
   return '<div class="card tight diet-mini" data-goto-diet="1" role="button" tabindex="0" aria-label="오늘 식단 기록 열기">' +
     '<div class="dmin-top"><span class="dmin-t">🥗 오늘 식단</span>' +
       '<span class="dmin-v">' + (t.count ? num1(t.kcal) + ' kcal' : '기록 전') + '</span></div>' +
-    '<div class="dmin-bar"><i class="' + (t.kcal > g.calories ? 'over' : '') + '" style="width:' + ratio + '%"></i></div>' +
+    '<div class="dmin-bar"><i class="' + dietKcalState(t.kcal, g.calories) + '" style="width:' + ratio + '%"></i></div>' +
     '<div class="dmin-s">단백질 ' + num1(t.protein) + 'g / ' + g.protein[0] + '~' + g.protein[1] + 'g · 💧 ' + num1(water) + ' mL' +
       (t.count ? '' : ' · 눌러서 기록하기') + '</div>' +
   '</div>';
