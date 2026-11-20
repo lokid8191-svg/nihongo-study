@@ -1444,15 +1444,24 @@ const CHECK_ITEMS = [
 ];
 
 /* ---------------- 데일리 루틴 (노션 🍰 HABBIT TRACKER) ----------------
-   기본 항목은 노션 데이터베이스의 체크박스 6개를 그대로 옮겼습니다. */
+   기본 항목은 노션 데이터베이스의 체크박스 6개를 그대로 옮겼습니다.
+   2026-11-21: '물 2L 마시기'를 빼고 '🐾 레오 산책'으로 바꿨습니다.
+   물 기록은 식단 탭의 500mL 버튼이 계속 맡습니다(루틴과 별개). */
+const ROUTINE_WALK_ITEM = { id:'leo-walk', label:'레오 산책', icon:'🐾' };
 const ROUTINE_DEFAULT_ITEMS = [
   { id:'melatonin', label:'멜라토닌 먹기', icon:'🌙' },
   { id:'probiotics', label:'유산균 먹기',  icon:'🥛' },
   { id:'vitamin',    label:'비타민 먹기',  icon:'💊' },
   { id:'stretch',    label:'스트레칭',      icon:'🤸' },
-  { id:'water',      label:'물 2L 마시기', icon:'💧' },
+  ROUTINE_WALK_ITEM,
   { id:'diary',      label:'일기쓰기',      icon:'✏️' }
 ];
+/* 옛 기본 항목 '물 2L 마시기' 판별 — id가 water이거나 라벨이 '물 … 마시기'인 경우 */
+function routineIsWaterItem(it) {
+  if (!it) return false;
+  if (it.id === 'water') return true;
+  return /물/.test(String(it.label || '')) && /마시기/.test(String(it.label || ''));
+}
 /* 노션 2027 JLPT N3 플랜의 '평일 퇴근 후 루틴'을 한 번에 더할 수 있는 프리셋 */
 const ROUTINE_JP_ITEMS = [
   { id:'jp-kana', label:'가나·헷갈리는 가나 5분', icon:'あ' },
@@ -1614,6 +1623,17 @@ function normalizeRoutine(raw) {
   let items = Array.isArray(r.items) ? r.items.filter(function (it) { return it && it.id; }).map(function (it) {
     return { id: String(it.id), label: String(it.label || '항목').slice(0, 40), icon: String(it.icon || '•') };
   }) : routineDefaultItems();
+  /* 2026-11-21 기본 항목 교체: 옛 '물 2L 마시기'를 기기에 남은 목록에서도 같은 자리에 '🐾 레오 산책'으로 바꿉니다.
+     이미 '레오 산책'이 있으면 옛 항목만 지웁니다(같은 id가 둘 생기지 않게).
+     옛 '물' 체크는 새 항목으로 넘기지 않고 지워, 오늘 산책을 이미 한 것으로 잘못 체크되지 않게 합니다. */
+  let hasWalk = items.some(function (it) { return it.id === ROUTINE_WALK_ITEM.id; });
+  const legacyWaterIds = [];
+  items = items.reduce(function (acc, it) {
+    if (!routineIsWaterItem(it)) { acc.push(it); return acc; }
+    legacyWaterIds.push(it.id);
+    if (!hasWalk) { acc.push({ id: ROUTINE_WALK_ITEM.id, label: ROUTINE_WALK_ITEM.label, icon: ROUTINE_WALK_ITEM.icon }); hasWalk = true; }
+    return acc;
+  }, []);
   const days = {};
   if (r.days && typeof r.days === 'object') {
     Object.keys(r.days).forEach(function (k) {
@@ -1626,6 +1646,7 @@ function normalizeRoutine(raw) {
       };
       if (d.workout && d.workout.id) day.workout = { id: String(d.workout.id), at: Number(d.workout.at) || 0 };
       if (d.woPick) day.woPick = String(d.woPick);
+      if (legacyWaterIds.length) legacyWaterIds.forEach(function (id) { delete day.checks[id]; });
       days[k] = day;
     });
   }
