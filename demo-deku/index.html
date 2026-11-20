@@ -5582,8 +5582,14 @@ function normalizeDiet(raw) {
       days[k] = normalizeDietDay(d.days[k]);
     });
   }
+  let goals = normalizeDietGoals(d.goals);
+  /* 예전 데쿠 데모 기본값(1,700 kcal · 탄 190~220 · 단 80~100 · 지 50~65)이
+     그대로 남아 있으면 새 기본값(1,250 kcal)으로 바꿉니다. 직접 고친 목표는 그대로 둡니다. */
+  const oldDefault = goals.calories === 1700 && goals.carbs[0] === 190 && goals.carbs[1] === 220 &&
+    goals.protein[0] === 80 && goals.protein[1] === 100 && goals.fat[0] === 50 && goals.fat[1] === 65;
+  if (!d.goalsEdited && oldDefault) goals = normalizeDietGoals(null);
   return {
-    goals: normalizeDietGoals(d.goals),
+    goals: goals,
     goalsEdited: !!d.goalsEdited,
     days: days,
     seedVersion: Number(d.seedVersion) || 0,
