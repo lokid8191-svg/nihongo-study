@@ -1,5 +1,5 @@
 {
-  "version": 17,
+  "version": 18,
   "updatedAt": "2026-11-20",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -76,7 +76,7 @@
       "meals": {
         "breakfast": [],
         "lunch": [
-          { "id": "l1", "name": "굽네 오리지널 순살 (다리살, 반 마리 약 250g 추정)", "kcal": 475, "carb": 6.1, "protein": 78.2, "fat": 15.4, "est": true }
+          { "id": "l1", "name": "굽네 오리지널 순살 (다리살, 1/4마리 약 125g 추정)", "kcal": 238, "carb": 3.1, "protein": 39.1, "fat": 7.7, "est": true }
         ],
         "dinner": [],
         "snack": []
