@@ -542,6 +542,11 @@ input[type="text"].field:focus{outline:2px solid #BBF7D0;outline-offset:1px;bord
 .dgoal-range{display:flex;align-items:center;gap:7px}
 .dgoal-range .field{flex:1;min-width:0;text-align:center;padding:0 8px}
 .dgoal-range span{flex:none;font-size:12.5px;font-weight:600;color:var(--ink-3)}
+/* 목표 수정 시트의 숫자 입력 — 앱의 다른 입력칸과 같은 높이·보더로 */
+input[type="number"].field-num{width:100%;height:46px;border-radius:12px;border:1px solid var(--line);background:var(--surface);padding:0 12px;font-family:inherit;font-size:16px;font-weight:700;color:var(--ink);letter-spacing:-.2px;appearance:none;-moz-appearance:textfield}
+input[type="number"].field-num::-webkit-inner-spin-button,input[type="number"].field-num::-webkit-outer-spin-button{-webkit-appearance:none;margin:0}
+input[type="number"].field-num:focus{outline:2px solid #BBF7D0;outline-offset:1px;border-color:#BBF7D0}
+.dgoal-range input[type="number"].field-num{flex:1;min-width:0;width:auto;text-align:center;font-size:15px;padding:0 6px}
 .diet-mini{display:flex;flex-direction:column;gap:6px;width:100%;text-align:left;cursor:pointer}
 .diet-mini .dmin-top{display:flex;align-items:baseline;justify-content:space-between;gap:8px}
 .diet-mini .dmin-t{font-size:13px;font-weight:700}
@@ -5901,15 +5906,15 @@ function renderDietGoalSheet() {
   const rangeRow = function (key, label) {
     return '<label class="field-label">' + label + '<span>g · 범위</span></label>' +
       '<div class="dgoal-range">' +
-        '<input class="field" type="number" id="dg' + key + 'Lo" inputmode="decimal" min="0" step="1" value="' + esc(dietGoalDraft[key.toLowerCase()][0]) + '" placeholder="최소" aria-label="' + label + ' 최소 g">' +
+        '<input class="field field-num" type="number" id="dg' + key + 'Lo" inputmode="decimal" min="0" step="1" value="' + esc(dietGoalDraft[key.toLowerCase()][0]) + '" placeholder="최소" aria-label="' + label + ' 최소 g">' +
         '<span>~</span>' +
-        '<input class="field" type="number" id="dg' + key + 'Hi" inputmode="decimal" min="0" step="1" value="' + esc(dietGoalDraft[key.toLowerCase()][1]) + '" placeholder="최대" aria-label="' + label + ' 최대 g">' +
+        '<input class="field field-num" type="number" id="dg' + key + 'Hi" inputmode="decimal" min="0" step="1" value="' + esc(dietGoalDraft[key.toLowerCase()][1]) + '" placeholder="최대" aria-label="' + label + ' 최대 g">' +
       '</div>';
   };
   openSheet(
     '<div class="quiz-head"><b>🎯 섭취 목표 수정</b><button class="mini-btn" data-close="1">닫기</button></div>' +
     '<label class="field-label" for="dgKcal">일일 칼로리<span>kcal · 필수</span></label>' +
-    '<input class="field" type="number" id="dgKcal" inputmode="numeric" min="500" max="5000" step="10" value="' + esc(dietGoalDraft.kcal) + '" placeholder="예: 1250">' +
+    '<input class="field field-num" type="number" id="dgKcal" inputmode="numeric" min="500" max="5000" step="10" value="' + esc(dietGoalDraft.kcal) + '" placeholder="예: 1250">' +
     rangeRow('Carb', '🍚 탄수화물') +
     rangeRow('Protein', '🍗 단백질') +
     rangeRow('Fat', '🥑 지방') +
@@ -6610,9 +6615,9 @@ function renderWeightGoalSheet() {
   openSheet(
     '<div class="quiz-head"><b>🎯 체중 목표 수정</b><button class="mini-btn" data-close="1">닫기</button></div>' +
     '<label class="field-label" for="gGoal">목표 체중<span>kg · 필수</span></label>' +
-    '<input class="field" type="number" id="gGoal" inputmode="decimal" min="20" max="300" step="0.1" value="' + esc(weightGoalDraft.goal) + '" placeholder="예: 58">' +
+    '<input class="field field-num" type="number" id="gGoal" inputmode="decimal" min="20" max="300" step="0.1" value="' + esc(weightGoalDraft.goal) + '" placeholder="예: 58">' +
     '<label class="field-label" for="gStart">시작 체중<span>kg · 진행률 기준</span></label>' +
-    '<input class="field" type="number" id="gStart" inputmode="decimal" min="20" max="300" step="0.01" value="' + esc(weightGoalDraft.start) + '" placeholder="예: 64.5">' +
+    '<input class="field field-num" type="number" id="gStart" inputmode="decimal" min="20" max="300" step="0.01" value="' + esc(weightGoalDraft.start) + '" placeholder="예: 64.5">' +
     '<label class="field-label" for="gStartDate">시작일<span>선택</span></label>' +
     '<input class="field" type="date" id="gStartDate" value="' + esc(weightGoalDraft.date) + '">' +
     '<p class="wt-goal-hint" id="gHint">' + esc(weightGoalHintText()) + '</p>' +
