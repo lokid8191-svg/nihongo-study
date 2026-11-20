@@ -1,5 +1,5 @@
 {
-  "version": 20,
+  "version": 21,
   "updatedAt": "2026-11-20",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -84,7 +84,9 @@
           { "id": "d3", "name": "육회 한 젓가락 (약 20g)", "kcal": 35, "carb": 0.3, "protein": 3.4, "fat": 2.2, "est": true },
           { "id": "d4", "name": "교자만두 3개 (약 90g)", "kcal": 200, "carb": 24.5, "protein": 7.3, "fat": 8.1, "est": true }
         ],
-        "snack": []
+        "snack": [
+          { "id": "s1", "name": "생초코모찌 2상자 (개당 80g, 총 160g)", "kcal": 502, "carb": 72.4, "protein": 2.8, "fat": 22.4, "est": false }
+        ]
       }
     }
   }
