@@ -419,7 +419,9 @@ input[type="text"].field:focus{outline:2px solid #BBF7D0;outline-offset:1px;bord
 .rt-hit{display:flex;align-items:center;gap:11px;width:100%;text-align:left;padding:11px 2px;min-height:52px}
 .rt-box{width:26px;height:26px;border-radius:8px;border:1.8px solid var(--line);background:var(--surface-2);display:grid;place-items:center;color:#fff;font-size:14px;flex:none;transition:.16s}
 .rt-hit.done .rt-box{background:var(--primary);border-color:var(--primary)}
-.rt-hit.done .rt-t{color:var(--ink-3);text-decoration:line-through}
+.rt-hit.done .rt-t{color:var(--ink-3)}
+.rt-hit.done .rt-l{text-decoration:line-through}
+.rt-l{display:block}
 .rt-t{flex:1;min-width:0;font-size:13.5px;font-weight:600;line-height:1.4}
 .rt-t small{display:block;font-size:10.5px;font-weight:500;color:var(--ink-3);text-decoration:none;margin-top:1px}
 .rt-foot{display:flex;flex-wrap:wrap;gap:6px;margin-top:11px;padding-top:11px;border-top:1px dashed var(--line)}
@@ -4734,7 +4736,7 @@ function renderRoutine() {
       : (isStudy ? (studyAuto ? '📖 오늘의 학습 완료로 자동 체크' : '📖 오늘의 학습을 끝내면 자동으로 체크돼요') : '');
     return '<div class="rt-row"><button class="rt-hit' + (on ? ' done' : '') + '" data-rtoggle="' + esc(it.id) + '" aria-pressed="' + (on ? 'true' : 'false') + '">' +
       '<span class="rt-box">' + (on ? '✓' : '') + '</span>' +
-      '<span class="rt-t">' + esc(it.icon || '') + ' ' + esc(it.label) +
+      '<span class="rt-t"><span class="rt-l">' + esc(it.icon || '') + ' ' + esc(it.label) + '</span>' +
         (hint ? '<small>' + hint + '</small>' : '') +
       '</span>' +
     '</button></div>';
