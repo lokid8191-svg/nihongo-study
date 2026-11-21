@@ -4511,9 +4511,83 @@ const BAKUGO_LINES = {
     { jp:'大丈夫だ。…ふん、言わせんなよ。', read:'だいじょうぶだ。…ふん、いわせんなよ。', ko:'괜찮아. …흥, 말 시키지 마.' }
   ]
 };
-/* 지금 상황에 맞는 대사 풀을 골라 무작위로 한 줄. 같은 상태가 이어져도 새로 열거나 [다른 한마디]를 누르면 달라집니다. */
+/* 지금 상황에 맞는 대사 풀을 골라 한 줄.
+   상황(그룹)마다 셔플백을 두어, 그 상황의 대사를 한 바퀴 다 보기 전에는 같은 대사가 다시 나오지 않습니다.
+   남은 대사는 localStorage에 저장되어 새로고침·탭 이동 후에도 이어집니다.
+   한 바퀴가 끝나 리셋될 때는 방금 본 대사가 새 바퀴의 첫 줄로 연달아 나오지 않게 맨 마지막에 둡니다. */
 let buddyPick = { sig: '', line: null, group: '', i: 0, len: 0 };
 let buddyLastJp = '';
+const BUDDY_BAG_KEY = 'nihongo-bakugo-bag-v1';
+let buddyBag = null;
+function buddyBagState() {
+  if (buddyBag) return buddyBag;
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(BUDDY_BAG_KEY) || 'null'); } catch (e) { saved = null; }
+  buddyBag = (saved && typeof saved === 'object' && saved.groups && typeof saved.groups === 'object')
+    ? { v: 1, lastGroup: typeof saved.lastGroup === 'string' ? saved.lastGroup : '', groups: saved.groups }
+    : { v: 1, lastGroup: '', groups: {} };
+  return buddyBag;
+}
+function buddyBagSave() {
+  try { localStorage.setItem(BUDDY_BAG_KEY, JSON.stringify(buddyBagState())); } catch (e) {}
+}
+function buddyShuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = rand(i + 1); const t = a[i]; a[i] = a[j]; a[j] = t;
+  }
+  return a;
+}
+/* 대사가 추가·삭제되어 개수가 달라져도 저장된 인덱스가 범위를 벗어나지 않게 정리합니다.
+   늘어난 대사는 이번 바퀴에 바로 넣어 줍니다. */
+function buddyBagFor(g, n) {
+  const bag = buddyBagState();
+  const prev = (bag.groups[g] && typeof bag.groups[g] === 'object') ? bag.groups[g] : {};
+  const oldLen = Math.floor(Number(prev.len)) || 0;
+  const seen = {};
+  const left = (Array.isArray(prev.left) ? prev.left : []).filter(function (i) {
+    const ok = typeof i === 'number' && i % 1 === 0 && i >= 0 && i < n;
+    if (!ok || seen[i]) return false;
+    seen[i] = true;
+    return true;
+  });
+  if (n > oldLen) {
+    for (let i = Math.max(0, oldLen); i < n; i++) { if (!seen[i]) { seen[i] = true; left.push(i); } }
+  }
+  let defer = (typeof prev.defer === 'number' && prev.defer % 1 === 0 && prev.defer >= 0 && prev.defer < n && !seen[prev.defer]) ? prev.defer : null;
+  const e = { left: left, defer: defer, lastJp: typeof prev.lastJp === 'string' ? prev.lastJp : '', len: n };
+  bag.groups[g] = e;
+  return e;
+}
+/* 셔플백에서 인덱스 하나를 뽑습니다. 남은 게 없으면 새 바퀴로 리셋합니다. */
+function buddyDrawIndex(g, list) {
+  const n = list.length;
+  if (!n) return -1;
+  const e = buddyBagFor(g, n);
+  if (!e.left.length && e.defer !== null) {
+    /* 새 바퀴의 마지막 한 줄 — 직전 바퀴에서 마지막으로 본 대사 */
+    const i = e.defer;
+    e.defer = null;
+    e.lastJp = list[i].jp;
+    buddyBagSave();
+    return i;
+  }
+  if (!e.left.length) {
+    const all = [];
+    for (let i = 0; i < n; i++) all.push(i);
+    let hold = null;
+    if (n > 1 && e.lastJp) {
+      const li = list.map(function (l) { return l.jp; }).indexOf(e.lastJp);
+      if (li >= 0) { hold = li; all.splice(all.indexOf(li), 1); }
+    }
+    e.left = buddyShuffle(all);
+    e.defer = hold;
+  }
+  const at = rand(e.left.length);
+  const i = e.left.splice(at, 1)[0];
+  e.lastJp = list[i].jp;
+  buddyBagSave();
+  return i;
+}
 function buddySlotKey(h) {
   const hour = typeof h === 'number' ? h : new Date().getHours();
   if (hour >= 5 && hour < 11) return 'morning';
@@ -4553,12 +4627,21 @@ function buddyContextGroups(done, total, dayKey) {
   return groups.filter(function (g, i) { return BAKUGO_LINES[g] && groups.indexOf(g) === i; });
 }
 function pickBuddyLine(groups) {
-  const g = groups[rand(groups.length)] || 'cheer';
+  const pool = (Array.isArray(groups) ? groups : []).filter(function (g) {
+    return BAKUGO_LINES[g] && BAKUGO_LINES[g].length;
+  });
+  const bag = buddyBagState();
+  let g = pool.length ? pool[rand(pool.length)] : 'cheer';
+  /* 그룹이 여럿이면 방금 쓴 그룹은 바로 다시 고르지 않습니다. */
+  if (pool.length > 1 && g === bag.lastGroup) {
+    const others = pool.filter(function (x) { return x !== bag.lastGroup; });
+    if (others.length) g = others[rand(others.length)];
+  }
   const list = BAKUGO_LINES[g] || BAKUGO_LINES.cheer;
-  let line = list[rand(list.length)];
-  /* 같은 대사가 연달아 나오지 않게 한 번만 다시 고릅니다. */
-  if (list.length > 1 && line.jp === buddyLastJp) line = list[(list.indexOf(line) + 1 + rand(list.length - 1)) % list.length];
-  return { group: g, line: line, i: list.indexOf(line), len: list.length };
+  const i = buddyDrawIndex(g, list);
+  bag.lastGroup = g;
+  buddyBagSave();
+  return { group: g, line: (i >= 0 ? list[i] : list[0]), i: (i >= 0 ? i : 0), len: list.length };
 }
 function buddyLine(done, total, dayKey) {
   const s = buddyState(done, total);
