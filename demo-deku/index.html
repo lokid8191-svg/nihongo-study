@@ -5550,7 +5550,7 @@ function renderFridge() {
         ? '<div class="vcols"><div class="vcol">' + goneBlock + '</div><div class="vcol">' + vocaBlock + '</div></div>'
         : vocaBlock) +
 
-      '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.<br>수량이 0이 된 재료는 목록에서 지우고, 여기서 지운 재료는<br>예시 목록에 다시 있어도 되살리지 않아요.</p>' +
+      '<p class="foot-note">재료 목록은 이 기기의 브라우저에 저장되고,<br>복습 탭 JSON 백업에 함께 담깁니다.<br>수량이 0이 된 재료는 목록에서 지우고, 여기서 지운 재료는<br>공유 목록에 다시 있어도 되살리지 않아요.</p>' +
     '</div>';
 }
 
@@ -6692,7 +6692,7 @@ function weightViewHTML() {
         ' · 허리둘레는 매주 월요일 측정' + (p.waistNote ? ' (' + esc(p.waistNote) + ')' : '') + '</p>' +
     '</div>' +
 
-    '<p class="foot-note">체중 기록은 이 기기와 <b>seed-weight.json</b>(153cm·61kg 예시)을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.<br>이 기기 기록은 지워지지 않아요.</p>' +
+    '<p class="foot-note">체중 기록은 이 기기와 <b>공유 기록</b>(153cm·61kg 기준)을 함께 씁니다.<br>복습 탭의 JSON 백업에도 담깁니다.<br>이 기기 기록은 지워지지 않아요.</p>' +
   '</div>';
 }
 
