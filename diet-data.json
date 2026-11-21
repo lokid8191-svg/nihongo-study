@@ -1,5 +1,5 @@
 {
-  "version": 22,
+  "version": 23,
   "updatedAt": "2026-11-21",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -97,7 +97,9 @@
           { "id": "l1", "name": "다신샵 통밀당 피타브레드 시금치바질토마토 (120g)", "kcal": 248, "carb": 37, "protein": 10, "fat": 8, "est": false },
           { "id": "l2", "name": "오븐구이 닭안심살 오리지널 100g", "kcal": 90, "carb": 0.5, "protein": 21, "fat": 0.5, "est": false }
         ],
-        "dinner": [],
+        "dinner": [
+          { "id": "d1", "name": "굽네 오리지널 순살 (다리살 약 460g, 1마리 평소보다 조금 적음)", "kcal": 874, "carb": 11, "protein": 144, "fat": 28.1, "est": true }
+        ],
         "snack": []
       }
     }
