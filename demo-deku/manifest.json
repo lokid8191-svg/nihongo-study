@@ -1,7 +1,7 @@
 {
-  "name": "withデク · 데모",
+  "name": "withデク",
   "short_name": "withデク",
-  "description": "JLPT N5~N3 일본어 학습 + 데일리 루틴·냉장고 관리 데모. 예시 데이터로 동작하는 미리보기입니다.",
+  "description": "JLPT N5~N3 일본어 학습 + 데일리 루틴·냉장고 관리.",
   "lang": "ko",
   "dir": "ltr",
   "start_url": "./",
