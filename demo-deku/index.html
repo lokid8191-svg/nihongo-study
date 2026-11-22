@@ -390,7 +390,7 @@ textarea.field:focus,input[type="date"].field:focus{outline:2px solid #BBF7D0;ou
 .tpl{min-height:38px;padding:6px 11px;border-radius:11px;background:var(--primary-soft);border:1px solid #BBF7D0;color:#166534;font-size:12.5px;font-weight:600;text-align:left;line-height:1.35}
 .tpl small{display:block;font-size:10.5px;font-weight:500;color:var(--ink-3);margin-top:1px}
 .tpl:active{background:#DCFCE7}
-/* ---------- 데일리 루틴 (노션 🍰 HABBIT TRACKER) ---------- */
+/* ---------- 데일리 루틴 ---------- */
 input[type="text"].field{width:100%;height:42px;border-radius:11px;border:1px solid var(--line);background:var(--surface);padding:0 11px;font-family:inherit;font-size:13.5px;color:var(--ink)}
 input[type="text"].field:focus{outline:2px solid #BBF7D0;outline-offset:1px;border-color:#BBF7D0}
 .wk-nav{display:flex;gap:5px;align-items:center}
@@ -1476,8 +1476,8 @@ const CHECK_ITEMS = [
   {key:'talk',  label:'회화 1문장',         hint:'소리 내어 읽어보기',   icon:'話'}
 ];
 
-/* ---------------- 데일리 루틴 (노션 🍰 HABBIT TRACKER) ----------------
-   기본 항목은 노션 데이터베이스의 체크박스 6개를 그대로 옮겼습니다. */
+/* ---------------- 데일리 루틴 ----------------
+   기본 항목은 멜라토닌·유산균·비타민·스트레칭·물 2L·일기쓰기 6개입니다. */
 const ROUTINE_DEFAULT_ITEMS = [
   { id:'melatonin', label:'멜라토닌 먹기', icon:'🌙' },
   { id:'probiotics', label:'유산균 먹기',  icon:'🥛' },
@@ -1486,7 +1486,7 @@ const ROUTINE_DEFAULT_ITEMS = [
   { id:'water',      label:'물 2L 마시기', icon:'💧' },
   { id:'diary',      label:'일기쓰기',      icon:'✏️' }
 ];
-/* 노션 2027 JLPT N3 플랜의 '평일 퇴근 후 루틴'을 한 번에 더할 수 있는 프리셋 */
+/* 2027 JLPT N3 플랜의 '평일 퇴근 후 루틴'을 한 번에 더할 수 있는 프리셋 */
 const ROUTINE_JP_ITEMS = [
   { id:'jp-kana', label:'가나·헷갈리는 가나 5분', icon:'あ' },
   { id:'jp-voca', label:'보카 15~20단어 소리 내어 읽기', icon:'📚' },
@@ -1502,7 +1502,7 @@ function routineIsStudyItem(it) {
   return ROUTINE_STUDY_RE.test(String(it.label || ''));
 }
 function routineStudyItems() { return routineItems().filter(routineIsStudyItem); }
-/* 노션 '무드' 선택지 9개 (순서 그대로) */
+/* 무드 선택지 9개 (순서 그대로) */
 const ROUTINE_MOODS = [
   { e:'😞', l:'피곤' }, { e:'😍', l:'행복' }, { e:'😊', l:'뿌듯' },
   { e:'😵', l:'혼란' }, { e:'😥', l:'벅참' }, { e:'😭', l:'우울' },
@@ -4239,7 +4239,7 @@ function saveDiary() {
     ts: prev.ts || Date.now(), updated: Date.now()
   };
   save();
-  /* 노션 '일기쓰기'처럼, 한 줄 일기를 저장하면 그 날 루틴의 일기 항목을 자동 체크 */
+  /* '일기쓰기' 항목이 있으면, 한 줄 일기를 저장할 때 그 날 루틴의 일기 항목을 자동 체크 */
   if (routineItems().some(function (it) { return it.id === 'diary'; })) {
     const rd = routineDay(diaryDraft.date, true);
     if (!rd.checks.diary) { rd.checks.diary = true; save(); }
@@ -4662,8 +4662,8 @@ function workoutMiniHTML() {
   '</div>';
 }
 
-/* ---------------- 데일리 루틴 (노션 🍰 HABBIT TRACKER) ----------------
-   날짜별 체크·무드·자세한 일기 메모. 노션 표와 같은 항목·달성률 구조입니다. */
+/* ---------------- 데일리 루틴 ----------------
+   날짜별 체크·무드·자세한 일기 메모. 항목 수와 체크 수로 달성률을 계산합니다. */
 let routineDate = dkey();
 function routineState() {
   if (!S.routine || typeof S.routine !== 'object') S.routine = normalizeRoutine(null);
@@ -5019,7 +5019,7 @@ function renderRoutineItemSheet() {
       '<button class="btn btn-primary" data-radd="1">추가</button>' +
     '</div>' +
     '<button class="btn btn-block" style="margin-top:10px" data-rpreset="jp">🇯🇵 일본어 공부 항목 3개 추가</button>' +
-    '<p style="font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.6">기본값은 노션 · 🍰 HABBIT TRACKER 항목 6개입니다. 항목을 빼도 그동안의 체크 기록은 파일 안에 남아 있어요.</p>'
+    '<p style="font-size:11.5px;color:var(--ink-3);margin-top:10px;line-height:1.6">기본값은 6개 항목입니다. 항목을 빼도 그동안의 체크 기록은 파일 안에 남아 있어요.</p>'
   );
 }
 function moveRoutineItem(id, dir) {
