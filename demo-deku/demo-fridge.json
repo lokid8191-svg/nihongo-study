@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-18",
+  "note": "데모용 예시 데이터입니다. 실제 냉장고가 아닙니다. nutri는 1회분 기준 영양성분이라 '지금 냉장고로 뭐 먹지?' 추천에 쓰입니다.",
+  "items": [
+    { "id": "egg", "name": "계란", "jp": "卵", "kana": "たまご", "place": "fridge", "qty": "6알", "expires": "", "memo": "",
+      "nutri": { "label": "계란", "serving": "1알 50g", "unit": "알", "kcal": 70, "carb": 0.5, "protein": 6, "fat": 5, "est": false } },
+    { "id": "milk", "name": "우유", "jp": "牛乳", "kana": "ぎゅうにゅう", "place": "fridge", "qty": "1팩", "expires": "", "memo": "900mL",
+      "nutri": { "label": "우유", "serving": "1컵 200mL", "unit": "컵", "kcal": 130, "carb": 10, "protein": 6.5, "fat": 7, "est": true } },
+    { "id": "cherry-tomato", "name": "방울토마토", "jp": "ミニトマト", "kana": "みにとまと", "place": "fridge", "qty": "1팩", "expires": "", "memo": "",
+      "nutri": { "label": "방울토마토", "serving": "5알 80g", "unit": "팩", "kcal": 25, "carb": 5, "protein": 1, "fat": 0.2, "est": true } },
+    { "id": "tofu", "name": "두부", "jp": "豆腐", "kana": "とうふ", "place": "fridge", "qty": "1모", "expires": "", "memo": "",
+      "nutri": { "label": "두부", "serving": "100g", "unit": "모", "kcal": 85, "carb": 2, "protein": 9, "fat": 5, "est": true } },
+    { "id": "greek-yogurt", "name": "그릭요거트", "jp": "ギリシャヨーグルト", "kana": "ぎりしゃよーぐると", "place": "fridge", "qty": "2개", "expires": "", "memo": "",
+      "nutri": { "label": "그릭요거트", "serving": "1개 100g", "unit": "개", "kcal": 60, "carb": 4, "protein": 10, "fat": 0, "est": true } },
+    { "id": "green-onion", "name": "대파", "jp": "長ねぎ", "kana": "ながねぎ", "place": "fridge", "qty": "1단", "expires": "", "memo": "",
+      "nutri": { "label": "대파", "serving": "1대 30g", "unit": "단", "kcal": 10, "carb": 2, "protein": 0.5, "fat": 0, "est": true } },
+    { "id": "frozen-chicken-breast", "name": "냉동 닭가슴살", "jp": "鶏むね肉", "kana": "とりむねにく", "place": "freezer", "qty": "2봉", "expires": "", "memo": "상시 구비 품목",
+      "nutri": { "label": "냉동 닭가슴살", "serving": "100g", "unit": "봉", "kcal": 110, "carb": 0, "protein": 23, "fat": 1.5, "est": true } },
+    { "id": "frozen-shrimp", "name": "냉동새우", "jp": "海老", "kana": "えび", "place": "freezer", "qty": "1봉", "expires": "", "memo": "",
+      "nutri": { "label": "냉동새우", "serving": "100g", "unit": "봉", "kcal": 90, "carb": 0.5, "protein": 20, "fat": 1, "est": true } },
+    { "id": "cooked-rice", "name": "현미밥 130g", "jp": "玄米ごはん", "kana": "げんまいごはん", "place": "room", "qty": "3개", "expires": "", "memo": "",
+      "nutri": { "label": "현미밥 130g", "serving": "1개 130g", "unit": "개", "kcal": 200, "carb": 42, "protein": 4, "fat": 1, "est": false } },
+    { "id": "onion", "name": "양파", "jp": "玉ねぎ", "kana": "たまねぎ", "place": "room", "qty": "2개", "expires": "", "memo": "",
+      "nutri": { "label": "양파", "serving": "1/2개 100g", "unit": "개", "kcal": 40, "carb": 9, "protein": 1, "fat": 0, "est": true } },
+    { "id": "banana", "name": "바나나", "jp": "バナナ", "kana": "ばなな", "place": "room", "qty": "3개", "expires": "", "memo": "",
+      "nutri": { "label": "바나나", "serving": "1개 100g", "unit": "개", "kcal": 90, "carb": 23, "protein": 1, "fat": 0, "est": true } },
+    { "id": "seasoned-gim", "name": "조미김", "jp": "味付け海苔", "kana": "あじつけのり", "place": "room", "qty": "4봉", "expires": "", "memo": "",
+      "nutri": { "label": "조미김", "serving": "1봉", "unit": "봉", "kcal": 25, "carb": 1, "protein": 1, "fat": 2, "est": true } }
+  ]
+}
