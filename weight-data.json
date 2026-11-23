@@ -1,6 +1,15 @@
 {
-  "version": 1,
-  "updatedAt": "2026-11-22",
-  "seedDisabled": true,
-  "note": "주간 초기화"
+  "version": 7,
+  "updatedAt": "2026-11-23",
+  "note": "채팅으로 체중·인바디 기록을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 새 기록을 받아가고, 앱에서 직접 넣은 기록과 지난 기록은 그대로 둡니다.",
+  "entries": [
+    {
+      "date": "2026-11-23",
+      "kg": 83.32,
+      "bodyFat": 47.8,
+      "fatMass": 39.83,
+      "muscle": 23.83,
+      "visceral": 18
+    }
+  ]
 }
