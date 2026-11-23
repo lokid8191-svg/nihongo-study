@@ -706,6 +706,7 @@ input[type="number"].field-num:focus{outline:2px solid #BBF7D0;outline-offset:1p
 }
 
 @media (max-width:360px){
+  .dmac .field{padding:0 4px}
   .brand h1{font-size:15px}
   .kana-cell{height:56px}
   .flash-word{font-size:44px}
@@ -2307,6 +2308,7 @@ function renderHome() {
   const step = Number(g.waterStepMl) || 500;
   const kcalMax = Math.max(g.calories * 1.2, dt.kcal * 1.05, 1);
   const proMax = Math.max(g.protein[1] * 1.25, dt.protein * 1.05, 1);
+  const sugMax = Math.max(g.sugar * 1.25, dt.sugar * 1.05, 1);
 
   /* 운동 */
   const wo = workoutFor(k);
@@ -2372,6 +2374,9 @@ function renderHome() {
           hmGaugeHTML('🍗 단백질', num1(dt.protein) + '<small> / ' + g.protein[0] + '~' + g.protein[1] + 'g</small>',
             dt.protein / proMax * 100,
             { state: dietRangeState(dt.protein, g.protein), zone: [g.protein[0] / proMax * 100, g.protein[1] / proMax * 100] }) +
+          hmGaugeHTML('🍬 당류', num1(dt.sugar) + '<small> / ' + g.sugar + 'g 이하</small>',
+            dt.sugar / sugMax * 100,
+            { state: dt.sugar > g.sugar ? 'over' : 'ok', zone: [0, g.sugar / sugMax * 100] }) +
         '</div>' +
         '<div class="hm-water">💧 <b>' + num1(water) + '</b><small>mL</small><span class="sp"></span>' +
           '<button class="btn btn-sm btn-primary" data-hwater="1">+' + step + 'mL</button></div>' +
@@ -5786,7 +5791,8 @@ const DIET_MEALS = [
   { k: 'dinner',    l: '저녁', e: '🌙' },
   { k: 'snack',     l: '간식', e: '🍪' }
 ];
-const DIET_GOALS_DEFAULT = { calories: 1250, carbs: [130, 150], protein: [65, 80], fat: [35, 45], waterStepMl: 500 };
+/* sugar: 하루 당류 상한(g) — 총 에너지의 10% 미만(1,250kcal에서 다 30g)을 기본값으로 둡니다. */
+const DIET_GOALS_DEFAULT = { calories: 1250, carbs: [130, 150], protein: [65, 80], fat: [35, 45], sugar: 30, waterStepMl: 500 };
 const DIET_SEED_KEY = 'demo-deku-diet_seed_version';
 let dietDate = dkey();
 let routineSub = 'routine';   /* 루틴 탭 안의 서브 화면: routine | diet */
@@ -5825,6 +5831,7 @@ function normalizeDietGoals(raw) {
     carbs: dietRange(g.carbs, def.carbs),
     protein: dietRange(g.protein, def.protein),
     fat: dietRange(g.fat, def.fat),
+    sugar: dietNum(g.sugar, 500) > 0 ? dietNum(g.sugar, 500) : def.sugar,
     waterStepMl: dietNum(g.waterStepMl, 2000) || def.waterStepMl
   };
 }
@@ -5837,6 +5844,8 @@ function normalizeDietItem(raw) {
     carb: dietNum(raw.carb, 500),
     protein: dietNum(raw.protein, 500),
     fat: dietNum(raw.fat, 500),
+    /* 당류는 모르는 항목(예전 기록·라벨에 없는 음식)을 0으로 속이지 않고 null로 둡니다. */
+    sugar: (raw.sugar === undefined || raw.sugar === null || String(raw.sugar).trim() === '') ? null : dietNum(raw.sugar, 500),
     est: !!raw.est,
     src: raw.src === 'user' ? 'user' : 'seed'
   };
@@ -5891,15 +5900,17 @@ function dietDay(k, create) {
   if (!d && create) d = ds.days[k] = { water: 0, meals: { breakfast: [], lunch: [], dinner: [], snack: [] }, edited: true, del: [] };
   return d || null;
 }
+function dietSugarKnown(v) { return typeof v === 'number' && isFinite(v); }
 function dietTotals(day) {
-  const t = { kcal: 0, carb: 0, protein: 0, fat: 0, count: 0 };
+  const t = { kcal: 0, carb: 0, protein: 0, fat: 0, sugar: 0, sugarN: 0, sugarMiss: 0, count: 0 };
   if (!day || !day.meals) return t;
   DIET_MEALS.forEach(function (m) {
     (day.meals[m.k] || []).forEach(function (it) {
       t.kcal += it.kcal; t.carb += it.carb; t.protein += it.protein; t.fat += it.fat; t.count++;
+      if (dietSugarKnown(it.sugar)) { t.sugar += it.sugar; t.sugarN++; } else { t.sugarMiss++; }
     });
   });
-  ['kcal', 'carb', 'protein', 'fat'].forEach(function (k) { t[k] = Math.round(t[k] * 10) / 10; });
+  ['kcal', 'carb', 'protein', 'fat', 'sugar'].forEach(function (k) { t[k] = Math.round(t[k] * 10) / 10; });
   return t;
 }
 function dietDayTotals(k) { return dietTotals(dietState().days[k]); }
@@ -5934,7 +5945,7 @@ function applyDietSeed(data) {
         const have = cur.meals[m.k][i];
         if (have.src === 'user') return;             /* 앱에서 직접 넣고 고친 항목은 그대로 */
         if (have.name !== it.name || have.kcal !== it.kcal || have.carb !== it.carb ||
-            have.protein !== it.protein || have.fat !== it.fat) {
+            have.protein !== it.protein || have.fat !== it.fat || have.sugar !== it.sugar) {
           cur.meals[m.k][i] = it; changed++;
         }
       });
@@ -6058,6 +6069,25 @@ function dietRangeRow(label, value, range) {
     '<div class="dgo-state ' + st.c + '">' + st.t + '</div>' +
   '</div>';
 }
+/* 당류는 '이하' 상한 기준: 0~권장량 구간을 정상(초록)으로 두고, 넘으면 빨강으로 바꿉니다. */
+function dietSugarRow(label, value, max, miss) {
+  const lim = Number(max) > 0 ? Number(max) : 30;
+  const scale = Math.max(lim * 1.25, value * 1.05, 1);
+  const fill = Math.min(100, value / scale * 100);
+  const z1 = lim / scale * 100;
+  const c = value > lim ? 'over' : 'ok';
+  const st = c === 'over'
+    ? { t: '권장 ' + lim + 'g보다 ' + num1(value - lim) + 'g 많아요', c: c }
+    : { t: (value > 0 ? '권장 ' + lim + 'g 이하 · ' + num1(lim - value) + 'g 여유' : '권장 ' + lim + 'g 이하'), c: c };
+  const shown = (value > 0 || !miss) ? num1(value) + 'g' : '-';
+  return '<div class="dgo-row">' +
+    '<div class="dgo-top"><span class="dgo-k">' + label + '</span>' +
+      '<span class="dgo-v">' + shown + '<small> / ' + lim + 'g 이하</small></span></div>' +
+    '<div class="dgo-bar"><span class="dgo-fill ' + c + '" style="width:' + fill + '%"></span>' +
+      '<span class="dgo-zone" style="left:0;width:' + z1 + '%"></span></div>' +
+    '<div class="dgo-state ' + st.c + '">' + st.t + (miss ? ' · 당류 미기재 ' + miss + '개 제외' : '') + '</div>' +
+  '</div>';
+}
 function dietMealHTML(meal, day) {
   const m = DIET_MEALS.filter(function (x) { return x.k === meal; })[0] || DIET_MEALS[0];
   const items = (day && day.meals && day.meals[meal]) || [];
@@ -6065,7 +6095,8 @@ function dietMealHTML(meal, day) {
     return '<div class="dm-row">' +
       '<div class="dm-main">' +
         '<div class="dm-name">' + esc(it.name) + (it.est ? '<span class="dm-est">추정</span>' : '') + '</div>' +
-        '<div class="dm-meta">' + num1(it.kcal) + ' kcal · 탄 ' + num1(it.carb) + ' · 단 ' + num1(it.protein) + ' · 지 ' + num1(it.fat) + ' g</div>' +
+        '<div class="dm-meta">' + num1(it.kcal) + ' kcal · 탄 ' + num1(it.carb) + 'g · 단 ' + num1(it.protein) + 'g · 지 ' + num1(it.fat) + 'g · 당 ' +
+          (dietSugarKnown(it.sugar) ? num1(it.sugar) + 'g' : '-') + '</div>' +
       '</div>' +
       '<button class="dm-btn" data-dedit="' + esc(meal + ':' + it.id) + '" aria-label="수정">✎</button>' +
       '<button class="dm-btn" data-drowdel="' + esc(meal + ':' + it.id) + '" aria-label="삭제">✕</button>' +
@@ -6114,6 +6145,7 @@ function dietViewHTML() {
       dietRangeRow('🍚 탄수화물', t.carb, g.carbs) +
       dietRangeRow('🍗 단백질', t.protein, g.protein) +
       dietRangeRow('🥑 지방', t.fat, g.fat) +
+      dietSugarRow('🍬 당류', t.sugar, g.sugar, t.sugarMiss) +
     '</div>' +
       '<div class="dgoal-foot"><span>' + (ds.goalsEdited ? '이 기기에서 고친 목표' : '기본 목표 · 153cm·61kg 감량 기준') + '</span>' +
         '<button class="mini-btn" data-dgoal="1" aria-label="섭취 목표 수정">✎ 목표 수정</button></div>' +
@@ -6164,7 +6196,8 @@ function openDietGoal() {
     kcal: String(g.calories),
     carb: [String(g.carbs[0]), String(g.carbs[1])],
     protein: [String(g.protein[0]), String(g.protein[1])],
-    fat: [String(g.fat[0]), String(g.fat[1])]
+    fat: [String(g.fat[0]), String(g.fat[1])],
+    sugar: String(g.sugar)
   };
   renderDietGoalSheet();
 }
@@ -6172,6 +6205,7 @@ function syncDietGoalInputs() {
   if (!dietGoalDraft) return;
   const g = function (id) { const el = document.getElementById(id); return el ? String(el.value || '').trim() : ''; };
   dietGoalDraft.kcal = g('dgKcal');
+  if (document.getElementById('dgSugar')) dietGoalDraft.sugar = g('dgSugar');
   [['carb', 'Carb'], ['protein', 'Protein'], ['fat', 'Fat']].forEach(function (p) {
     if (!document.getElementById('dg' + p[1] + 'Lo')) return;
     dietGoalDraft[p[0]] = [g('dg' + p[1] + 'Lo'), g('dg' + p[1] + 'Hi')];
@@ -6212,8 +6246,12 @@ function renderDietGoalSheet() {
     rangeRow('Carb', '🍚 탄수화물') +
     rangeRow('Protein', '🍗 단백질') +
     rangeRow('Fat', '🥑 지방') +
+    '<label class="field-label">🍬 당류<span>g · 하루 상한(이하)</span></label>' +
+    '<div class="dgoal-range">' +
+      '<input class="field field-num" type="number" id="dgSugar" inputmode="decimal" min="1" max="300" step="1" value="' + esc(dietGoalDraft.sugar) + '" placeholder="예: 30" aria-label="당류 상한 g">' +
+    '</div>' +
     '<p class="wt-goal-hint" id="dgHint">' + esc(dietGoalHintText()) + '</p>' +
-    (edited ? '<button class="wt-goal-reset" data-dgoalreset="1">기본 목표(1,250 kcal · 탄 130~150 · 단 65~80 · 지 35~45g)로 돌리기</button>' : '') +
+    (edited ? '<button class="wt-goal-reset" data-dgoalreset="1">기본 목표(1,250 kcal · 탄 130~150 · 단 65~80 · 지 35~45g · 당 30g 이하)로 돌리기</button>' : '') +
     '<p class="menu-eff">바꿔 둔 목표는 이 기기에만 저장되고, 오늘의 목표 달성률·맞춤 메뉴 추천(남은 칼로리)에 바로 반영돼요.</p>' +
     '<div class="q-foot"><button class="btn" data-close="1">취소</button>' +
       '<button class="btn btn-primary" data-dgoalsave="1">저장</button></div>'
@@ -6237,9 +6275,13 @@ function saveDietGoal() {
   const protein = dietGoalRange('protein');
   const fat = dietGoalRange('fat');
   if (!carbs || !protein || !fat) { toast('탄수·단백·지방 범위를 g 숫자로 적어 주세요 (0~500)'); return; }
+  const sugarMax = Number(dietGoalDraft.sugar);
+  if (String(dietGoalDraft.sugar || '').trim() === '' || !isFinite(sugarMax) || sugarMax <= 0 || sugarMax > 300) {
+    toast('당류 상한을 1~300 사이 g 숫자로 적어 주세요'); return;
+  }
   const ds = dietState();
   ds.goals = normalizeDietGoals({
-    calories: Math.round(kcal), carbs: carbs, protein: protein, fat: fat,
+    calories: Math.round(kcal), carbs: carbs, protein: protein, fat: fat, sugar: Math.round(sugarMax),
     waterStepMl: ds.goals.waterStepMl
   });
   ds.goalsEdited = true;
@@ -6249,7 +6291,7 @@ function saveDietGoal() {
   renderRoutine();
   const g = dietState().goals;
   toast('섭취 목표 저장 · ' + numComma(g.calories) + ' kcal · 탄 ' + g.carbs[0] + '~' + g.carbs[1] +
-    ' · 단 ' + g.protein[0] + '~' + g.protein[1] + ' · 지 ' + g.fat[0] + '~' + g.fat[1] + 'g');
+    ' · 단 ' + g.protein[0] + '~' + g.protein[1] + ' · 지 ' + g.fat[0] + '~' + g.fat[1] + 'g · 당 ' + g.sugar + 'g 이하');
 }
 function resetDietGoal() {
   const ds = dietState();
@@ -6277,8 +6319,8 @@ function openDietItem(meal, id) {
   const it = id ? arr.filter(function (x) { return x.id === id; })[0] : null;
   dietDelAsk = false;
   dietDraft = it
-    ? { meal: meal, id: it.id, name: it.name, kcal: String(it.kcal), carb: String(it.carb), protein: String(it.protein), fat: String(it.fat), est: !!it.est }
-    : { meal: meal, id: '', name: '', kcal: '', carb: '', protein: '', fat: '', est: false };
+    ? { meal: meal, id: it.id, name: it.name, kcal: String(it.kcal), carb: String(it.carb), protein: String(it.protein), fat: String(it.fat), sugar: dietSugarKnown(it.sugar) ? String(it.sugar) : '', est: !!it.est }
+    : { meal: meal, id: '', name: '', kcal: '', carb: '', protein: '', fat: '', sugar: '', est: false };
   renderDietSheet();
 }
 function syncDietInputs() {
@@ -6289,6 +6331,7 @@ function syncDietInputs() {
   dietDraft.carb = g('dCarb');
   dietDraft.protein = g('dProtein');
   dietDraft.fat = g('dFat');
+  dietDraft.sugar = g('dSugar');
   const cb = document.getElementById('dEst');
   dietDraft.est = !!(cb && cb.checked);
 }
@@ -6302,11 +6345,12 @@ function renderDietSheet() {
     '<input class="field" type="text" id="dName" value="' + esc(dietDraft.name) + '" placeholder="예: 현미볶음밥 200g" maxlength="50">' +
     '<label class="field-label" for="dKcal">칼로리<span>kcal · 필수</span></label>' +
     '<input class="field" type="number" id="dKcal" inputmode="decimal" min="0" step="1" value="' + esc(dietDraft.kcal) + '" placeholder="예: 335">' +
-    '<label class="field-label">탄수화물 · 단백질 · 지방<span>g · 모르면 비워두세요</span></label>' +
+    '<label class="field-label">탄수화물 · 단백질 · 지방 · 당류<span>g · 모르면 비워두세요</span></label>' +
     '<div class="dmac">' +
       '<input class="field" type="number" id="dCarb" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.carb) + '" placeholder="탄수" aria-label="탄수화물 g">' +
       '<input class="field" type="number" id="dProtein" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.protein) + '" placeholder="단백" aria-label="단백질 g">' +
       '<input class="field" type="number" id="dFat" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.fat) + '" placeholder="지방" aria-label="지방 g">' +
+      '<input class="field" type="number" id="dSugar" inputmode="decimal" min="0" step="0.1" value="' + esc(dietDraft.sugar) + '" placeholder="당류" aria-label="당류 g">' +
     '</div>' +
     '<label class="dcheck" for="dEst"><input type="checkbox" id="dEst"' + (dietDraft.est ? ' checked' : '') + '> 추정치로 표시</label>' +
     '<div class="q-foot">' +
@@ -6333,6 +6377,7 @@ function saveDietItem() {
     carb: dietNum(dietDraft.carb, 500),
     protein: dietNum(dietDraft.protein, 500),
     fat: dietNum(dietDraft.fat, 500),
+    sugar: String(dietDraft.sugar || '').trim() === '' ? null : dietNum(dietDraft.sugar, 500),
     est: !!dietDraft.est
   };
   if (editing) {
