@@ -2373,7 +2373,7 @@ function renderHome() {
           hmGaugeHTML('🍗 단백질', num1(dt.protein) + '<small> / ' + g.protein[0] + '~' + g.protein[1] + 'g</small>',
             dt.protein / proMax * 100,
             { state: dietRangeState(dt.protein, g.protein), zone: [g.protein[0] / proMax * 100, g.protein[1] / proMax * 100] }) +
-          hmGaugeHTML('🍬 당류', num1(dt.sugar) + '<small> / ' + g.sugar + 'g 이하</small>',
+          hmGaugeHTML('🍬 당류', (dt.sugarN ? num1(dt.sugar) + 'g' : '-') + '<small> / ' + g.sugar + 'g 이하</small>',
             dt.sugar / sugMax * 100,
             { state: dt.sugar > g.sugar ? 'over' : 'ok', zone: [0, g.sugar / sugMax * 100] }) +
         '</div>' +
@@ -6325,7 +6325,7 @@ function dietRangeRow(label, value, range) {
   '</div>';
 }
 /* 당류는 '이하' 상한 기준: 0~권장량 구간을 정상(초록)으로 두고, 넘으면 빨강으로 바꿉니다. */
-function dietSugarRow(label, value, max, miss) {
+function dietSugarRow(label, value, max, miss, known) {
   const lim = Number(max) > 0 ? Number(max) : 30;
   const scale = Math.max(lim * 1.25, value * 1.05, 1);
   const fill = Math.min(100, value / scale * 100);
@@ -6334,7 +6334,7 @@ function dietSugarRow(label, value, max, miss) {
   const st = c === 'over'
     ? { t: '권장 ' + lim + 'g보다 ' + num1(value - lim) + 'g 많아요', c: c }
     : { t: (value > 0 ? '권장 ' + lim + 'g 이하 · ' + num1(lim - value) + 'g 여유' : '권장 ' + lim + 'g 이하'), c: c };
-  const shown = (value > 0 || !miss) ? num1(value) + 'g' : '-';
+  const shown = known ? num1(value) + 'g' : '-';
   return '<div class="dgo-row">' +
     '<div class="dgo-top"><span class="dgo-k">' + label + '</span>' +
       '<span class="dgo-v">' + shown + '<small> / ' + lim + 'g 이하</small></span></div>' +
@@ -6402,7 +6402,7 @@ function dietViewHTML() {
       dietRangeRow('🍚 탄수화물', t.carb, g.carbs) +
       dietRangeRow('🍗 단백질', t.protein, g.protein) +
       dietRangeRow('🥑 지방', t.fat, g.fat) +
-      dietSugarRow('🍬 당류', t.sugar, g.sugar, t.sugarMiss) +
+      dietSugarRow('🍬 당류', t.sugar, g.sugar, t.sugarMiss, t.sugarN) +
     '</div></div>' +
 
     '<div class="section-title"><h2>수분</h2><span class="hint">' + step + 'mL 버튼</span></div>' +
