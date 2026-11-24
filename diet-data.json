@@ -1,5 +1,5 @@
 {
-  "version": 40,
+  "version": 41,
   "updatedAt": "2026-11-24",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -37,7 +37,10 @@
           { "id": "l1", "name": "매일두유 고단백 검은콩 1팩 (190mL)", "kcal": 110, "carb": 6.0, "protein": 12.0, "fat": 5.0, "sugar": 1.7 },
           { "id": "l2", "name": "닭안심살 청양바베큐 1팩 (100g)", "kcal": 100, "carb": 3.0, "protein": 21.0, "fat": 0.7, "sugar": 3.0 }
         ],
-        "dinner": [],
+        "dinner": [
+          { "id": "d1", "name": "교촌치킨 레드순살 약 6조각 (약 160g · 추정)", "kcal": 608, "carb": 31.4, "protein": 46.4, "fat": 33.0, "sugar": 12.8, "est": true },
+          { "id": "d2", "name": "서오릉피자 페퍼로니 R 2조각 (약 150g · 추정)", "kcal": 393, "carb": 42.0, "protein": 21.5, "fat": 15.5, "sugar": 6.9, "est": true }
+        ],
         "snack": [
           { "id": "s1", "name": "샤인머스캣 15알 (약 128g · 추정)", "kcal": 87, "carb": 22.5, "protein": 0.8, "fat": 0.2, "sugar": 19.5, "est": true }
         ]
