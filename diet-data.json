@@ -1,6 +1,6 @@
 {
-  "version": 38,
-  "updatedAt": "2026-11-23",
+  "version": 39,
+  "updatedAt": "2026-11-24",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
     "calories": 1200,
@@ -27,6 +27,18 @@
           { "id": "s2", "name": "투게더 바닐라 아이스크림 2스푼 (약 40g · 추정)", "kcal": 74, "carb": 7.6, "protein": 1.2, "fat": 4.4, "sugar": 7.4, "est": true },
           { "id": "s3", "name": "오뚜기 로열라면(로제열라면) 큰컵 (100g)", "kcal": 450, "carb": 70.0, "protein": 7.0, "fat": 16.0, "sugar": 7.0 }
         ]
+      }
+    },
+    "2026-11-24": {
+      "water": 0,
+      "meals": {
+        "breakfast": [],
+        "lunch": [
+          { "id": "l1", "name": "매일두유 고단백 검은콩 1팩 (190mL)", "kcal": 110, "carb": 6.0, "protein": 12.0, "fat": 5.0, "sugar": 1.7 },
+          { "id": "l2", "name": "닭안심살 청양바베큐 1팩 (100g)", "kcal": 100, "carb": 3.0, "protein": 21.0, "fat": 0.7, "sugar": 3.0 }
+        ],
+        "dinner": [],
+        "snack": []
       }
     }
   }
