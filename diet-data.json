@@ -1,5 +1,5 @@
 {
-  "version": 43,
+  "version": 44,
   "updatedAt": "2026-11-25",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -53,7 +53,9 @@
         "lunch": [
           { "id": "l1", "name": "서오릉피자 꽉채운 페퍼로니 R 2조각 (178g)", "kcal": 430, "carb": 43.0, "protein": 24.0, "fat": 18.0, "sugar": 8.0, "est": true }
         ],
-        "dinner": [],
+        "dinner": [
+          { "id": "d1", "name": "교촌치킨 레드순살 3조각 (약 50g · 추정)", "kcal": 190, "carb": 9.8, "protein": 14.5, "fat": 10.3, "sugar": 4.0, "est": true }
+        ],
         "snack": []
       }
     }
