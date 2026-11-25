@@ -1,6 +1,6 @@
 {
-  "version": 42,
-  "updatedAt": "2026-11-24",
+  "version": 43,
+  "updatedAt": "2026-11-25",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
     "calories": 1200,
@@ -44,6 +44,17 @@
         "snack": [
           { "id": "s1", "name": "샤인머스캣 15알 (약 128g · 추정)", "kcal": 87, "carb": 22.5, "protein": 0.8, "fat": 0.2, "sugar": 19.5, "est": true }
         ]
+      }
+    },
+    "2026-11-25": {
+      "water": 0,
+      "meals": {
+        "breakfast": [],
+        "lunch": [
+          { "id": "l1", "name": "서오릉피자 꽉채운 페퍼로니 R 2조각 (178g)", "kcal": 430, "carb": 43.0, "protein": 24.0, "fat": 18.0, "sugar": 8.0, "est": true }
+        ],
+        "dinner": [],
+        "snack": []
       }
     }
   }
