@@ -4846,18 +4846,48 @@ function buddyHTML(done, total, opts) {
     '</div></div>';
 }
 
-/* 🏃 5~10분 운동 추천 (유튜브 실제 영상 · 제목·채널·길이를 검색으로 확인)
-   임베드 차단이 있어 링크는 새 창으로 엽니다. */
+/* 🏃 5~12분 운동 추천 (유튜브 실제 영상 · 제목·채널·길이는 유튜브 oEmbed·검색으로 확인)
+   임베드 차단이 있어 링크는 새 창으로 엽니다.
+   어깨를 옆으로 60~120도 들어 올릴 때 통증, 허리·발목 통증이 있는 세온 님 기준으로
+   점프·버피·고강도 어깨 거상은 넣지 않고 저충격 유산소·누워서 하는 코어·부드러운 스트레칭만 담았습니다. */
 const WORKOUTS = [
-  { id:'w-am',    theme:'body',   len:'6:00',  title:'아침 눈뜨자마자 5분 스트레칭', ch:'다노언니 제시', yt:'S_XjbPjWL3o', note:'가볍게 몸을 깨우는 전신 스트레칭' },
-  { id:'w-body',  theme:'body',   len:'4:09',  title:'매일 가볍게 전신 5분 스트레칭', ch:'서울척병원', yt:'2j9SRYlolfQ', note:'물리치료사가 알려주는 기본 동작' },
-  { id:'w-shoul', theme:'neck',   len:'5:54',  title:'예쁜 일자어깨·승모근 스트레칭 BEST3', ch:'Thankyou BUBU', yt:'dJXZRZvqbYg', note:'거북목·굽은등·라운드숄더 교정' },
-  { id:'w-neck',  theme:'neck',   len:'10:47', title:'딱 10분! 거북목·버섯증후군 교정 운동', ch:'자세요정', yt:'kgCj8UUEWjU', note:'목·어깨가 뻬뻬한 날' },
-  { id:'w-night', theme:'night',  len:'9:31',  title:'자기 전 숙면을 도와주는 10분 스트레칭', ch:'힙으뜸', yt:'8VtkpMGw0hw', note:'자기 전 몸 풀고 자는 루틴' },
-  { id:'w-night2',theme:'night',  len:'7:28',  title:'숙면을 도와주는 간단한 7분 스트레칭', ch:'방는', yt:'dsuu7kifkA0', note:'짧고 조용한 bedtime 루틴' },
-  { id:'w-core',  theme:'core',   len:'5:54',  title:'누워서 5분 복부운동 · 코어강화', ch:'SomiFit', yt:'7TLk7pscICk', note:'허리 부담이 적은 누운 동작' },
-  { id:'w-abs',   theme:'core',   len:'5:24',  title:'5분 식스팩 복근 운동', ch:'Allblanc TV', yt:'tjZm34Kfpmg', note:'복부지방 태우기' },
-  { id:'w-cardio',theme:'cardio', len:'10:09', title:'하루 10분 전신 유산소 홈트', ch:'Allblanc TV', yt:'2dail5Imi04', note:'점프 없이 하는 카디오' }
+  /* 전신 */
+  { id:'w-am',     theme:'body',   len:'6:00',  title:'아침 눈뜨자마자 5분 스트레칭', ch:'Stretch with Jessie', yt:'S_XjbPjWL3o', note:'가볍게 몸을 깨우는 전신 스트레칭' },
+  { id:'w-body',   theme:'body',   len:'4:09',  title:'매일 가볍게 전신 5분 스트레칭', ch:'서울척병원', yt:'2j9SRYlolfQ', note:'물리치료사가 알려주는 기본 동작' },
+  { id:'w-body2',  theme:'body',   len:'10:21', title:'10분 서서하는 전신 스트레칭', ch:'람PT', yt:'uw1aUHnMfo8', note:'물리치료사와 서서 하는 안전한 스트레칭' },
+  { id:'w-body3',  theme:'body',   len:'11:46', title:'매일 아침 10분 기상 스트레칭 (2024)', ch:'빵느', yt:'EbGh3ME7NLI', note:'아침에 몸 깨우는 10분 루틴' },
+  { id:'w-body4',  theme:'body',   len:'10:25', title:'매일 아침 10분 스트레칭 (2023)', ch:'힙으뜸', yt:'50WCSpZtdmA', note:'심으뜸의 아침 스트레칭' },
+  { id:'w-body5',  theme:'body',   len:'9:52',  title:'하루 9분 전신 스트레칭 BEST', ch:'Thankyou BUBU', yt:'aob4Lh1Vebk', note:'운동 전후로 쓰기 좋은 전신 스트레칭' },
+  { id:'w-body6',  theme:'body',   len:'8:39',  title:'앉아서 하는 전신 스트레칭 8분', ch:'람PT', yt:'EN3wkYAQNss', note:'의자에 앉아 목·어깨·허리 풀기' },
+  /* 어깨·거북목 */
+  { id:'w-shoul',  theme:'neck',   len:'5:54',  title:'예쁜 일자어깨·승모근 스트레칭 BEST3', ch:'Thankyou BUBU', yt:'dJXZRZvqbYg', note:'거북목·굽은등·라운드숄더 교정' },
+  { id:'w-neck',   theme:'neck',   len:'10:47', title:'딱 10분! 거북목·버섯증후군 교정 운동', ch:'자세요정 JSYJ', yt:'kgCj8UUEWjU', note:'목·어깨가 뻐근한 날' },
+  { id:'w-shoul2', theme:'neck',   len:'10:12', title:'목·어깨·등 통증 완화 10분', ch:'람PT', yt:'UH9sZnQLu6I', note:'승모근·거북목·라운드숄더 완화' },
+  { id:'w-shoul3', theme:'neck',   len:'9:39',  title:'목·어깨 통증 사라지는 10분 스트레칭', ch:'하이닥', yt:'mUnSpfItRf0', note:'뭉친 목·어깨를 천천히 풀기' },
+  { id:'w-neck2',  theme:'neck',   len:'10:22', title:'목·어깨 뻐근함 푸는 승모근 스트레칭', ch:'에일린 mind yoga', yt:'CkSLkHSdJjA', note:'요가식으로 천천히 푸는 목·어깨' },
+  { id:'w-neck3',  theme:'neck',   len:'10:01', title:'앉아서 하는 목·어깨 통증 스트레칭', ch:'관절사용설명서', yt:'z969qsVCrlQ', note:'의자에 앉아서 하는 목·어깨 루틴' },
+  /* 자기 전 */
+  { id:'w-night',  theme:'night',  len:'9:31',  title:'자기 전 숙면을 도와주는 10분 스트레칭', ch:'힙으뜸', yt:'8VtkpMGw0hw', note:'자기 전 몸 풀고 자는 루틴' },
+  { id:'w-night2', theme:'night',  len:'7:28',  title:'숙면을 도와주는 간단한 7분 스트레칭', ch:'빵느', yt:'dsuu7kifkA0', note:'짧고 조용한 bedtime 루틴' },
+  { id:'w-night3', theme:'night',  len:'10:01', title:'잠자기 전 10분 스트레칭', ch:'서리요가', yt:'Gtog8qfSt8Y', note:'자기 전 쉬운 요가 스트레칭' },
+  { id:'w-night4', theme:'night',  len:'11:52', title:'꿀잠을 부르는 10분 스트레칭', ch:'빵느', yt:'A3tO5mxYAzI', note:'깊은 잠을 위한 이완 스트레칭' },
+  { id:'w-night5', theme:'night',  len:'8:34',  title:'숙면을 돕는 자기 전 필수 스트레칭', ch:'하이닥', yt:'H_4mTwkwHdQ', note:'잠들기 전 몸의 긴장 풀기' },
+  { id:'w-night6', theme:'night',  len:'8:07',  title:'매일 밤 8분 자기 전 스트레칭', ch:'다노티비', yt:'1vfMmDuTweQ', note:'종아리·하체까지 가볍게' },
+  /* 복근 */
+  { id:'w-core',   theme:'core',   len:'5:54',  title:'누워서 5분 복부운동 · 코어강화', ch:'SomiFit', yt:'7TLk7pscICk', note:'허리 부담이 적은 누운 동작' },
+  { id:'w-abs',    theme:'core',   len:'5:24',  title:'5분 식스팩 복근 운동', ch:'Allblanc TV', yt:'tjZm34Kfpmg', note:'복부지방 태우기' },
+  { id:'w-core2',  theme:'core',   len:'10:48', title:'누워서 하는 복부 운동 10분', ch:'람PT', yt:'ROc9hYC0acA', note:'몸통 안정화·기초 체력' },
+  { id:'w-core6',  theme:'core',   len:'7:30',  title:'누워서 뒹굴거리며 하는 뱃살 운동', ch:'다노티비', yt:'mVsORhCxNL0', note:'누워서 가볍게 하는 복부 운동' },
+  { id:'w-core4',  theme:'core',   len:'7:42',  title:'누워서 하는 코어·복부 7분', ch:'람PT', yt:'tNtiUsdL5_8', note:'매일 7분 몸통 중심 안정화' },
+  { id:'w-core5',  theme:'core',   len:'11:02', title:'초보자 코어운동 10분 (데드버그·버드독)', ch:'에이핏 afit', yt:'Dx9iW-IkCEg', note:'허리·어깨 부담 적은 동작' },
+  /* 유산소 */
+  { id:'w-cardio', theme:'cardio', len:'10:09', title:'하루 10분 전신 유산소 홈트', ch:'Allblanc TV', yt:'2dail5Imi04', note:'점프 없이 하는 카디오' },
+  { id:'w-cardio2',theme:'cardio', len:'10:52', title:'점프·눕는동작 없이 전신 다이어트', ch:'Thankyou BUBU', yt:'pcyrlkHXAdE', note:'점프 없이 서서 하는 유산소' },
+  { id:'w-cardio3',theme:'cardio', len:'9:59',  title:'서서하는 10분 유산소', ch:'MIZI', yt:'kNZUvU54wRw', note:'층간소음 없이 서서 타는 유산소' },
+  { id:'w-cardio4',theme:'cardio', len:'10:57', title:'노점핑 층간소음 없는 지방 태우기', ch:'MIZI', yt:'s82_Hi_5ItA', note:'점프 없는 10분 카디오' },
+  { id:'w-cardio5',theme:'cardio', len:'11:08', title:'관절 부담 없는 서서하는 유산소 10분', ch:'빅씨스 Bigsis', yt:'-1xXC90r7Xg', note:'무릎·관절에 무리 없이' },
+  { id:'w-cardio6',theme:'cardio', len:'10:26', title:'식후 실내 걷기 10분', ch:'건강한 박코치', yt:'IJSZOQnO6qQ', note:'식사 뒤 걷기로 혈당·소화 관리' },
+  { id:'w-cardio7',theme:'cardio', len:'10:32', title:'초급 서서하는 유산소 & 복부', ch:'빵느', yt:'cuB8MTBCssQ', note:'목·허리 부담 없는 초급' }
 ];
 const WORKOUT_THEMES = [
   { k:'all', l:'전체' }, { k:'body', l:'전신' }, { k:'neck', l:'어깨·거북목' },
@@ -4867,15 +4897,97 @@ let workoutTheme = 'all';
 function workoutPool() {
   return workoutTheme === 'all' ? WORKOUTS : WORKOUTS.filter(function (w) { return w.theme === workoutTheme; });
 }
+/* 추천 로테이션 — 셔플 백
+   풀(전체 또는 테마)마다 남은 운동을 한 벌 저장해 두고, 한 바퀴 다 돌기 전에는 같은 운동이 다시 나오지 않습니다.
+   오늘의 운동은 하루에 한 번만 뽑아 저장하므로 홈 탭과 루틴 탭이 같은 운동을 보여 주고, 새로고침해도 하루 안에는 그대로입니다.
+   🎲 '다른 운동 추천'을 누르면 그 자리에서 다음 운동을 뽑아 그날 기록(d.woPick)에 저장합니다. */
+const WO_BAG_KEY = 'nihongo-wo-bag-v1';
+let woBag = null;
+function woBagState() {
+  if (woBag) return woBag;
+  let saved = null;
+  try { saved = JSON.parse(localStorage.getItem(WO_BAG_KEY) || 'null'); } catch (e) { saved = null; }
+  woBag = (saved && typeof saved === 'object' && saved.pools && typeof saved.pools === 'object')
+    ? { v: 1, today: (saved.today && typeof saved.today === 'object') ? saved.today : null, pools: saved.pools }
+    : { v: 1, today: null, pools: {} };
+  return woBag;
+}
+function woBagSave() {
+  try { localStorage.setItem(WO_BAG_KEY, JSON.stringify(woBagState())); } catch (e) {}
+}
+function woShuffle(a) {
+  for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); const t = a[i]; a[i] = a[j]; a[j] = t; }
+  return a;
+}
+/* 셔플백에서 운동 하나를 뽑습니다. 풀이 바뀌면(운동 추가·삭제) 새 바퀴로 다시 섞고,
+   새 바퀴의 첫 장이 직전 운동(또는 지금 보던 운동)이면 뒤쪽 다른 운동과 자리를 바꿔 연속 노출을 막습니다. */
+function woDraw(ids, avoidId) {
+  if (!ids.length) return '';
+  const st = woBagState();
+  const sig = ids.join(',');
+  let e = st.pools[sig];
+  if (!e || typeof e !== 'object' || !Array.isArray(e.left) || e.pool !== sig) {
+    e = st.pools[sig] = { pool: sig, left: [], last: (e && typeof e.last === 'string') ? e.last : '' };
+  }
+  if (!e.left.length) {
+    e.left = woShuffle(ids.slice());
+    if (e.left.length > 1 && (e.left[0] === e.last || e.left[0] === avoidId)) {
+      let k = -1;
+      for (let i = 1; i < e.left.length; i++) { if (e.left[i] !== e.last && e.left[i] !== avoidId) { k = i; break; } }
+      if (k < 0) k = e.left.length - 1;
+      const t = e.left[0]; e.left[0] = e.left[k]; e.left[k] = t;
+    }
+  }
+  const id = e.left.shift();
+  e.last = id;
+  woBagSave();
+  return id;
+}
+/* 오늘의 운동: 하루에 한 번만 뽑아 저장합니다. */
+function woTodayPick() {
+  const k = dkey();
+  const ids = WORKOUTS.map(function (w) { return w.id; });
+  const st = woBagState();
+  if (st.today && st.today.date === k && ids.indexOf(st.today.id) >= 0) return st.today.id;
+  const id = woDraw(ids, (st.today && typeof st.today.id === 'string') ? st.today.id : '');
+  st.today = { date: k, id: id };
+  woBagSave();
+  return id;
+}
+/* 지난 날짜(지난 루틴 보기)는 그날 날짜에 고정된 운동을 보여 줍니다. */
+function woDatePick(k, pool) {
+  if (!pool.length) return WORKOUTS[0];
+  let h = 2166136261;
+  for (let i = 0; i < k.length; i++) { h ^= k.charCodeAt(i); h = Math.imul(h, 16777619); }
+  return pool[(h >>> 0) % pool.length] || pool[0];
+}
 function workoutFor(k) {
   const d = routineDay(k);
-  const pool = workoutPool();
   if (d && d.woPick) {
-    const pick = pool.filter(function (w) { return w.id === d.woPick; })[0] || WORKOUTS.filter(function (w) { return w.id === d.woPick; })[0];
+    const pick = WORKOUTS.filter(function (w) { return w.id === d.woPick; })[0];
     if (pick) return pick;
   }
-  const day = Math.floor(parseDkey(k).getTime() / 86400000);
-  return pool[Math.abs(day) % pool.length];
+  if (k === dkey()) {
+    const w = WORKOUTS.filter(function (x) { return x.id === woTodayPick(); })[0];
+    if (w) return w;
+  }
+  return woDatePick(k, workoutPool());
+}
+/* 고른 테마에 맞춰 다음 운동을 뽑기 (오늘은 셔플백, 지난 날짜는 그 풀의 다음 순서) */
+function woNextPick(k, cur) {
+  const pool = workoutPool();
+  const ids = pool.map(function (w) { return w.id; });
+  if (!ids.length) return WORKOUTS[0];
+  let id = '';
+  if (k === dkey()) id = woDraw(ids, cur && cur.id);
+  else { const i = cur ? ids.indexOf(cur.id) : -1; id = ids[(i + 1) % ids.length]; }
+  return WORKOUTS.filter(function (w) { return w.id === id; })[0] || pool[0];
+}
+function woSetToday(w) {
+  if (!w) return;
+  const st = woBagState();
+  st.today = { date: dkey(), id: w.id };
+  woBagSave();
 }
 function workoutMinutes(w) {
   const s = String(w.len || '').split(':').reduce(function (a, v) { return a * 60 + Number(v || 0); }, 0);
@@ -5384,16 +5496,35 @@ function onRoutineClick(e) {
   const rm = t.closest('[data-rmemo]');
   if (rm) { flushMemo(true); openRoutineMemo(rm.dataset.rmemo); return; }
   const wt = t.closest('[data-wtheme]');
-  if (wt) { workoutTheme = wt.dataset.wtheme; flushMemo(true); renderRoutine(); return; }
+  if (wt) {
+    workoutTheme = wt.dataset.wtheme;
+    flushMemo(true);
+    /* 테마를 바꿨는데 지금 운동이 그 테마가 아니면, 그 테마에서 다음 운동을 뽑아 오늘의 운동으로 저장합니다. */
+    if (routineDate === dkey()) {
+      const pool = workoutPool();
+      const cur = workoutFor(routineDate);
+      if (cur && !pool.some(function (w) { return w.id === cur.id; })) {
+        const w = woNextPick(routineDate, cur);
+        if (w) {
+          const d = routineDay(routineDate, true);
+          d.woPick = w.id;
+          woSetToday(w);
+          save();
+        }
+      }
+    }
+    renderRoutine();
+    return;
+  }
   const wp = t.closest('[data-wpick]');
   if (wp) {
     flushMemo(true);
-    const pool = workoutPool();
     const cur = workoutFor(routineDate);
-    const i = pool.map(function (w) { return w.id; }).indexOf(cur.id);
-    const nxt = pool[(i + 1) % pool.length] || pool[0];
+    const nxt = woNextPick(routineDate, cur);
+    if (!nxt) return;
     const d = routineDay(routineDate, true);
     d.woPick = nxt.id;
+    if (routineDate === dkey()) woSetToday(nxt);
     save();
     renderRoutine();
     toast('🎲 ' + nxt.title);
