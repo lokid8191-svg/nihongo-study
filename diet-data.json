@@ -1,5 +1,5 @@
 {
-  "version": 46,
+  "version": 47,
   "updatedAt": "2026-11-26",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -67,7 +67,7 @@
         ],
         "lunch": [
           { "id": "l1", "name": "다신샵 현미볶음밥 1봉 (200g)", "kcal": 335, "carb": 67.0, "protein": 8.0, "fat": 4.1, "sugar": 2.0 },
-          { "id": "l2", "name": "BBQ 황금올리브 속안심 2조각 (약 77g · 추정)", "kcal": 206, "carb": 1.5, "protein": 18.3, "fat": 14.0, "sugar": 1.3, "est": true }
+          { "id": "l2", "name": "계란 1알 (추정)", "kcal": 70, "carb": 0.5, "protein": 6.0, "fat": 5.0, "sugar": 0.2, "est": true }
         ],
         "dinner": [],
         "snack": []
