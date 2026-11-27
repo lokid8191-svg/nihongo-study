@@ -6782,7 +6782,7 @@ function weightChartSVG(limit) {
     ' L' + X(0).toFixed(1) + ' ' + (yBot + 2) + ' Z" fill="#15803D" opacity=".07"/>';
   /* 선택한 주 값 라벨 — 차트 위쪽에 잘리지 않게, 넘치면 점 아래로 내려 그립니다 */
   const selW = weeks[selIdx];
-  const sy = Y(selW.avg);
+  const sx = X(selIdx), sy = Y(selW.avg);
   const lx = Math.min(x1 - 14, Math.max(x0 + 14, sx));
   const ly = sy - 8 < yTop + 9 ? sy + 13 : sy - 8;
 
