@@ -717,6 +717,15 @@ input[type="text"].field:focus{outline:2px solid #FECACA;outline-offset:1px;bord
 .wt-stat b{display:block;font-size:15px;font-weight:700;letter-spacing:-.2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .wt-stat span{display:block;font-size:10.5px;color:var(--ink-3);margin-top:1px}
 .wt-chart{width:100%;height:auto;display:block;margin-top:4px}
+.wt-chart{touch-action:manipulation}
+.wt-chart [data-wdot]{cursor:pointer}
+.wt-chart [data-wdot]:focus{outline:none}
+.wt-chart [data-wdot]:focus-visible{stroke:#DC2626;stroke-width:1.5;stroke-dasharray:2 2}
+.wt-sel{display:flex;align-items:baseline;gap:6px;flex-wrap:wrap;margin-top:5px;font-size:11px;color:var(--ink-3)}
+.wt-sel b{font-size:14px;font-weight:800;color:#15803D;letter-spacing:-.2px;font-variant-numeric:tabular-nums}
+.wt-sel .d{font-weight:700;color:#15803D;font-variant-numeric:tabular-nums}
+.wt-sel .d.up{color:#DC2626}
+.wt-sel .n{color:var(--ink-3)}
 .wt-legend{display:flex;gap:10px;font-size:10.5px;color:var(--ink-3);margin-top:5px;flex-wrap:wrap}
 .wt-legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:3px}
 .wt-tools{display:flex;gap:6px;flex:none}
@@ -6748,6 +6757,7 @@ let weightSyncing = false;
 let weightDraft = null;
 let weightDelAsk = false;
 let weightChartRange = 12;   /* 12주 | 0(전체) */
+let weightChartSel = '';      /* 선택한 주 시작일(빈 값 = 최근 주) */
 
 function wtNum(v) { const n = Number(v); return (v === '' || v === null || v === undefined || !isFinite(n)) ? null : n; }
 function wtDateStr(v) { return /^\d{4}-\d{2}-\d{2}$/.test(String(v || '')) ? String(v) : ''; }
@@ -6847,7 +6857,9 @@ function weightWeeks(limit) {
   return weeks;
 }
 
-/* 주간 평균 SVG 라인 + 전주 대비 막대(아래로 = 감소) */
+/* 주간 평균 SVG 라인 + 전주 대비 막대(아래로 = 감소)
+   점(투명 히트 영역 포함)을 누르면 그 주 평균이 선택됩니다. 선택은 weightChartSel(주 시작일)에 담고,
+   선택이 없거나 지금 보이는 범위 밖이면 가장 최근 주를 고릅니다. */
 function weightChartSVG(limit) {
   const weeks = weightWeeks(limit);
   if (weeks.length < 2) {
@@ -6863,20 +6875,30 @@ function weightChartSVG(limit) {
   lo -= padY; hi += padY;
   const X = function (i) { return weeks.length === 1 ? x0 : x0 + (x1 - x0) * i / (weeks.length - 1); };
   const Y = function (v) { return yBot - (v - lo) / (hi - lo) * (yBot - yTop); };
+  /* 선택된 주: 없거나 범위 밖이면 최근 주 */
+  let selIdx = weeks.length - 1;
+  weeks.forEach(function (w, i) { if (w.week === weightChartSel) selIdx = i; });
+  const gap = weeks.length > 1 ? (x1 - x0) / (weeks.length - 1) : (x1 - x0);
+  const hitR = Math.max(6, Math.min(11, gap * 0.46));
 
-  let line = '', dots = '';
+  let line = '', dots = '', hits = '';
   weeks.forEach(function (w, i) {
     const x = X(i), y = Y(w.avg);
     line += (i ? ' L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1);
-    const last = i === weeks.length - 1;
-    dots += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (last ? 3.4 : 2.1) + '" fill="' + (last ? '#DC2626' : '#15803D') + '"/>';
+    const sel = i === selIdx;
+    dots += '<circle cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) + '" r="' + (sel ? 3.4 : 2.1) + '" fill="' + (sel ? '#DC2626' : '#15803D') + '"/>';
+    /* 손가락으로 누르기 쉽게 점 위에 투명 히트 영역(키보드 포커스 포함) */
+    hits += '<circle class="wt-hit" data-wdot="' + w.week + '" cx="' + x.toFixed(1) + '" cy="' + y.toFixed(1) +
+      '" r="' + hitR.toFixed(1) + '" fill="transparent" pointer-events="all" tabindex="0" role="button"' +
+      ' aria-pressed="' + (sel ? 'true' : 'false') + '" aria-label="' + esc(w.label) + '주 평균 ' + w.avg.toFixed(2) + 'kg"/>';
   });
   const area = '<path d="' + line + ' L' + X(weeks.length - 1).toFixed(1) + ' ' + (yBot + 2) +
     ' L' + X(0).toFixed(1) + ' ' + (yBot + 2) + ' Z" fill="#15803D" opacity=".07"/>';
-  /* 마지막 값 라벨 */
-  const lastW = weeks[weeks.length - 1];
-  const lx = Math.min(x1 - 16, Math.max(x0 + 16, X(weeks.length - 1)));
-  const ly = Math.max(yTop + 8, Y(lastW.avg) - 8);
+  /* 선택한 주 값 라벨 — 차트 위쪽에 잘리지 않게, 넘치면 점 아래로 내려 그립니다 */
+  const selW = weeks[selIdx];
+  const sy = Y(selW.avg);
+  const lx = Math.min(x1 - 14, Math.max(x0 + 14, sx));
+  const ly = sy - 8 < yTop + 9 ? sy + 13 : sy - 8;
 
   const deltas = weeks.map(function (w, i) { return i ? w.delta : 0; });
   const maxAbs = Math.max(0.4, Math.max.apply(null, deltas.map(function (v) { return Math.abs(v); })));
@@ -6898,7 +6920,10 @@ function weightChartSVG(limit) {
     labels += '<text x="' + X(i).toFixed(1) + '" y="' + (H - 5) + '" text-anchor="middle" font-size="7.5" fill="#8D939C">' + esc(w.label) + '</text>';
   });
 
-  return '<svg class="wt-chart" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="주간 평균 체중 추세선과 전주 대비 막대">' +
+  const deltaTxt = (selW.delta === 0 && selIdx === 0) ? '첫 주'
+    : selW.delta === 0 ? '지난주와 같아요' : '전주 대비 ' + wtSigned(selW.delta, 'kg');
+
+  return '<svg class="wt-chart" viewBox="0 0 ' + W + ' ' + H + '" role="group" aria-label="주간 평균 체중 추세선과 전주 대비 막대. 점을 누르면 그 주 평균을 볼 수 있어요">' +
     '<line x1="' + x0 + '" y1="' + yTop + '" x2="' + x1 + '" y2="' + yTop + '" stroke="#E4E6EA" stroke-width="1"/>' +
     '<line x1="' + x0 + '" y1="' + yBot + '" x2="' + x1 + '" y2="' + yBot + '" stroke="#E4E6EA" stroke-width="1"/>' +
     '<text x="' + (x0 - 4) + '" y="' + (yTop + 3) + '" text-anchor="end" font-size="7.5" fill="#8D939C">' + hi.toFixed(1) + '</text>' +
@@ -6906,10 +6931,15 @@ function weightChartSVG(limit) {
     area +
     '<path d="' + line + '" fill="none" stroke="#15803D" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
     dots +
-    '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle" font-size="8.5" font-weight="700" fill="#DC2626">' + lastW.avg.toFixed(2) + '</text>' +
+    '<text x="' + lx.toFixed(1) + '" y="' + ly.toFixed(1) + '" text-anchor="middle" font-size="8.5" font-weight="700" fill="#DC2626">' + selW.avg.toFixed(2) + '</text>' +
     '<line x1="' + x0 + '" y1="' + barMid + '" x2="' + x1 + '" y2="' + barMid + '" stroke="#E3E5E9" stroke-width="1"/>' +
     bars + labels +
-  '</svg>';
+    hits +
+  '</svg>' +
+  '<div class="wt-sel">' + esc(selW.label) + '주 평균 <b>' + selW.avg.toFixed(2) + 'kg</b>' +
+    '<span class="d' + (selW.delta > 0 ? ' up' : '') + '">' + deltaTxt + '</span>' +
+    '<span class="n">' + (selIdx === weeks.length - 1 ? '이번 주 · ' : '') + selW.n + '일 기록</span>' +
+  '</div>';
 }
 
 function weightSummary() {
@@ -7015,7 +7045,7 @@ function weightViewHTML() {
       weightChartSVG(weightChartRange) +
       '<div class="wt-legend"><span><i style="background:#15803D"></i>주간 평균</span>' +
         '<span><i style="background:#15803D"></i>줄었어요</span><span><i style="background:#DC2626"></i>늘었어요</span></div>' +
-      '<p class="menu-eff">하루 수분 오차에 흔들리지 않게 주간 평균으로 봅니다. 기록이 없는 기간은 선으로 이어 그렸어요.</p>' +
+      '<p class="menu-eff">하루 수분 오차에 흔들리지 않게 주간 평균으로 봅니다. 점을 누르면 그 주 평균이 보여요. 기록이 없는 기간은 선으로 이어 그렸어요.</p>' +
     '</div>' +
 
     '<div class="section-title"><h2>💉 마운자로</h2><span class="hint">' + (lastDose ? '최근 ' + lastDose.date.slice(5).replace('-', '/') + ' · ' + lastDose.mg + 'mg' : '기록 없음') + '</span></div>' +
@@ -7242,6 +7272,8 @@ function onWeightClick(e) {
   const t = e.target;
   if (!t || !t.closest) return false;
   if (routineSub !== 'weight') return false;
+  const dot = t.closest('[data-wdot]');
+  if (dot) { weightChartSel = dot.dataset.wdot; renderRoutine(); return true; }
   const rng = t.closest('[data-wtrange]');
   if (rng) { weightChartRange = Number(rng.dataset.wtrange) || 0; renderRoutine(); return true; }
   if (t.closest('[data-wadd]')) { openWeightEntry(); return true; }
@@ -8792,6 +8824,17 @@ function init() {
   $('#view-studytoday').addEventListener('click', onHomeClick);
   $('#view-n3').addEventListener('click', onHomeClick);
   $('#view-routine').addEventListener('click', onRoutineClick);
+  /* 주간 평균 그래프 점: Enter/Space 로도 그 주를 고를 수 있게 */
+  $('#view-routine').addEventListener('keydown', function (e) {
+    if (e.key !== 'Enter' && e.key !== ' ' && e.key !== 'Spacebar') return;
+    const d = e.target && e.target.closest ? e.target.closest('[data-wdot]') : null;
+    if (!d) return;
+    e.preventDefault();
+    weightChartSel = d.dataset.wdot;
+    renderRoutine();
+    const again = document.querySelector('#view-routine [data-wdot="' + weightChartSel + '"]');
+    if (again) again.focus();
+  });
   $('#view-routine').addEventListener('input', onRoutineInput);
   $('#view-routine').addEventListener('change', onRoutineInput);
   $('#view-fridge').addEventListener('click', onFridgeClick);
