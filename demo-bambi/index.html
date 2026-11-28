@@ -2207,7 +2207,7 @@ function updateStreakChip() {
   if (sub) {
     const day = S.days[dkey()] || {};
     const done = CHECK_ITEMS.filter(c => day[c.key]).length;
-    sub.textContent = done === 3 ? '오늘 루틴 완료 · 내일 또 봐요' : '일본어 · 식단 관리 · 데일리 루틴';
+    sub.textContent = done === 3 ? '오늘 루틴 완료 · 내일도 같이 해요' : '밤비와 함께 · 일본어 · 식단 · 루틴';
   }
 }
 /* ---------------- 홈: 하루치 대시보드 ---------------- */
@@ -4620,7 +4620,10 @@ const BAMBI_IMAGES = [
   { p: 'assets/bambi-20.jpg?v=2' },
   { p: 'assets/bambi-21.jpg?v=2' },
   { p: 'assets/bambi-22.jpg?v=2' },
-  { p: 'assets/bambi-23.jpg?v=2' }
+  { p: 'assets/bambi-23.jpg?v=2' },
+  { p: 'assets/bambi-24.jpg?v=2' },
+  { p: 'assets/bambi-25.jpg?v=2' },
+  { p: 'assets/bambi-26.jpg?v=2' }
 ];
 let buddyImgIdx = Math.floor(Math.random() * BAMBI_IMAGES.length);
 function buddyImage(compact) {
