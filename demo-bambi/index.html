@@ -4647,7 +4647,9 @@ function buddyImageBroken(img) {
 function buddyNextImage() {
   const n = BAMBI_IMAGES.length;
   if (n < 2) return;
-  buddyImgIdx = (buddyImgIdx + 1 + rand(n - 1)) % n;
+  /* 사진은 순서대로 한 바퀴 돕니다(시작 위치만 열 때마다 무작위).
+     그래서 26장을 다 보기 전에는 같은 사진이 다시 나오지 않습니다. */
+  buddyImgIdx = (buddyImgIdx + 1) % n;
 }
 function buddyState(done, total) {
   if (!total || done <= 0) return 'none';
