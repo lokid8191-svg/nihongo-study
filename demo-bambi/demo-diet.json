@@ -1,0 +1,113 @@
+{
+  "version": 1,
+  "updatedAt": "2026-11-18",
+  "note": "with밤비 식단 기본 기록입니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
+  "goals": {
+    "calories": 1700,
+    "carbs": [
+      190,
+      220
+    ],
+    "protein": [
+      80,
+      100
+    ],
+    "fat": [
+      50,
+      65
+    ],
+    "waterStepMl": 500
+  },
+  "days": {
+    "2026-11-17": {
+      "water": 1200,
+      "meals": {
+        "breakfast": [
+          {
+            "id": "b1",
+            "name": "아메리카노 1잔",
+            "kcal": 10,
+            "carb": 2,
+            "protein": 0,
+            "fat": 0
+          }
+        ],
+        "lunch": [
+          {
+            "id": "l1",
+            "name": "닭가슴살 샐러드 1팩",
+            "kcal": 250,
+            "carb": 14,
+            "protein": 28,
+            "fat": 9
+          },
+          {
+            "id": "l2",
+            "name": "삶은 계란 1개",
+            "kcal": 70,
+            "carb": 0.5,
+            "protein": 6,
+            "fat": 5
+          }
+        ],
+        "dinner": [
+          {
+            "id": "d1",
+            "name": "현미밥 1공기",
+            "kcal": 300,
+            "carb": 63,
+            "protein": 6,
+            "fat": 2
+          },
+          {
+            "id": "d2",
+            "name": "된장국 1그릇",
+            "kcal": 60,
+            "carb": 7,
+            "protein": 4,
+            "fat": 2,
+            "est": true
+          }
+        ],
+        "snack": [
+          {
+            "id": "s1",
+            "name": "바나나 1개",
+            "kcal": 90,
+            "carb": 23,
+            "protein": 1,
+            "fat": 0,
+            "est": true
+          }
+        ]
+      }
+    },
+    "2026-11-18": {
+      "water": 500,
+      "meals": {
+        "breakfast": [
+          {
+            "id": "b1",
+            "name": "아메리카노 1잔",
+            "kcal": 10,
+            "carb": 2,
+            "protein": 0,
+            "fat": 0
+          },
+          {
+            "id": "b2",
+            "name": "통밀 토스트 1장",
+            "kcal": 120,
+            "carb": 22,
+            "protein": 4,
+            "fat": 2,
+            "est": true
+          }
+        ],
+        "lunch": [],
+        "dinner": [],
+        "snack": []
+      }
+    }
+  }
+}

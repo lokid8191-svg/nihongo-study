@@ -1,0 +1,50 @@
+{
+  "version": 3,
+  "updatedAt": "2026-11-18",
+  "note": "with밤비 체중·인바디 기본 기록입니다(153cm · 시작 61kg · 목표 52kg 기준). 앱은 version이 올라간 것을 감지해 새 기록을 받아갑니다.",
+  "profile": {
+    "heightCm": 153,
+    "startDate": "2026-09-14",
+    "startWeight": 61,
+    "goalWeight": 52,
+    "bmr": 1180,
+    "startWaist": 78,
+    "latestWaist": 75.5,
+    "waistNote": ""
+  },
+  "entries": [
+    {
+      "date": "2026-09-14",
+      "kg": 61.0
+    },
+    {
+      "date": "2026-09-28",
+      "kg": 60.62
+    },
+    {
+      "date": "2026-10-12",
+      "kg": 60.18
+    },
+    {
+      "date": "2026-10-26",
+      "kg": 59.76
+    },
+    {
+      "date": "2026-11-09",
+      "kg": 59.45
+    },
+    {
+      "date": "2026-11-16",
+      "kg": 59.24,
+      "bodyFat": 30.8,
+      "fatMass": 18.25,
+      "muscle": 22.6,
+      "visceral": 8,
+      "waist": 75.5
+    },
+    {
+      "date": "2026-11-18",
+      "kg": 59.12
+    }
+  ]
+}

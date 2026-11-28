@@ -1,0 +1,35 @@
+{
+  "name": "with밤비",
+  "short_name": "with밤비",
+  "description": "밤비와 함께하는 JLPT N5~N3 일본어 학습 + 데일리 루틴·냉장고 관리.",
+  "lang": "ko",
+  "dir": "ltr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "portrait",
+  "background_color": "#FFFFFF",
+  "theme_color": "#EC4899",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "assets/icon-192.png?v=1",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/logo-bambi.png?v=1",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}
