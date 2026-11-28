@@ -1,5 +1,5 @@
 {
-  "version": 52,
+  "version": 53,
   "updatedAt": "2026-11-28",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
@@ -97,7 +97,10 @@
           { "id": "l2", "name": "보스김밥 닭강정 2조각 (약 60g · 추정)", "kcal": 170, "carb": 14.0, "protein": 9.0, "fat": 8.5, "sugar": 6.0, "est": true }
         ],
         "dinner": [],
-        "snack": []
+        "snack": [
+          { "id": "s1", "name": "딸기우유크림케이크 1/2조각 (약 75g · 추정)", "kcal": 205, "carb": 24.0, "protein": 3.0, "fat": 11.0, "sugar": 14.0, "est": true },
+          { "id": "s2", "name": "디카페인 아메리카노 1잔 (추정)", "kcal": 5, "carb": 1.0, "protein": 0.3, "fat": 0.0, "sugar": 0.0, "est": true }
+        ]
       }
     }
   }
