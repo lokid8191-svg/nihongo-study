@@ -1,6 +1,6 @@
 {
-  "version": 51,
-  "updatedAt": "2026-11-27",
+  "version": 52,
+  "updatedAt": "2026-11-28",
   "note": "채팅으로 식단을 알려주면 피클이 이 파일을 갱신해 배포합니다. 앱은 version이 올라간 것을 감지해 기록을 새로 받아가고, 앱에서 직접 고친 날짜·항목은 그대로 둡니다.",
   "goals": {
     "calories": 1200,
@@ -86,6 +86,18 @@
         "snack": [
           { "id": "s1", "name": "매일두유 고단백 검은콩 1팩 (190mL)", "kcal": 110, "carb": 6.0, "protein": 12.0, "fat": 5.0, "sugar": 1.7 }
         ]
+      }
+    },
+    "2026-11-28": {
+      "water": 0,
+      "meals": {
+        "breakfast": [],
+        "lunch": [
+          { "id": "l1", "name": "보스김밥 참치마요김밥 반줄 (약 140g · 추정)", "kcal": 225, "carb": 28.0, "protein": 8.5, "fat": 8.5, "sugar": 2.5, "est": true },
+          { "id": "l2", "name": "보스김밥 닭강정 2조각 (약 60g · 추정)", "kcal": 170, "carb": 14.0, "protein": 9.0, "fat": 8.5, "sugar": 6.0, "est": true }
+        ],
+        "dinner": [],
+        "snack": []
       }
     }
   }
